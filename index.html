@@ -920,7 +920,7 @@ async function writeGitHubFile(filename,data,sha=null){
 let fileSHAs={};
 
 // Constants for splitting large files
-const COINS_PER_CHUNK = 20; // Split coins into chunks of 20 (keeps files under 1MB for GitHub API)
+const COINS_PER_CHUNK = 10; // Split coins into chunks of 10 (keeps files well under 1MB for GitHub API)
 
 // Split coins into multiple chunks for upload
 async function uploadCoinsInChunks(coins){

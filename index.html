@@ -907,6 +907,16 @@ async function readJSONFile(filename,defaultValue=[]){
     return null;
 }
 
+// Helper to ensure SHA is fetched before upload
+async function ensureFileSHA(filename){
+    if(!fileSHAs[filename]){
+        const file=await readGitHubFile(filename);
+        if(file){
+            fileSHAs[filename]=file.sha;
+        }
+    }
+}
+
 // IndexedDB for images (fallback) + JSON file storage
 let db;
 let imagesCache={};
@@ -2228,6 +2238,13 @@ $('#uploadToGithubBtn')?.addEventListener('click',async()=>{
     statusDiv.innerHTML='⏳ Uploading data to GitHub...';
     
     try{
+        // Ensure we have SHAs for all files before uploading
+        await ensureFileSHA('coins_data.json');
+        await ensureFileSHA('kb_data.json');
+        await ensureFileSHA('images_data.json');
+        await ensureFileSHA('names_data.json');
+        await ensureFileSHA('types_data.json');
+        
         // Upload all data files
         await writeJSONFile('coins_data.json',coins);
         await writeJSONFile('kb_data.json',kbEntries);
@@ -2274,33 +2291,49 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
     statusDiv.innerHTML='⏳ Downloading data from GitHub...';
     
     try{
+        // Clear fileSHAs cache before downloading
+        fileSHAs={};
+        
         // Download all data files from GitHub
-        const coinsFile=await readJSONFile('coins_data.json',[]);
-        if(coinsFile!==null){
-            coins=coinsFile;
+        const coinsFileObj=await readGitHubFile('coins_data.json');
+        if(coinsFileObj!==null){
+            coins=coinsFileObj.data;
+            fileSHAs['coins_data.json']=coinsFileObj.sha;
             saveJSON(STORAGE_KEY,coins);
         }
         
-        const kbFile=await readJSONFile('kb_data.json',[]);
-        if(kbFile!==null){
-            kbEntries=kbFile;
+        const kbFileObj=await readGitHubFile('kb_data.json');
+        if(kbFileObj!==null){
+            kbEntries=kbFileObj.data;
+            fileSHAs['kb_data.json']=kbFileObj.sha;
             saveJSON(KB_KEY,kbEntries);
         }
         
-        const imagesFile=await readJSONFile('images_data.json',{});
-        if(imagesFile!==null){
-            imagesCache=imagesFile;
+        const imagesFileObj=await readGitHubFile('images_data.json');
+        if(imagesFileObj!==null){
+            imagesCache=imagesFileObj.data;
+            fileSHAs['images_data.json']=imagesFileObj.sha;
+            
+            // Save images to IndexedDB
+            if(!db)await initDB();
+            for(const[imageId,imageData]of Object.entries(imagesCache)){
+                const transaction=db.transaction(['images'],'readwrite');
+                const store=transaction.objectStore('images');
+                store.put({id:imageId,data:imageData});
+            }
         }
         
         // Reload names and types and save to localStorage
-        const namesFile=await readJSONFile('names_data.json',[]);
-        if(namesFile!==null){
-            saveJSON(NAMES_KEY,namesFile);
+        const namesFileObj=await readGitHubFile('names_data.json');
+        if(namesFileObj!==null){
+            fileSHAs['names_data.json']=namesFileObj.sha;
+            saveJSON(NAMES_KEY,namesFileObj.data);
         }
         
-        const typesFile=await readJSONFile('types_data.json',[]);
-        if(typesFile!==null){
-            saveJSON(TYPES_KEY,typesFile);
+        const typesFileObj=await readGitHubFile('types_data.json');
+        if(typesFileObj!==null){
+            fileSHAs['types_data.json']=typesFileObj.sha;
+            saveJSON(TYPES_KEY,typesFileObj.data);
         }
         
         // Refresh UI dropdowns

@@ -1,0 +1,37 @@
+[
+  {
+    "coinId": "CMKB25OE9XLON",
+    "coinName": "Hercules 50 FR - wisior",
+    "coinCountry": "France",
+    "coinYear": "1978",
+    "coinWeight": "30",
+    "coinSize": "1",
+    "category": "Coin",
+    "type": "Obiegowe Francja",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "0",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-03",
+    "comments": "prezent :)",
+    "coinLink": "",
+    "checked": true
+  },
+  {
+    "coinId": "CMKCR6N0Q803D",
+    "coinName": "test3",
+    "coinCountry": "test3",
+    "coinYear": "2026",
+    "coinWeight": "10",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bar",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "1",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-13",
+    "comments": "",
+    "coinLink": ""
+  }
+]

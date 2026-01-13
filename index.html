@@ -149,11 +149,11 @@
                 <a href="#" class="nav-link" data-section="coin-verification">
                     <span>🔍</span> Coin Verification
                 </a>
+                <a href="#" class="nav-link" data-section="github-settings">
+                    <span>⚙️</span> GitHub Settings
+                </a>
                 <div style="margin-top: 30px; padding: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <button id="enableFileSystemBtn" style="width: 100%; padding: 12px; background: rgba(52, 152, 219, 0.3); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(52, 152, 219, 0.4)'" onmouseout="this.style.background='rgba(52, 152, 219, 0.3)'">
-                        📁 Enable File Storage
-                    </button>
-                    <div id="fileSystemStatus" style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 10px;"></div>
+                    <div id="githubStatus" style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 10px;"></div>
                     <button id="refreshRatesBtn" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
                         🔄 Refresh FX Rates
                     </button>
@@ -570,6 +570,71 @@
                     </div>
                 </div>
             </div>
+
+            <div class="section" id="github-settings-section" style="display: none;">
+                <h2>⚙️ GitHub Storage Settings</h2>
+                
+                <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 32px; max-width: 800px; margin: 0 auto;">
+                    <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                        <p style="margin: 0 0 8px 0; font-weight: 600; color: #1976d2;">ℹ️ About GitHub Storage</p>
+                        <p style="margin: 0; color: #555; font-size: 14px; line-height: 1.6;">
+                            Store your coin data directly in your GitHub repository. This allows you to:
+                            <br>• Access your data from any device/browser
+                            <br>• Have automatic version control and backup
+                            <br>• Keep everything synced in one place
+                        </p>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label style="display: block; font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f;">
+                            GitHub Personal Access Token (PAT):
+                        </label>
+                        <input type="password" id="githubTokenInput" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: monospace;" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                        <p style="margin: 8px 0 0 0; font-size: 13px; color: #666; line-height: 1.5;">
+                            Need a token? 
+                            <a href="https://github.com/settings/tokens/new?description=APS%20Coin%20Tracker&scopes=repo" target="_blank" style="color: #4ecdc4; text-decoration: none; font-weight: 600;">Create one here</a>
+                            <br>Required permission: <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-size: 12px;">repo</code>
+                        </p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                        <div class="form-group">
+                            <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Repository Owner:</label>
+                            <input type="text" id="githubOwnerInput" value="annpasz" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;">
+                        </div>
+                        <div class="form-group">
+                            <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Repository Name:</label>
+                            <input type="text" id="githubRepoInput" value="APSCoinTracker" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                        <button id="saveGithubSettingsBtn" style="flex: 1; padding: 16px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                            💾 Save Settings
+                        </button>
+                        <button id="testGithubConnectionBtn" style="flex: 1; padding: 16px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                            🔌 Test Connection
+                        </button>
+                    </div>
+
+                    <div id="githubConnectionStatus" style="padding: 16px; border-radius: 8px; display: none; margin-bottom: 24px;"></div>
+
+                    <div style="border-top: 2px solid #e0e0e0; padding-top: 24px;">
+                        <h3 style="font-size: 18px; margin: 0 0 16px 0; color: #1d1d1f;">Data Management</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <button id="uploadToGithubBtn" style="padding: 14px; background: rgba(78, 205, 196, 0.2); color: #44a08d; border: 2px solid #4ecdc4; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;">
+                                ⬆️ Upload Local Data to GitHub
+                            </button>
+                            <button id="downloadFromGithubBtn" style="padding: 14px; background: rgba(155, 89, 182, 0.2); color: #9b59b6; border: 2px solid #9b59b6; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;">
+                                ⬇️ Download Data from GitHub
+                            </button>
+                        </div>
+                        <p style="margin: 12px 0 0 0; font-size: 13px; color: #666; text-align: center;">
+                            Upload will overwrite GitHub data. Download will overwrite local data.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -581,74 +646,128 @@ let coins=[];let metalRatesUSD={AU:null,AG:null};let exchangeRatesPLN=null;let e
 let kbEntries=[];let currentKBId=null;let currentCoinImages=[];
 const $=s=>document.querySelector(s);const $$=s=>Array.from(document.querySelectorAll(s));const fmt=v=>isNaN(v)?'-':Number(v).toFixed(2);
 
-// File System Access API for JSON storage
-let directoryHandle=null;
-let useFileSystem=false;
+// GitHub API Storage Configuration
+const GITHUB_CONFIG={
+    owner:'annpasz',
+    repo:'APSCoinTracker',
+    branch:'main',
+    dataPath:'data/'
+};
 
-async function initFileSystem(){
-    try{
-        // Check if File System Access API is supported
-        if(!('showDirectoryPicker' in window)){
-            console.warn('File System Access API not supported, falling back to localStorage');
-            useFileSystem=false;
-            return false;
-        }
-        
-        // Try to get stored directory handle
-        const stored=await navigator.storage.getDirectory();
-        if(stored){
-            directoryHandle=stored;
-            useFileSystem=true;
-            return true;
-        }
-    }catch(err){
-        console.warn('Could not init file system, using localStorage:',err);
-        useFileSystem=false;
-    }
-    return false;
+// Load GitHub token from localStorage
+function getGitHubToken(){
+    return localStorage.getItem('github_token')||'';
 }
 
-async function requestDirectoryAccess(){
+function setGitHubToken(token){
+    localStorage.setItem('github_token',token);
+}
+
+// GitHub API functions
+async function githubApiCall(endpoint,method='GET',body=null){
+    const token=getGitHubToken();
+    if(!token){
+        console.warn('No GitHub token configured');
+        return null;
+    }
+    
+    const url=`https://api.github.com${endpoint}`;
+    const options={
+        method:method,
+        headers:{
+            'Authorization':`token ${token}`,
+            'Accept':'application/vnd.github.v3+json',
+            'Content-Type':'application/json'
+        }
+    };
+    
+    if(body){
+        options.body=JSON.stringify(body);
+    }
+    
     try{
-        directoryHandle=await window.showDirectoryPicker({mode:'readwrite'});
-        useFileSystem=true;
-        alert('✅ Folder access granted! Data will now be saved to JSON files in this folder.');
-        return true;
+        const response=await fetch(url,options);
+        if(!response.ok){
+            console.error('GitHub API error:',response.status,await response.text());
+            return null;
+        }
+        return await response.json();
     }catch(err){
-        console.warn('Directory access denied:',err);
-        return false;
+        console.error('GitHub API call failed:',err);
+        return null;
     }
 }
 
+async function readGitHubFile(filename){
+    const path=`${GITHUB_CONFIG.dataPath}${filename}`;
+    const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
+    const data=await githubApiCall(endpoint);
+    
+    if(!data||!data.content){
+        return null;
+    }
+    
+    try{
+        // GitHub returns base64 encoded content
+        const content=atob(data.content.replace(/\n/g,''));
+        return {data:JSON.parse(content),sha:data.sha};
+    }catch(err){
+        console.error('Error parsing GitHub file:',err);
+        return null;
+    }
+}
+
+async function writeGitHubFile(filename,data,sha=null){
+    const path=`${GITHUB_CONFIG.dataPath}${filename}`;
+    const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
+    
+    // Convert data to base64
+    const content=btoa(JSON.stringify(data,null,2));
+    
+    const body={
+        message:`Update ${filename}`,
+        content:content,
+        branch:GITHUB_CONFIG.branch
+    };
+    
+    if(sha){
+        body.sha=sha;
+    }
+    
+    const result=await githubApiCall(endpoint,'PUT',body);
+    return result!==null;
+}
+
+// Cache for file SHAs (needed for updates)
+let fileSHAs={};
+
+// Wrapper functions for backward compatibility
 async function writeJSONFile(filename,data){
-    if(!useFileSystem||!directoryHandle){
+    const token=getGitHubToken();
+    if(!token){
+        console.warn('No GitHub token, data only saved to localStorage');
         return false;
     }
-    try{
-        const fileHandle=await directoryHandle.getFileHandle(filename,{create:true});
-        const writable=await fileHandle.createWritable();
-        await writable.write(JSON.stringify(data,null,2));
-        await writable.close();
-        return true;
-    }catch(err){
-        console.error('Error writing file:',err);
-        return false;
+    
+    const sha=fileSHAs[filename];
+    const result=await writeGitHubFile(filename,data,sha);
+    if(result){
+        // Update SHA cache (need to read it back)
+        const file=await readGitHubFile(filename);
+        if(file){
+            fileSHAs[filename]=file.sha;
+        }
     }
+    return result;
 }
 
 async function readJSONFile(filename,defaultValue=[]){
-    if(!useFileSystem||!directoryHandle){
-        return null;
+    const file=await readGitHubFile(filename);
+    if(file){
+        fileSHAs[filename]=file.sha;
+        return file.data;
     }
-    try{
-        const fileHandle=await directoryHandle.getFileHandle(filename);
-        const file=await fileHandle.getFile();
-        const text=await file.text();
-        return JSON.parse(text);
-    }catch(err){
-        // File doesn't exist or error reading
-        return null;
-    }
+    return null;
 }
 
 // IndexedDB for images (fallback) + JSON file storage
@@ -888,7 +1007,7 @@ async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.inne
 function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const hasPhotos=c.images&&Array.isArray(c.images)&&c.images.length>0;const photoIcon=hasPhotos?'<span style="color:green;font-size:18px">✓</span>':'<span style="color:red;font-size:18px">✗</span>';tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td><td style="text-align:center">${photoIcon}</td><td style="text-align:center" onclick="event.stopPropagation()"><input type="checkbox" class="coin-checkbox" data-id="${c.coinId}" ${c.checked?'checked':''}></td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)});$$('.coin-checkbox').forEach(cb=>cb.addEventListener('change',function(){const coin=coins.find(c=>c.coinId===this.dataset.id);if(coin){coin.checked=this.checked;saveCoins()}}))}
 function getFilteredAndSortedCoins(){const nf=($('#filterName')?.value||'').toLowerCase();const cf=($('#filterCountry')?.value||'').toLowerCase();const yf=$('#filterYear')?.value||'';const tf=($('#filterType')?.value||'').toLowerCase();const mf=$('#filterMaterial')?.value||'';const pf=$('#filterPurity')?.value||'';const df=$('#filterPurchaseDate')?.value||'';let fil=coins.filter(c=>{if(nf&&!(c.coinName||'').toLowerCase().includes(nf))return false;if(cf&&!(c.coinCountry||'').toLowerCase().includes(cf))return false;if(yf&&c.coinYear!=yf)return false;if(tf&&!(c.type||'').toLowerCase().includes(tf))return false;if(mf&&c.coinMaterial!==mf)return false;if(pf&&c.coinMetalContent!=pf)return false;if(df&&c.purchaseDate!==df)return false;return true});fil.sort((a,b)=>{let vA,vB;if(currentSortBy==='currentValue'){vA=computeCurrentValuePLN(a);vB=computeCurrentValuePLN(b)}else if(currentSortBy==='gain'){vA=computeCurrentValuePLN(a)-costBasisPLN(a);vB=computeCurrentValuePLN(b)-costBasisPLN(b)}else if(currentSortBy==='coinYear'||currentSortBy==='purchasePrice'){vA=parseFloat(a[currentSortBy])||0;vB=parseFloat(b[currentSortBy])||0}else if(currentSortBy==='purchaseDate'){vA=a.purchaseDate||'';vB=b.purchaseDate||''}else{vA=(a[currentSortBy]||'').toString().toLowerCase();vB=(b[currentSortBy]||'').toString().toLowerCase()}if(vA<vB)return currentSortOrder==='asc'?-1:1;if(vA>vB)return currentSortOrder==='asc'?1:-1;return 0});return fil}
 function setSortColumn(col){if(currentSortBy===col){currentSortOrder=currentSortOrder==='asc'?'desc':'asc'}else{currentSortBy=col;currentSortOrder='asc'}$$('th.sortable').forEach(th=>{th.classList.remove('sorted-asc','sorted-desc');if(th.dataset.sort===col){th.classList.add('sorted-'+currentSortOrder)}});renderCoinsTable()}
-function showSection(n){const sec={'overview':$('#overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section')};Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});$$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));if(n==='overview'){updateOverviewTotals()}else if(n==='all-coins'){renderCoinsTable()}else if(n==='manage-types'){renderTypesTable()}else if(n==='add-coin'){if(!editModeId){isViewMode=false;$('#coinForm').reset();$('#coinId').value=genId();currentCoinImages=[];renderCoinImagesPreview();setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#editCoinBtn').style.display='none'}}else if(n==='fx-chart'){initTradingViewChart()}else if(n==='price-simulation'){updateSimulationRates()}else if(n==='coin-verification'){renderKBList();showKBListView()}}
+function showSection(n){const sec={'overview':$('#overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section')};Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});$$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));if(n==='overview'){updateOverviewTotals()}else if(n==='all-coins'){renderCoinsTable()}else if(n==='manage-types'){renderTypesTable()}else if(n==='add-coin'){if(!editModeId){isViewMode=false;$('#coinForm').reset();$('#coinId').value=genId();currentCoinImages=[];renderCoinImagesPreview();setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#editCoinBtn').style.display='none'}}else if(n==='fx-chart'){initTradingViewChart()}else if(n==='price-simulation'){updateSimulationRates()}else if(n==='coin-verification'){renderKBList();showKBListView()}else if(n==='github-settings'){loadGithubSettings()}}
 let tvWidget=null;
 function initTradingViewChart(){if(tvWidget)return;const pair=$('#currencyPair')?.value||'XAUUSD';tvWidget=new TradingView.widget({autosize:true,symbol:pair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'});$('#currencyPair')?.addEventListener('change',function(){const newPair=this.value;if(tvWidget){tvWidget.remove();tvWidget=null}tvWidget=new TradingView.widget({autosize:true,symbol:newPair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'})})}
 function updateSimulationRates(){const metal=$('#simMetal')?.value||'AG';const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(rate){const ratePerGram=rate/31.1034768;$('#simCurrentRate').textContent='$'+rate.toFixed(2)+' /oz';$('#simCurrentRatePerGram').textContent='$'+ratePerGram.toFixed(2)+' /g'}else{$('#simCurrentRate').textContent='Rate not available';$('#simCurrentRatePerGram').textContent='-'}}
@@ -1680,35 +1799,189 @@ $('#importFileInput')?.addEventListener('change',function(){
     }
 });
 
-// Enable File System button
-$('#enableFileSystemBtn')?.addEventListener('click',async()=>{
-    const success=await requestDirectoryAccess();
-    if(success){
-        updateFileSystemStatus();
-        // Reload data from files
-        await initializeApp();
-    }
-});
+// GitHub Settings event handlers
+function loadGithubSettings(){
+    const token=getGitHubToken();
+    $('#githubTokenInput').value=token;
+    $('#githubOwnerInput').value=GITHUB_CONFIG.owner;
+    $('#githubRepoInput').value=GITHUB_CONFIG.repo;
+    updateGithubStatus();
+}
 
-function updateFileSystemStatus(){
-    const status=$('#fileSystemStatus');
+function updateGithubStatus(){
+    const status=$('#githubStatus');
     if(!status)return;
-    if(useFileSystem){
-        status.textContent='✓ File storage enabled';
-        status.style.color='#4ecdc4';
-        const btn=$('#enableFileSystemBtn');
-        if(btn){
-            btn.style.display='none';
-        }
+    
+    const token=getGitHubToken();
+    if(token){
+        status.innerHTML='<span style="color: #4ecdc4;">✓ GitHub configured</span>';
     }else{
-        status.textContent='Using browser storage';
-        status.style.color='rgba(255,255,255,0.5)';
+        status.innerHTML='<span style="color: rgba(255,255,255,0.5);">⚠️ No GitHub token set</span>';
     }
 }
 
+$('#saveGithubSettingsBtn')?.addEventListener('click',()=>{
+    const token=$('#githubTokenInput').value.trim();
+    const owner=$('#githubOwnerInput').value.trim();
+    const repo=$('#githubRepoInput').value.trim();
+    
+    if(!token){
+        alert('⚠️ Please enter a GitHub Personal Access Token');
+        return;
+    }
+    
+    if(!owner||!repo){
+        alert('⚠️ Please enter repository owner and name');
+        return;
+    }
+    
+    setGitHubToken(token);
+    GITHUB_CONFIG.owner=owner;
+    GITHUB_CONFIG.repo=repo;
+    
+    updateGithubStatus();
+    
+    const statusDiv=$('#githubConnectionStatus');
+    statusDiv.style.display='block';
+    statusDiv.style.background='#d4edda';
+    statusDiv.style.borderLeft='4px solid #28a745';
+    statusDiv.style.color='#155724';
+    statusDiv.innerHTML='<strong>✓ Settings saved!</strong> GitHub storage is now active.';
+    
+    setTimeout(()=>{
+        statusDiv.style.display='none';
+    },3000);
+});
+
+$('#testGithubConnectionBtn')?.addEventListener('click',async()=>{
+    const token=getGitHubToken();
+    if(!token){
+        alert('⚠️ Please save your GitHub token first');
+        return;
+    }
+    
+    const statusDiv=$('#githubConnectionStatus');
+    statusDiv.style.display='block';
+    statusDiv.style.background='#fff3cd';
+    statusDiv.style.borderLeft='4px solid #ffc107';
+    statusDiv.style.color='#856404';
+    statusDiv.innerHTML='⏳ Testing connection...';
+    
+    // Try to read repo info
+    const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`;
+    const result=await githubApiCall(endpoint);
+    
+    if(result){
+        statusDiv.style.background='#d4edda';
+        statusDiv.style.borderLeft='4px solid #28a745';
+        statusDiv.style.color='#155724';
+        statusDiv.innerHTML=`<strong>✓ Connection successful!</strong><br>Repository: ${result.full_name}<br>Default branch: ${result.default_branch}`;
+    }else{
+        statusDiv.style.background='#f8d7da';
+        statusDiv.style.borderLeft='4px solid #dc3545';
+        statusDiv.style.color='#721c24';
+        statusDiv.innerHTML='<strong>✗ Connection failed!</strong><br>Please check your token and repository settings.';
+    }
+});
+
+$('#uploadToGithubBtn')?.addEventListener('click',async()=>{
+    const token=getGitHubToken();
+    if(!token){
+        alert('⚠️ Please configure GitHub settings first');
+        showSection('github-settings');
+        return;
+    }
+    
+    if(!confirm('⚠️ This will OVERWRITE all data in your GitHub repository with your local data. Continue?')){
+        return;
+    }
+    
+    const statusDiv=$('#githubConnectionStatus');
+    statusDiv.style.display='block';
+    statusDiv.style.background='#fff3cd';
+    statusDiv.style.borderLeft='4px solid #ffc107';
+    statusDiv.style.color='#856404';
+    statusDiv.innerHTML='⏳ Uploading data to GitHub...';
+    
+    try{
+        // Upload all data files
+        await writeJSONFile('coins_data.json',coins);
+        await writeJSONFile('kb_data.json',kbEntries);
+        await writeJSONFile('images_data.json',imagesCache);
+        const names=await loadNames();
+        await writeJSONFile('names_data.json',names);
+        const types=await loadTypes();
+        await writeJSONFile('types_data.json',types);
+        
+        statusDiv.style.background='#d4edda';
+        statusDiv.style.borderLeft='4px solid #28a745';
+        statusDiv.style.color='#155724';
+        statusDiv.innerHTML='<strong>✓ Upload complete!</strong> All data saved to GitHub.';
+        
+        setTimeout(()=>{
+            statusDiv.style.display='none';
+        },5000);
+    }catch(err){
+        console.error('Upload error:',err);
+        statusDiv.style.background='#f8d7da';
+        statusDiv.style.borderLeft='4px solid #dc3545';
+        statusDiv.style.color='#721c24';
+        statusDiv.innerHTML='<strong>✗ Upload failed!</strong> '+err.message;
+    }
+});
+
+$('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
+    const token=getGitHubToken();
+    if(!token){
+        alert('⚠️ Please configure GitHub settings first');
+        showSection('github-settings');
+        return;
+    }
+    
+    if(!confirm('⚠️ This will OVERWRITE your local data with data from GitHub. Continue?')){
+        return;
+    }
+    
+    const statusDiv=$('#githubConnectionStatus');
+    statusDiv.style.display='block';
+    statusDiv.style.background='#fff3cd';
+    statusDiv.style.borderLeft='4px solid #ffc107';
+    statusDiv.style.color='#856404';
+    statusDiv.innerHTML='⏳ Downloading data from GitHub...';
+    
+    try{
+        // Download all data files
+        await loadCoins();
+        await loadKBEntries();
+        await loadImagesFromFile();
+        
+        // Reload UI
+        if($('#overview-section').style.display!=='none'){
+            updateOverviewTotals();
+        }
+        if($('#all-coins-section').style.display!=='none'){
+            renderCoinsTable();
+        }
+        
+        statusDiv.style.background='#d4edda';
+        statusDiv.style.borderLeft='4px solid #28a745';
+        statusDiv.style.color='#155724';
+        statusDiv.innerHTML='<strong>✓ Download complete!</strong> Data loaded from GitHub.';
+        
+        setTimeout(()=>{
+            statusDiv.style.display='none';
+        },5000);
+    }catch(err){
+        console.error('Download error:',err);
+        statusDiv.style.background='#f8d7da';
+        statusDiv.style.borderLeft='4px solid #dc3545';
+        statusDiv.style.color='#721c24';
+        statusDiv.innerHTML='<strong>✗ Download failed!</strong> '+err.message;
+    }
+});
+
 async function initializeApp(){
     await initDB();
-    await initFileSystem();
     await loadImagesFromFile();
     await loadCoins();
     await loadKBEntries();
@@ -1718,7 +1991,7 @@ async function initializeApp(){
     showSection('overview');
     updateOverviewTotals();
     renderCoinImagesPreview();
-    updateFileSystemStatus();
+    updateGithubStatus();
 }
 
 initializeApp().then(()=>{

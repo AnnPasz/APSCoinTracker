@@ -20,12 +20,7 @@
     "type": "Bulion Kanada",
     "photos": [],
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215304537_gzi2ob8dujm",
-      "coin_img_1768215313521_1xgh8n3ci7y",
-      "coin_img_1768215322465_djpjprdpzi7"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMIM3LP14LP87",
@@ -47,11 +42,7 @@
     "category": "Bulion",
     "type": "Bulion USA",
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215582449_m382bqzx4w",
-      "coin_img_1768215591244_hjc8ci7uqno"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMIM3OEE71A5R",
@@ -73,8 +64,7 @@
     "category": "Bulion",
     "type": "Bulion USA",
     "checked": true,
-    "coinLink": "",
-    "images": []
+    "coinLink": ""
   },
   {
     "coinId": "CMIM3P5J10YXI",

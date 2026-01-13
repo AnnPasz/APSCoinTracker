@@ -975,6 +975,16 @@ async function downloadCoinsFromChunks(){
             console.log(`No more chunks found at ${filename}`);
             break;
         }
+        
+        // Check if we got data or just SHA (file too large for Contents API)
+        if(!file.data){
+            console.log(`File ${filename} too large, skipping download on page load`);
+            // Still count it as existing
+            fileSHAs[filename] = file.sha;
+            chunkIndex++;
+            continue;
+        }
+        
         console.log(`Downloaded ${filename}: ${file.data.length} coins`);
         fileSHAs[filename] = file.sha;
         allCoins = allCoins.concat(file.data);

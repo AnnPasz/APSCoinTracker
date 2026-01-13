@@ -838,18 +838,21 @@ function base64ToUtf8(str){
 async function readGitHubFile(filename){
     const path=`${GITHUB_CONFIG.dataPath}${filename}`;
     const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
+    console.log(`Reading GitHub file: ${filename} from ${endpoint}`);
     const data=await githubApiCall(endpoint);
     
     if(!data||!data.content){
+        console.warn(`Could not read ${filename} - file may not exist or API call failed`);
         return null;
     }
     
     try{
         // GitHub returns base64 encoded content
         const content=base64ToUtf8(data.content.replace(/\n/g,''));
+        console.log(`Successfully read ${filename}, SHA: ${data.sha}`);
         return {data:JSON.parse(content),sha:data.sha};
     }catch(err){
-        console.error('Error parsing GitHub file:',err);
+        console.error(`Error parsing GitHub file ${filename}:`,err);
         return null;
     }
 }
@@ -925,8 +928,12 @@ async function ensureFileSHA(filename){
     if(file&&file.sha){
         fileSHAs[filename]=file.sha;
         console.log('Fetched SHA for',filename,':',file.sha);
+        return true;
     }else{
-        console.warn('Could not fetch SHA for',filename,'- file may not exist yet');
+        console.warn('Could not fetch SHA for',filename,'- file may not exist yet or is inaccessible');
+        // Clear any stale undefined value
+        delete fileSHAs[filename];
+        return false;
     }
 }
 

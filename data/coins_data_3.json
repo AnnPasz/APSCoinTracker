@@ -66,39 +66,5 @@
     "comments": "prezent :)",
     "coinLink": "",
     "checked": true
-  },
-  {
-    "coinId": "CMKCR6N0Q803D",
-    "coinName": "test3",
-    "coinCountry": "test3",
-    "coinYear": "2026",
-    "coinWeight": "10",
-    "coinSize": "1",
-    "category": "Bulion",
-    "type": "Bar",
-    "coinMaterial": "AG",
-    "coinMetalContent": "900",
-    "purchasePrice": "1",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2026-01-13",
-    "comments": "",
-    "coinLink": ""
-  },
-  {
-    "coinId": "CMKCXTR3NVLGV",
-    "coinName": "test4",
-    "coinCountry": "test4",
-    "coinYear": "2026",
-    "coinWeight": "1",
-    "coinSize": "1",
-    "category": "Bulion",
-    "type": "Bar",
-    "coinMaterial": "Other",
-    "coinMetalContent": "",
-    "purchasePrice": "1",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2026-01-16",
-    "comments": "",
-    "coinLink": ""
   }
 ]

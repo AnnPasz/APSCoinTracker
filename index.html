@@ -1288,6 +1288,10 @@ $('#mobileSimToggle')?.addEventListener('click',function(){
         if(form.style.display==='none'){
             form.style.display='block';
             updateMobileSimulationRates();
+            // Scroll the form into view smoothly
+            setTimeout(()=>{
+                form.scrollIntoView({behavior:'smooth',block:'start'});
+            },100);
         }else{
             form.style.display='none';
         }

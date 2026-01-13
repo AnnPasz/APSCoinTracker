@@ -635,6 +635,9 @@
                                 ⬇️ Download Data from GitHub
                             </button>
                         </div>
+                        <button id="deleteAllChunksBtn" style="margin-top: 12px; padding: 10px; width: 100%; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 2px solid #e74c3c; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                            🗑️ Delete All Coin Chunks from GitHub
+                        </button>
                         <p style="margin: 12px 0 0 0; font-size: 13px; color: #666; text-align: center;">
                             Upload will overwrite GitHub data. Download will overwrite local data.
                         </p>
@@ -2578,6 +2581,66 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
         statusDiv.style.borderLeft='4px solid #dc3545';
         statusDiv.style.color='#721c24';
         statusDiv.innerHTML='<strong>✗ Download failed!</strong> '+err.message;
+    }
+});
+
+$('#deleteAllChunksBtn')?.addEventListener('click',async()=>{
+    const token=getGitHubToken();
+    if(!token){
+        alert('⚠️ Please configure GitHub settings first');
+        showSection('github-settings');
+        return;
+    }
+    
+    if(!confirm('⚠️ This will DELETE all coins_data_*.json chunk files from GitHub. This is useful before re-uploading. Continue?')){
+        return;
+    }
+    
+    const statusDiv=$('#githubConnectionStatus');
+    statusDiv.style.display='block';
+    statusDiv.style.background='#fff3cd';
+    statusDiv.style.borderLeft='4px solid #ffc107';
+    statusDiv.style.color='#856404';
+    statusDiv.innerHTML='⏳ Deleting chunk files from GitHub...';
+    
+    try{
+        console.log('Deleting all coin chunk files...');
+        let chunkIndex = 0;
+        let deletedCount = 0;
+        let maxAttempts = 100; // Don't try forever
+        
+        while(maxAttempts > 0){
+            const filename = `coins_data_${chunkIndex}.json`;
+            const file = await readGitHubFile(filename);
+            if(!file){
+                console.log(`No more chunks found at ${filename}`);
+                break;
+            }
+            console.log(`Deleting ${filename}...`);
+            const deleted = await deleteGitHubFile(filename);
+            if(deleted){
+                deletedCount++;
+            }else{
+                console.warn(`Failed to delete ${filename}`);
+            }
+            chunkIndex++;
+            maxAttempts--;
+        }
+        
+        statusDiv.style.background='#d4edda';
+        statusDiv.style.borderLeft='4px solid #28a745';
+        statusDiv.style.color='#155724';
+        statusDiv.innerHTML=`<strong>✓ Deletion complete!</strong> Deleted ${deletedCount} chunk file(s).`;
+        
+        setTimeout(()=>{
+            statusDiv.style.display='none';
+        },5000);
+    }catch(err){
+        console.error('Deletion error:',err);
+        statusDiv.style.background='#f8d7da';
+        statusDiv.style.borderLeft='4px solid #dc3545';
+        statusDiv.style.color='#721c24';
+        statusDiv.innerHTML='<strong>✗ Deletion failed!</strong> '+err.message;
     }
 });
 

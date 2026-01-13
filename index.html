@@ -2060,25 +2060,17 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
         populateDatalist();
         populateTypeDropdown();
         
-        // Reload current view
-        if($('#overview-section').style.display!=='none'){
-            updateOverviewTotals();
-        }
-        if($('#all-coins-section').style.display!=='none'){
-            renderCoinsTable();
-        }
-        if($('#manage-types-section').style.display!=='none'){
-            renderTypesTable();
-        }
-        
+        // Show success message
         statusDiv.style.background='#d4edda';
         statusDiv.style.borderLeft='4px solid #28a745';
         statusDiv.style.color='#155724';
-        statusDiv.innerHTML='<strong>✓ Download complete!</strong> Data loaded from GitHub.';
+        statusDiv.innerHTML='<strong>✓ Download complete!</strong> Data loaded from GitHub. Redirecting to Overview...';
         
+        // Wait a moment then go to overview
         setTimeout(()=>{
             statusDiv.style.display='none';
-        },5000);
+            showSection('overview');
+        },1500);
     }catch(err){
         console.error('Download error:',err);
         statusDiv.style.background='#f8d7da';

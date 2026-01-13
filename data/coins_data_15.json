@@ -1,0 +1,104 @@
+[
+  {
+    "coinId": "CMK9MM3BUZ49B",
+    "coinName": "10$ Niedźwiedź Kanda",
+    "coinCountry": "Canada",
+    "coinYear": "2013",
+    "coinWeight": "15.87",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion Kanada",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "297",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-10",
+    "comments": "allegro",
+    "images": [
+      "coin_img_1768212410156_m6v0o9w08c8",
+      "coin_img_1768212420072_heq19swa4e"
+    ]
+  },
+  {
+    "coinId": "CMKAXUVIEX3VH",
+    "coinName": "Texas State Round",
+    "coinCountry": "USA",
+    "coinYear": "1986",
+    "coinWeight": "31.1",
+    "coinSize": "39",
+    "category": "Bulion",
+    "type": "Rounds",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "370",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-11",
+    "comments": "allegro",
+    "images": [
+      "coin_img_1768210103231_ge9zuzczeqq",
+      "coin_img_1768210122746_x281qmtsnwa"
+    ],
+    "coinLink": "",
+    "checked": false
+  },
+  {
+    "coinId": "CMKAXVU2JA61P",
+    "coinName": "Freedom Bell Round",
+    "coinCountry": "USA",
+    "coinYear": "1972",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Rounds",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "369",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-11",
+    "comments": "allegro",
+    "images": [
+      "coin_img_1768210189355_dbeqbg5i049",
+      "coin_img_1768210199528_hr5bbrtlwid"
+    ]
+  },
+  {
+    "coinId": "CMKB25OE9XLON",
+    "coinName": "Hercules 50 FR - wisior",
+    "coinCountry": "France",
+    "coinYear": "1978",
+    "coinWeight": "30",
+    "coinSize": "1",
+    "category": "Coin",
+    "type": "Obiegowe Francja",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "0",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-03",
+    "comments": "prezent :)",
+    "coinLink": "",
+    "images": [
+      "coin_img_1768216132370_0yz77dixwrz",
+      "coin_img_1768216142163_j4uadgo8m0i"
+    ],
+    "checked": true
+  },
+  {
+    "coinId": "CMKCR6N0Q803D",
+    "coinName": "test3",
+    "coinCountry": "test3",
+    "coinYear": "2026",
+    "coinWeight": "10",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bar",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "1",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-13",
+    "comments": "",
+    "coinLink": "",
+    "images": []
+  }
+]

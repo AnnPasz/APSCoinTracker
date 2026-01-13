@@ -458,7 +458,7 @@
     "coinWeight": "49",
     "coinSize": "45",
     "category": "Bulion",
-    "type": "Bulion Kanada",
+    "type": "Kolekcjonerskie Kanada",
     "coinMaterial": "AG",
     "coinMetalContent": "925",
     "purchasePrice": "229",
@@ -468,7 +468,8 @@
     "metalValuePLN": 229,
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
-    "checked": true
+    "checked": true,
+    "coinLink": ""
   },
   {
     "coinId": "CMIM6U8F73SSV",

@@ -858,6 +858,8 @@ async function writeGitHubFile(filename,data,sha=null){
     const path=`${GITHUB_CONFIG.dataPath}${filename}`;
     const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
     
+    console.log(`writeGitHubFile: ${filename}, SHA provided: ${sha}`);
+    
     // Convert data to base64 (UTF-8 safe)
     const content=utf8ToBase64(JSON.stringify(data,null,2));
     
@@ -867,16 +869,22 @@ async function writeGitHubFile(filename,data,sha=null){
         branch:GITHUB_CONFIG.branch
     };
     
-    if(sha){
+    // Only include SHA if it's a valid string
+    if(sha&&typeof sha==='string'&&sha!=='undefined'){
         body.sha=sha;
+        console.log(`Including SHA in request: ${sha}`);
+    }else{
+        console.log(`No SHA provided - creating new file`);
     }
     
     const result=await githubApiCall(endpoint,'PUT',body);
     
     // If successful, return the new SHA from the response
     if(result&&result.content&&result.content.sha){
+        console.log(`Upload successful! New SHA: ${result.content.sha}`);
         return result.content.sha;
     }
+    console.error(`Upload failed for ${filename}`);
     return null;
 }
 

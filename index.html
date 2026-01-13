@@ -926,10 +926,16 @@ const COINS_PER_CHUNK = 5; // Split coins into chunks of 5 (keeps files well und
 async function uploadCoinsInChunks(coins){
     console.log(`Splitting ${coins.length} coins into chunks of ${COINS_PER_CHUNK}...`);
     
-    // Strip images from coins before uploading (images stay in imagesCache)
+    // Strip images and any large data from coins before uploading
     const coinsWithoutImages = coins.map(coin => {
-        const {images, ...coinWithoutImages} = coin;
-        return coinWithoutImages;
+        // Create a clean copy without images property
+        const cleanCoin = {};
+        for(let key in coin){
+            if(key !== 'images'){
+                cleanCoin[key] = coin[key];
+            }
+        }
+        return cleanCoin;
     });
     console.log('Removed images from coins for upload (images saved separately in images_data.json)');
     

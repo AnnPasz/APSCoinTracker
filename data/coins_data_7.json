@@ -1,0 +1,42 @@
+[
+  {
+    "coinId": "CMIM672WP8PL5",
+    "coinName": "Walking LIberty",
+    "coinCountry": "USA",
+    "coinYear": "1989",
+    "coinWeight": "31.42",
+    "coinSize": "40.5",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "169",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-09-01",
+    "comments": "Praga",
+    "metalValuePLN": 169,
+    "metalRateOnPurchaseUSD": 56.7249,
+    "fxRatesOnPurchase": null,
+    "checked": true
+  },
+  {
+    "coinId": "CMIM69O4VT6QH",
+    "coinName": "Walking Liberty",
+    "coinCountry": "USA",
+    "coinYear": "2025",
+    "coinWeight": "31.23",
+    "coinSize": "40.5",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "170",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-09-01",
+    "comments": "Coral Gables",
+    "metalValuePLN": 170,
+    "metalRateOnPurchaseUSD": 56.7249,
+    "fxRatesOnPurchase": null,
+    "checked": true
+  }
+]

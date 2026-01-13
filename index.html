@@ -778,7 +778,7 @@
 
                             <div style="background: rgba(52, 152, 219, 0.1); padding: 14px; border-radius: 10px; border-left: 3px solid #3498db; margin-bottom: 10px;">
                                 <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Transport Fee</div>
-                                <div style="font-size: 18px; font-weight: 700; color: #1d1d1f;">12.99 PLN</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #1d1d1f;">11.49 PLN</div>
                             </div>
 
                             <div style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); padding: 20px; border-radius: 10px; text-align: center;">
@@ -1587,8 +1587,8 @@ function calculateMobileMargin(){
     // Allegro fee: 3.69% of coin value, capped at 36.90 PLN
     const allegroFeePercent=coinValue*0.0369;
     const allegroFee=Math.min(allegroFeePercent,36.90);
-    // Transport fee: fixed 12.99 PLN
-    const transportFee=12.99;
+    // Transport fee: fixed 11.49 PLN
+    const transportFee=11.49;
     // Final price
     const finalPrice=coinValue+allegroFee+transportFee;
     

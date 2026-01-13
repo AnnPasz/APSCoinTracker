@@ -652,8 +652,13 @@
                     <!-- Coins Summary -->
                     <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 24px; border-radius: 16px; color: white; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
                         <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Total Collection Value</div>
-                        <div style="font-size: 36px; font-weight: 700; margin-bottom: 4px;" id="mobileTotalValue">0.00 PLN</div>
-                        <div style="font-size: 16px; opacity: 0.85;" id="mobileGainLoss">Gain/Loss: 0.00 PLN</div>
+                        <div style="font-size: 36px; font-weight: 700;" id="mobileTotalValue">0.00 PLN</div>
+                    </div>
+                    
+                    <!-- Gain/Loss -->
+                    <div style="background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%); padding: 20px; border-radius: 16px; color: white; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); text-align: center;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Gain/Loss</div>
+                        <div style="font-size: 32px; font-weight: 700;" id="mobileGainLoss">0.00 PLN</div>
                     </div>
                     
                     <!-- Quick Stats - Metal Weights -->
@@ -1122,8 +1127,17 @@ function updateMobileOverview(){
     // Update values
     $('#mobileTotalValue').textContent=fmt(cur)+' PLN';
     const gl=cur-p;
-    $('#mobileGainLoss').textContent='Gain/Loss: '+fmt(gl)+' PLN';
-    $('#mobileGainLoss').style.color=gl<0?'red':(gl>0?'green':'inherit');
+    const glEl=$('#mobileGainLoss');
+    glEl.textContent=fmt(gl)+' PLN';
+    // Change tile color based on gain/loss
+    const glTile=glEl.parentElement;
+    if(gl<0){
+        glTile.style.background='linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+    }else if(gl>0){
+        glTile.style.background='linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
+    }else{
+        glTile.style.background='linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)';
+    }
     
     // Metal weights
     $('#mobileSilverWeight').textContent=fmt(sW)+' g';

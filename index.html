@@ -172,7 +172,10 @@
         <main class="main-content">
             <div class="section" id="overview-section">
                 <div class="overview-section">
-                    <h2>Overview</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0;">Overview</h2>
+                        <div style="color: #666; font-size: 14px;" id="currentDate"></div>
+                    </div>
                     <div class="overview-grid">
                         <div class="overview-card" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">
                             <p class="overview-label">Total Purchased Price</p>
@@ -1014,7 +1017,35 @@ function computeCurrentValuePLN(c){
     console.log(`📌 ${c.coinName}: Using cost basis ${costBasisPLN(c).toFixed(2)} PLN`);
     return costBasisPLN(c);
 }
-function updateOverviewTotals(){const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);let sC=0,gC=0,sW=0,gW=0;coins.forEach(c=>{const m=(c.coinMaterial||'Other').toUpperCase();if(m==='AG'){sC++;sW+=parseFloat(c.coinWeight)||0}if(m==='AU'){gC++;gW+=parseFloat(c.coinWeight)||0}});$('#totalPurchased').textContent=fmt(p)+' PLN';$('#totalCurrent').textContent=fmt(cur)+' PLN';$('#silverCount').textContent=sC;$('#goldCount').textContent=gC;$('#silverWeight').textContent=fmt(sW)+' g';$('#goldWeight').textContent=fmt(gW)+' g';const gl=cur-p;$('#gainLoss').textContent=fmt(gl)+' PLN';$('#gainLoss').style.color=gl<0?'red':(gl>0?'green':'inherit');updateGoldSilverRatio()}
+function updateOverviewTotals(){
+    const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);
+    const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);
+    let sC=0,gC=0,sW=0,gW=0;
+    coins.forEach(c=>{
+        const m=(c.coinMaterial||'Other').toUpperCase();
+        if(m==='AG'){sC++;sW+=parseFloat(c.coinWeight)||0}
+        if(m==='AU'){gC++;gW+=parseFloat(c.coinWeight)||0}
+    });
+    $('#totalPurchased').textContent=fmt(p)+' PLN';
+    $('#totalCurrent').textContent=fmt(cur)+' PLN';
+    $('#silverCount').textContent=sC;
+    $('#goldCount').textContent=gC;
+    $('#silverWeight').textContent=fmt(sW)+' g';
+    $('#goldWeight').textContent=fmt(gW)+' g';
+    const gl=cur-p;
+    $('#gainLoss').textContent=fmt(gl)+' PLN';
+    $('#gainLoss').style.color=gl<0?'red':(gl>0?'green':'inherit');
+    
+    // Update current date
+    const dateEl=$('#currentDate');
+    if(dateEl){
+        const now=new Date();
+        const options={weekday:'long',year:'numeric',month:'long',day:'numeric'};
+        dateEl.textContent=now.toLocaleDateString('en-US',options);
+    }
+    
+    updateGoldSilverRatio();
+}
 async function populateTypeDropdown(){const s=$('#coinType');if(!s)return;const cv=s.value;s.innerHTML='<option value="">-- Select Type --</option>';const types=await loadTypes();types.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;s.appendChild(o)});if(cv)s.value=cv}
 async function populateDatalist(){const d=$('#coinNameList');if(!d)return;d.innerHTML='';const names=await loadNames();names.forEach(n=>{const o=document.createElement('option');o.value=n;d.appendChild(o)})}
 async function addName(n){if(!n||typeof n!=='string')return;const v=n.trim();if(v.length<2)return;const l=await loadNames();if(!l.some(x=>x.toLowerCase()===v.toLowerCase())){l.unshift(v);await saveNames(l.slice(0,200));populateDatalist()}}

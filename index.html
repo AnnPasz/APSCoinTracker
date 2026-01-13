@@ -894,6 +894,87 @@ async function writeGitHubFile(filename,data,sha=null){
 // Cache for file SHAs (needed for updates)
 let fileSHAs={};
 
+// Constants for splitting large files
+const COINS_PER_CHUNK = 50; // Split coins into chunks of 50
+
+// Split coins into multiple chunks for upload
+async function uploadCoinsInChunks(coins){
+    console.log(`Splitting ${coins.length} coins into chunks of ${COINS_PER_CHUNK}...`);
+    const chunks = [];
+    for(let i = 0; i < coins.length; i += COINS_PER_CHUNK){
+        chunks.push(coins.slice(i, i + COINS_PER_CHUNK));
+    }
+    console.log(`Created ${chunks.length} chunks`);
+    
+    // Upload each chunk
+    for(let i = 0; i < chunks.length; i++){
+        const filename = `coins_data_${i}.json`;
+        console.log(`Uploading ${filename} (${chunks[i].length} coins)...`);
+        await ensureFileSHA(filename);
+        const success = await writeJSONFile(filename, chunks[i]);
+        if(!success){
+            console.error(`Failed to upload ${filename}`);
+            return false;
+        }
+        console.log(`Successfully uploaded ${filename}`);
+    }
+    
+    // Clean up old chunk files if we have fewer chunks now
+    let chunkIndex = chunks.length;
+    while(true){
+        const filename = `coins_data_${chunkIndex}.json`;
+        const file = await readGitHubFile(filename);
+        if(!file) break; // No more chunks to delete
+        console.log(`Deleting old chunk ${filename}...`);
+        await deleteGitHubFile(filename);
+        chunkIndex++;
+    }
+    
+    return true;
+}
+
+// Download and merge all coin chunks
+async function downloadCoinsFromChunks(){
+    console.log('Downloading coin chunks...');
+    let allCoins = [];
+    let chunkIndex = 0;
+    
+    while(true){
+        const filename = `coins_data_${chunkIndex}.json`;
+        console.log(`Attempting to download ${filename}...`);
+        const file = await readGitHubFile(filename);
+        if(!file){
+            console.log(`No more chunks found at ${filename}`);
+            break;
+        }
+        console.log(`Downloaded ${filename}: ${file.data.length} coins`);
+        fileSHAs[filename] = file.sha;
+        allCoins = allCoins.concat(file.data);
+        chunkIndex++;
+    }
+    
+    console.log(`Total coins downloaded: ${allCoins.length} from ${chunkIndex} chunks`);
+    return allCoins.length > 0 ? allCoins : null;
+}
+
+// Delete a file from GitHub
+async function deleteGitHubFile(filename){
+    const file = await readGitHubFile(filename);
+    if(!file) return true; // Already deleted
+    
+    const path = `${GITHUB_CONFIG.dataPath}${filename}`;
+    const endpoint = `/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
+    
+    const body = {
+        message: `Delete ${filename}`,
+        sha: file.sha,
+        branch: GITHUB_CONFIG.branch
+    };
+    
+    const result = await githubApiCall(endpoint, 'DELETE', body);
+    return result !== null;
+}
+
 // Wrapper functions for backward compatibility
 async function writeJSONFile(filename,data){
     const token=getGitHubToken();
@@ -2269,7 +2350,6 @@ $('#uploadToGithubBtn')?.addEventListener('click',async()=>{
         
         // Ensure we have SHAs for all files before uploading
         console.log('Fetching SHAs for existing files...');
-        await ensureFileSHA('coins_data.json');
         await ensureFileSHA('kb_data.json');
         await ensureFileSHA('images_data.json');
         await ensureFileSHA('names_data.json');
@@ -2278,14 +2358,13 @@ $('#uploadToGithubBtn')?.addEventListener('click',async()=>{
         console.log('All SHAs fetched. Starting uploads...');
         console.log('Current SHA cache:',fileSHAs);
         
-        // Upload all data files
-        console.log('Uploading coins_data.json...');
-        let coinsResult = await writeJSONFile('coins_data.json',coins);
+        // Upload coins in chunks (to handle large files)
+        console.log('Uploading coins in chunks...');
+        const coinsResult = await uploadCoinsInChunks(coins);
         if(!coinsResult){
-            console.log('First attempt failed. Retrying coins_data.json with fresh SHA...');
-            await ensureFileSHA('coins_data.json');
-            coinsResult = await writeJSONFile('coins_data.json',coins);
+            throw new Error('Failed to upload coins data');
         }
+        
         console.log('Uploading kb_data.json...');
         await writeJSONFile('kb_data.json',kbEntries);
         console.log('Uploading images_data.json...');
@@ -2339,14 +2418,13 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
         // Clear fileSHAs cache before downloading
         fileSHAs={};
         
-        // Download all data files from GitHub
-        console.log('Downloading coins_data.json...');
-        const coinsFileObj=await readGitHubFile('coins_data.json');
-        if(coinsFileObj!==null){
-            coins=coinsFileObj.data;
-            fileSHAs['coins_data.json']=coinsFileObj.sha;
-            saveJSON(STORAGE_KEY,coins);
-            console.log('Coins loaded:',coins.length,'coins');
+        // Download coins from chunks
+        console.log('Downloading coins from chunks...');
+        const downloadedCoins = await downloadCoinsFromChunks();
+        if(downloadedCoins !== null){
+            coins = downloadedCoins;
+            saveJSON(STORAGE_KEY, coins);
+            console.log('Coins loaded:', coins.length, 'coins');
         }else{
             console.warn('No coins data found on GitHub');
         }

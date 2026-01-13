@@ -1,0 +1,35 @@
+[
+  {
+    "coinId": "CMK9MJGH3EIV0",
+    "coinName": "Hercules 5 FR",
+    "coinCountry": "France",
+    "coinYear": "1849",
+    "coinWeight": "25",
+    "coinSize": "1",
+    "category": "Coin",
+    "type": "Obiegowe Francja",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "186",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-09",
+    "comments": "AUKRO",
+    "coinLink": ""
+  },
+  {
+    "coinId": "CMK9MM3BUZ49B",
+    "coinName": "10$ Niedźwiedź Kanda",
+    "coinCountry": "Canada",
+    "coinYear": "2013",
+    "coinWeight": "15.87",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion Kanada",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "297",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-10",
+    "comments": "allegro"
+  }
+]

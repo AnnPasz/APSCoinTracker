@@ -910,7 +910,16 @@ async function uploadCoinsInChunks(coins){
     for(let i = 0; i < chunks.length; i++){
         const filename = `coins_data_${i}.json`;
         console.log(`Uploading ${filename} (${chunks[i].length} coins)...`);
-        await ensureFileSHA(filename);
+        
+        // Always fetch the latest SHA before uploading (to handle updates)
+        const existingFile = await readGitHubFile(filename);
+        if(existingFile){
+            fileSHAs[filename] = existingFile.sha;
+            console.log(`Found existing ${filename}, will update with SHA: ${existingFile.sha}`);
+        }else{
+            console.log(`${filename} doesn't exist, will create new file`);
+        }
+        
         const success = await writeJSONFile(filename, chunks[i]);
         if(!success){
             console.error(`Failed to upload ${filename}`);

@@ -897,8 +897,12 @@ async function saveCoins(){
 }
 
 async function loadNames(){
-    const fileData=await readJSONFile('names_data.json',[]);
-    return fileData!==null?fileData:loadJSON(NAMES_KEY,[]);
+    const fileData=await readJSONFile('names_data.json',null);
+    if(fileData!==null){
+        return Array.isArray(fileData)?fileData:[];
+    }
+    const localData=loadJSON(NAMES_KEY,[]);
+    return Array.isArray(localData)?localData:[];
 }
 
 async function saveNames(l){
@@ -907,8 +911,12 @@ async function saveNames(l){
 }
 
 async function loadTypes(){
-    const fileData=await readJSONFile('types_data.json',[]);
-    return fileData!==null?fileData:loadJSON(TYPES_KEY,[]);
+    const fileData=await readJSONFile('types_data.json',null);
+    if(fileData!==null){
+        return Array.isArray(fileData)?fileData:[];
+    }
+    const localData=loadJSON(TYPES_KEY,[]);
+    return Array.isArray(localData)?localData:[];
 }
 
 async function saveTypes(l){

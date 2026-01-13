@@ -1,0 +1,42 @@
+[
+  {
+    "coinId": "CMIM6GM57W6H3",
+    "coinName": "Walking Liberty",
+    "coinCountry": "USA",
+    "coinYear": "1988",
+    "coinWeight": "31.22",
+    "coinSize": "40.5",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "169",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-09-01",
+    "comments": "Miami Gold",
+    "metalValuePLN": 169,
+    "metalRateOnPurchaseUSD": 56.7249,
+    "fxRatesOnPurchase": null,
+    "checked": true
+  },
+  {
+    "coinId": "CMIM6I25VK48R",
+    "coinName": "Prospector",
+    "coinCountry": "USA",
+    "coinYear": "1985",
+    "coinWeight": "31.41",
+    "coinSize": "38.8",
+    "category": "Bulion",
+    "type": "Rounds",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "170",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-09-01",
+    "comments": "Melbourne (wymiana)",
+    "metalValuePLN": 170,
+    "metalRateOnPurchaseUSD": 56.7249,
+    "fxRatesOnPurchase": null,
+    "checked": true
+  }
+]

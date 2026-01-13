@@ -1010,7 +1010,22 @@ function updateOverviewTotals(){const p=coins.reduce((s,c)=>s+costBasisPLN(c),0)
 async function populateTypeDropdown(){const s=$('#coinType');if(!s)return;const cv=s.value;s.innerHTML='<option value="">-- Select Type --</option>';const types=await loadTypes();types.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;s.appendChild(o)});if(cv)s.value=cv}
 async function populateDatalist(){const d=$('#coinNameList');if(!d)return;d.innerHTML='';const names=await loadNames();names.forEach(n=>{const o=document.createElement('option');o.value=n;d.appendChild(o)})}
 async function addName(n){if(!n||typeof n!=='string')return;const v=n.trim();if(v.length<2)return;const l=await loadNames();if(!l.some(x=>x.toLowerCase()===v.toLowerCase())){l.unshift(v);await saveNames(l.slice(0,200));populateDatalist()}}
-async function addType(t){if(!t||typeof t!=='string')return;const v=t.trim();if(v.length<1)return;const l=await loadTypes();if(!l.some(x=>x.toLowerCase()===v.toLowerCase())){l.push(v);l.sort();await saveTypes(l);populateTypeDropdown();renderTypesTable()}}
+async function addType(t){
+    if(!t||typeof t!=='string')return;
+    const v=t.trim();
+    if(v.length<1)return;
+    const l=await loadTypes();
+    if(!l.some(x=>x.toLowerCase()===v.toLowerCase())){
+        l.push(v);
+        l.sort();
+        await saveTypes(l);
+        populateTypeDropdown();
+        renderTypesTable();
+        console.log('Type added:',v);
+    }else{
+        alert('⚠️ This type already exists!');
+    }
+}
 window.deleteType=async function(tn){const cu=coins.filter(c=>c.type===tn).length;if(cu>0){if(!confirm(`${cu} coin(s) use this type. Delete anyway?`))return;coins.forEach(c=>{if(c.type===tn)c.type=''});await saveCoins()}const l=(await loadTypes()).filter(t=>t!==tn);await saveTypes(l);populateTypeDropdown();renderTypesTable();renderCoinsTable()};
 async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.innerHTML='';const ts=await loadTypes();if(!ts.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:#999">No types defined</td></tr>';return}ts.forEach((t,i)=>{const cu=coins.filter(c=>c.type===t).length;const tr=document.createElement('tr');tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td style="font-weight:600">${t}</td><td>${cu} coin${cu!==1?'s':''}</td><td><button class="delete-btn" onclick="deleteType('${t.replace(/'/g,"\\'")}')">Delete</button></td>`;tb.appendChild(tr)})}
 function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const hasPhotos=c.images&&Array.isArray(c.images)&&c.images.length>0;const photoIcon=hasPhotos?'<span style="color:green;font-size:18px">✓</span>':'<span style="color:red;font-size:18px">✗</span>';tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td><td style="text-align:center">${photoIcon}</td><td style="text-align:center" onclick="event.stopPropagation()"><input type="checkbox" class="coin-checkbox" data-id="${c.coinId}" ${c.checked?'checked':''}></td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)});$$('.coin-checkbox').forEach(cb=>cb.addEventListener('change',function(){const coin=coins.find(c=>c.coinId===this.dataset.id);if(coin){coin.checked=this.checked;saveCoins()}}))}
@@ -1477,7 +1492,21 @@ $('#filterPurchaseDate')?.addEventListener('change',()=>renderCoinsTable());
 $('#clearFilters')?.addEventListener('click',()=>{$('#filterName').value='';$('#filterCountry').value='';$('#filterYear').value='';$('#filterType').value='';$('#filterMaterial').value='';$('#filterPurity').value='';$('#filterPurchaseDate').value='';renderCoinsTable()});
 $('#sidebarToggle')?.addEventListener('click',function(){const sidebar=$('.sidebar');const body=document.body;const btn=this;sidebar.classList.toggle('collapsed');body.classList.toggle('sidebar-collapsed');btn.textContent=sidebar.classList.contains('collapsed')?'☰':'✕';localStorage.setItem('sidebarCollapsed',sidebar.classList.contains('collapsed'))});
 if(localStorage.getItem('sidebarCollapsed')==='true'){$('.sidebar')?.classList.add('collapsed');document.body.classList.add('sidebar-collapsed');$('#sidebarToggle').textContent='☰'}
-$('#addTypeBtn')?.addEventListener('click',()=>{const i=$('#newTypeName');if(i&&i.value.trim()){addType(i.value);i.value=''}});
+$('#addTypeBtn')?.addEventListener('click',async()=>{
+    const i=$('#newTypeName');
+    if(!i){
+        console.error('newTypeName input not found');
+        return;
+    }
+    const value=i.value.trim();
+    console.log('Add Type clicked, value:',value);
+    if(value){
+        await addType(value);
+        i.value='';
+    }else{
+        alert('⚠️ Please enter a type name');
+    }
+});
 $('#silverRate')?.addEventListener('input',()=>{metalRatesUSD.AG=parseFloat($('#silverRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#goldRate')?.addEventListener('input',()=>{metalRatesUSD.AU=parseFloat($('#goldRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#coinMaterial')?.addEventListener('change',function(){const v=this.value;const p=$('#coinMetalContent');if(p){if(v==='AG'||v==='AU'){p.disabled=false;p.required=true}else{p.disabled=true;p.required=false;p.value=''}}});

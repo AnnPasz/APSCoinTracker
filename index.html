@@ -814,9 +814,12 @@ async function githubApiCall(endpoint,method='GET',body=null){
     }
     
     try{
+        console.log(`GitHub API ${method} ${url}`);
         const response=await fetch(url,options);
         if(!response.ok){
-            console.error('GitHub API error:',response.status,await response.text());
+            const errorText=await response.text();
+            console.error(`GitHub API error ${response.status}:`,errorText);
+            // For 404, return null (file doesn't exist), for other errors, also return null
             return null;
         }
         return await response.json();
@@ -912,12 +915,17 @@ async function uploadCoinsInChunks(coins){
         console.log(`Uploading ${filename} (${chunks[i].length} coins)...`);
         
         // Always fetch the latest SHA before uploading (to handle updates)
+        // Clear any stale SHA from cache first
+        delete fileSHAs[filename];
+        
         const existingFile = await readGitHubFile(filename);
-        if(existingFile){
+        if(existingFile && existingFile.sha){
             fileSHAs[filename] = existingFile.sha;
             console.log(`Found existing ${filename}, will update with SHA: ${existingFile.sha}`);
         }else{
-            console.log(`${filename} doesn't exist, will create new file`);
+            console.log(`${filename} doesn't exist or couldn't be read, will create new file`);
+            // Ensure no SHA is in cache for this file
+            delete fileSHAs[filename];
         }
         
         const success = await writeJSONFile(filename, chunks[i]);

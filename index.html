@@ -2027,10 +2027,23 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
     statusDiv.innerHTML='⏳ Downloading data from GitHub...';
     
     try{
-        // Download all data files
-        await loadCoins();
-        await loadKBEntries();
-        await loadImagesFromFile();
+        // Download all data files from GitHub
+        const coinsFile=await readJSONFile('coins_data.json',[]);
+        if(coinsFile!==null){
+            coins=coinsFile;
+            saveJSON(STORAGE_KEY,coins);
+        }
+        
+        const kbFile=await readJSONFile('kb_data.json',[]);
+        if(kbFile!==null){
+            kbEntries=kbFile;
+            saveJSON(KB_KEY,kbEntries);
+        }
+        
+        const imagesFile=await readJSONFile('images_data.json',{});
+        if(imagesFile!==null){
+            imagesCache=imagesFile;
+        }
         
         // Reload names and types and save to localStorage
         const namesFile=await readJSONFile('names_data.json',[]);

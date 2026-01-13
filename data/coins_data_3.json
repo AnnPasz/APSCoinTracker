@@ -66,5 +66,22 @@
     "comments": "prezent :)",
     "coinLink": "",
     "checked": true
+  },
+  {
+    "coinId": "CMKD0YNEDI40N",
+    "coinName": "test",
+    "coinCountry": "test",
+    "coinYear": "1990",
+    "coinWeight": "1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bar",
+    "coinMaterial": "Other",
+    "coinMetalContent": "",
+    "purchasePrice": "1",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-13",
+    "comments": "",
+    "coinLink": ""
   }
 ]

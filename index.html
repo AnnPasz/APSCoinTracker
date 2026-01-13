@@ -931,16 +931,16 @@ async function uploadCoinsInChunks(coins){
     
     // Strip images and any large data from coins before uploading
     const coinsWithoutImages = coins.map(coin => {
-        // Create a clean copy without images property
+        // Create a clean copy without images or photoData properties
         const cleanCoin = {};
         for(let key in coin){
-            if(key !== 'images'){
+            if(key !== 'images' && key !== 'photoData'){
                 cleanCoin[key] = coin[key];
             }
         }
         return cleanCoin;
     });
-    console.log('Removed images from coins for upload (images saved separately in images_data.json)');
+    console.log('Removed images and photoData from coins for upload (images saved separately in images_data.json)');
     
     const chunks = [];
     for(let i = 0; i < coinsWithoutImages.length; i += COINS_PER_CHUNK){

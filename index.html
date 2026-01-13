@@ -1291,9 +1291,12 @@ $('#mobileSimToggle')?.addEventListener('click',function(){
         if(form.style.display==='none'){
             form.style.display='block';
             updateMobileSimulationRates();
-            // Scroll the form into view smoothly
+            // Scroll to the button first, then to the form
             setTimeout(()=>{
-                form.scrollIntoView({behavior:'smooth',block:'start'});
+                this.scrollIntoView({behavior:'smooth',block:'end'});
+                setTimeout(()=>{
+                    form.scrollIntoView({behavior:'smooth',block:'nearest'});
+                },200);
             },100);
         }else{
             form.style.display='none';

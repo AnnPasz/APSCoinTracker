@@ -1,0 +1,37 @@
+[
+  {
+    "coinId": "CMK2TPBYTW1LW",
+    "coinName": "Maple Leaf",
+    "coinCountry": "Canada",
+    "coinYear": "2025",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion Kanada",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "319.41",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-12-26",
+    "comments": "SK granica",
+    "checked": true
+  },
+  {
+    "coinId": "CMK3TEP9M48CM",
+    "coinName": "Libertad Mexico",
+    "coinCountry": "Mexico",
+    "coinYear": "2017",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion Meksyk",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "390",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-07",
+    "comments": "Numimarket Poznan przez allegro",
+    "checked": true,
+    "coinLink": ""
+  }
+]

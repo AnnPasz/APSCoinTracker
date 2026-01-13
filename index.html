@@ -769,8 +769,13 @@
 
                         <!-- Margin Calculation Result -->
                         <div id="mobileMarginResult" style="display: none; margin-top: 16px;">
-                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">With Allegro Fees</h4>
+                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">With Margin & Fees</h4>
                             
+                            <div style="background: rgba(46, 204, 113, 0.1); padding: 14px; border-radius: 10px; border-left: 3px solid #2ecc71; margin-bottom: 10px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Base Value + 10% Margin</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #1d1d1f;" id="mobileValueWithMargin">-</div>
+                            </div>
+
                             <div style="background: rgba(230, 126, 34, 0.1); padding: 14px; border-radius: 10px; border-left: 3px solid #e67e22; margin-bottom: 10px;">
                                 <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Allegro Fee (3.69%, max 36.90 PLN)</div>
                                 <div style="font-size: 18px; font-weight: 700; color: #1d1d1f;" id="mobileAllegroFee">-</div>
@@ -1584,14 +1589,17 @@ function calculateMobileMargin(){
         return;
     }
     const coinValue=lastCalculatedValuePLN;
-    // Allegro fee: 3.69% of coin value, capped at 36.90 PLN
-    const allegroFeePercent=coinValue*0.0369;
+    // Step 1: Add 10% profit margin
+    const valueWithMargin=coinValue*1.10;
+    // Step 2: Calculate Allegro fee from the 110% value (3.69%, capped at 36.90 PLN)
+    const allegroFeePercent=valueWithMargin*0.0369;
     const allegroFee=Math.min(allegroFeePercent,36.90);
-    // Transport fee: fixed 11.49 PLN
+    // Step 3: Add transport fee (fixed 11.49 PLN)
     const transportFee=11.49;
-    // Final price
-    const finalPrice=coinValue+allegroFee+transportFee;
+    // Final price: 110% value + Allegro fee + Transport
+    const finalPrice=valueWithMargin+allegroFee+transportFee;
     
+    $('#mobileValueWithMargin').textContent=valueWithMargin.toFixed(2)+' PLN';
     $('#mobileAllegroFee').textContent=allegroFee.toFixed(2)+' PLN';
     $('#mobileFinalPrice').textContent=finalPrice.toFixed(2)+' PLN';
     

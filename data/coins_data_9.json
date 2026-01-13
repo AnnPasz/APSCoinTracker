@@ -19,11 +19,7 @@
     "metalRateOnPurchaseUSD": 63.6915,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215781294_ax96507xnr5",
-      "coin_img_1768215789584_tz70rm7ze7h"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMJ93289DC21V",
@@ -45,11 +41,7 @@
     "metalRateOnPurchaseUSD": 63.6915,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215808700_nu3fqo3kz5p",
-      "coin_img_1768215817699_hnoje7qmh6s"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMJ934HMBYAY6",
@@ -71,11 +63,7 @@
     "metalRateOnPurchaseUSD": 71.4346,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215669436_7szz413tq",
-      "coin_img_1768215680239_4ww2nd9xc1m"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMJC1IY5VK60Y",
@@ -97,11 +85,7 @@
     "metalRateOnPurchaseUSD": 69.4433,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215711583_9fl0g2sikd",
-      "coin_img_1768215721493_9ftvrla7iap"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMJJUACC5RN02",
@@ -123,10 +107,6 @@
     "metalRateOnPurchaseUSD": 72.1763,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215424969_ja34jxefsp",
-      "coin_img_1768215433002_iqp577gnd88"
-    ]
+    "coinLink": ""
   }
 ]

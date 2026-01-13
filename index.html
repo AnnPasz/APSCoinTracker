@@ -2280,7 +2280,12 @@ $('#uploadToGithubBtn')?.addEventListener('click',async()=>{
         
         // Upload all data files
         console.log('Uploading coins_data.json...');
-        await writeJSONFile('coins_data.json',coins);
+        let coinsResult = await writeJSONFile('coins_data.json',coins);
+        if(!coinsResult){
+            console.log('First attempt failed. Retrying coins_data.json with fresh SHA...');
+            await ensureFileSHA('coins_data.json');
+            coinsResult = await writeJSONFile('coins_data.json',coins);
+        }
         console.log('Uploading kb_data.json...');
         await writeJSONFile('kb_data.json',kbEntries);
         console.log('Uploading images_data.json...');

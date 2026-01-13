@@ -925,9 +925,17 @@ const COINS_PER_CHUNK = 5; // Split coins into chunks of 5 (keeps files well und
 // Split coins into multiple chunks for upload
 async function uploadCoinsInChunks(coins){
     console.log(`Splitting ${coins.length} coins into chunks of ${COINS_PER_CHUNK}...`);
+    
+    // Strip images from coins before uploading (images stay in imagesCache)
+    const coinsWithoutImages = coins.map(coin => {
+        const {images, ...coinWithoutImages} = coin;
+        return coinWithoutImages;
+    });
+    console.log('Removed images from coins for upload (images saved separately in images_data.json)');
+    
     const chunks = [];
-    for(let i = 0; i < coins.length; i += COINS_PER_CHUNK){
-        chunks.push(coins.slice(i, i + COINS_PER_CHUNK));
+    for(let i = 0; i < coinsWithoutImages.length; i += COINS_PER_CHUNK){
+        chunks.push(coinsWithoutImages.slice(i, i + COINS_PER_CHUNK));
     }
     console.log(`Created ${chunks.length} chunks`);
     
@@ -999,7 +1007,16 @@ async function downloadCoinsFromChunks(){
         
         console.log(`Downloaded ${filename}: ${file.data.length} coins`);
         fileSHAs[filename] = file.sha;
-        allCoins = allCoins.concat(file.data);
+        
+        // Restore images from imagesCache (coins are uploaded without images)
+        const coinsWithImages = file.data.map(coin => {
+            if(imagesCache[coin.coinId]){
+                return {...coin, images: imagesCache[coin.coinId]};
+            }
+            return {...coin, images: []};
+        });
+        
+        allCoins = allCoins.concat(coinsWithImages);
         chunkIndex++;
     }
     

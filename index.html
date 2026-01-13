@@ -698,6 +698,15 @@ async function githubApiCall(endpoint,method='GET',body=null){
     }
 }
 
+// UTF-8 safe base64 encoding/decoding
+function utf8ToBase64(str){
+    return btoa(unescape(encodeURIComponent(str)));
+}
+
+function base64ToUtf8(str){
+    return decodeURIComponent(escape(atob(str)));
+}
+
 async function readGitHubFile(filename){
     const path=`${GITHUB_CONFIG.dataPath}${filename}`;
     const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
@@ -709,7 +718,7 @@ async function readGitHubFile(filename){
     
     try{
         // GitHub returns base64 encoded content
-        const content=atob(data.content.replace(/\n/g,''));
+        const content=base64ToUtf8(data.content.replace(/\n/g,''));
         return {data:JSON.parse(content),sha:data.sha};
     }catch(err){
         console.error('Error parsing GitHub file:',err);
@@ -721,8 +730,8 @@ async function writeGitHubFile(filename,data,sha=null){
     const path=`${GITHUB_CONFIG.dataPath}${filename}`;
     const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
     
-    // Convert data to base64
-    const content=btoa(JSON.stringify(data,null,2));
+    // Convert data to base64 (UTF-8 safe)
+    const content=utf8ToBase64(JSON.stringify(data,null,2));
     
     const body={
         message:`Update ${filename}`,

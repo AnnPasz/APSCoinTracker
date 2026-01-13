@@ -19,8 +19,7 @@
     "metalRateOnPurchaseUSD": 78.1869,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": "",
-    "images": []
+    "coinLink": ""
   },
   {
     "coinId": "CMJOCYRO54WT9",
@@ -103,10 +102,6 @@
     "photos": [],
     "metalValuePLN": 4437,
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215046622_efmdfh7rezf",
-      "coin_img_1768215061597_h0lo9bg8pe5"
-    ]
+    "coinLink": ""
   }
 ]

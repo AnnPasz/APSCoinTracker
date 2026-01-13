@@ -1459,6 +1459,13 @@ function showSection(n){
     Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});
     $$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));
     
+    // Update URL for mobile mode
+    if(n==='mobile-overview'){
+        window.history.pushState({}, '', '?mode=mobile');
+    } else {
+        window.history.pushState({}, '', window.location.pathname);
+    }
+    
     // Mobile mode: hide sidebar and toggle button
     const sidebar = $('.sidebar');
     const sidebarToggle = $('#sidebarToggle');
@@ -2673,7 +2680,15 @@ async function initializeApp(){
     populateDatalist();
     populateTypeDropdown();
     fetchRates();
-    showSection('overview');
+    
+    // Check URL parameters for mobile mode
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('mode') === 'mobile'){
+        showSection('mobile-overview');
+    } else {
+        showSection('overview');
+    }
+    
     updateOverviewTotals();
     renderCoinImagesPreview();
     updateGithubStatus();

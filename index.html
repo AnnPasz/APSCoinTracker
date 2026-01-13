@@ -880,10 +880,21 @@ async function writeGitHubFile(filename,data,sha=null){
         body.sha=sha;
         console.log(`Including SHA in request: ${sha}`);
     }else{
-        console.log(`No SHA provided - creating new file`);
+        console.log(`No SHA provided - attempting to create new file`);
     }
     
-    const result=await githubApiCall(endpoint,'PUT',body);
+    let result=await githubApiCall(endpoint,'PUT',body);
+    
+    // If we got 422 error (file exists but no SHA), try to fetch the SHA and retry
+    if(!result&&!sha){
+        console.log(`Upload failed, possibly file exists. Fetching SHA and retrying...`);
+        const existingFile=await readGitHubFile(filename);
+        if(existingFile&&existingFile.sha){
+            console.log(`Fetched SHA: ${existingFile.sha}, retrying upload...`);
+            body.sha=existingFile.sha;
+            result=await githubApiCall(endpoint,'PUT',body);
+        }
+    }
     
     // If successful, return the new SHA from the response
     if(result&&result.content&&result.content.sha){

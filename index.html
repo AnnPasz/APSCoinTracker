@@ -2369,15 +2369,14 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
         statusDiv.style.background='#d4edda';
         statusDiv.style.borderLeft='4px solid #28a745';
         statusDiv.style.color='#155724';
-        statusDiv.innerHTML='<strong>✓ Download complete!</strong> Data loaded from GitHub. Redirecting to Overview...';
+        statusDiv.innerHTML='<strong>✓ Download complete!</strong> Data loaded from GitHub.';
         
-        console.log('Download complete! Redirecting to overview...');
+        console.log('Download complete!');
         
-        // Wait a moment then go to overview
+        // Hide success message after a moment
         setTimeout(()=>{
             statusDiv.style.display='none';
-            showSection('overview');
-        },1500);
+        },3000);
     }catch(err){
         console.error('Download error:',err);
         statusDiv.style.background='#f8d7da';

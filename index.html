@@ -128,11 +128,11 @@
                 <img src="aps_coin_logo.png" alt="APS Coin Tracker Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Ccircle cx=\'200\' cy=\'200\' r=\'190\' fill=\'%23c0c0c0\' stroke=\'%23888\' stroke-width=\'4\'/%3E%3Ctext x=\'200\' y=\'120\' font-size=\'60\' font-weight=\'bold\' text-anchor=\'middle\' fill=\'%23333\'%3EAPS Coin%3C/text%3E%3Ctext x=\'200\' y=\'180\' font-size=\'48\' font-weight=\'bold\' text-anchor=\'middle\' fill=\'%23333\'%3ETracker%3C/text%3E%3Ctext x=\'200\' y=\'340\' font-size=\'40\' text-anchor=\'middle\' fill=\'%23555\'%3E2025%3C/text%3E%3C/svg%3E'">
             </div>
             <nav class="sidebar-nav">
+                <a href="#" class="nav-link" data-section="mobile-overview" id="mobileModeLink">
+                    <span>📱</span> Mobile Mode
+                </a>
                 <a href="#" class="nav-link active" data-section="overview">
                     <span>📊</span> Overview
-                </a>
-                <a href="#" class="nav-link" data-section="mobile-overview">
-                    <span>📱</span> Mobile Overview
                 </a>
                 <a href="#" class="nav-link" data-section="add-coin">
                     <span>➕</span> Add New Coin
@@ -646,7 +646,10 @@
             </div>
 
             <div class="section" id="mobile-overview-section" style="display: none;">
-                <h2>📱 Mobile Overview</h2>
+                <button id="backToDesktopBtn" style="margin-bottom: 20px; padding: 10px 20px; background: #666; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
+                    ← Back to Desktop
+                </button>
+                <h2>📱 Mobile Mode</h2>
                 
                 <div style="max-width: 600px; margin: 0 auto;">
                     <!-- Date -->
@@ -1451,7 +1454,24 @@ async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.inne
 function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const hasPhotos=c.images&&Array.isArray(c.images)&&c.images.length>0;const photoIcon=hasPhotos?'<span style="color:green;font-size:18px">✓</span>':'<span style="color:red;font-size:18px">✗</span>';tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td><td style="text-align:center">${photoIcon}</td><td style="text-align:center" onclick="event.stopPropagation()"><input type="checkbox" class="coin-checkbox" data-id="${c.coinId}" ${c.checked?'checked':''}></td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)});$$('.coin-checkbox').forEach(cb=>cb.addEventListener('change',function(){const coin=coins.find(c=>c.coinId===this.dataset.id);if(coin){coin.checked=this.checked;saveCoins()}}))}
 function getFilteredAndSortedCoins(){const nf=($('#filterName')?.value||'').toLowerCase();const cf=($('#filterCountry')?.value||'').toLowerCase();const yf=$('#filterYear')?.value||'';const tf=($('#filterType')?.value||'').toLowerCase();const mf=$('#filterMaterial')?.value||'';const pf=$('#filterPurity')?.value||'';const df=$('#filterPurchaseDate')?.value||'';let fil=coins.filter(c=>{if(nf&&!(c.coinName||'').toLowerCase().includes(nf))return false;if(cf&&!(c.coinCountry||'').toLowerCase().includes(cf))return false;if(yf&&c.coinYear!=yf)return false;if(tf&&!(c.type||'').toLowerCase().includes(tf))return false;if(mf&&c.coinMaterial!==mf)return false;if(pf&&c.coinMetalContent!=pf)return false;if(df&&c.purchaseDate!==df)return false;return true});fil.sort((a,b)=>{let vA,vB;if(currentSortBy==='currentValue'){vA=computeCurrentValuePLN(a);vB=computeCurrentValuePLN(b)}else if(currentSortBy==='gain'){vA=computeCurrentValuePLN(a)-costBasisPLN(a);vB=computeCurrentValuePLN(b)-costBasisPLN(b)}else if(currentSortBy==='coinYear'||currentSortBy==='purchasePrice'){vA=parseFloat(a[currentSortBy])||0;vB=parseFloat(b[currentSortBy])||0}else if(currentSortBy==='purchaseDate'){vA=a.purchaseDate||'';vB=b.purchaseDate||''}else{vA=(a[currentSortBy]||'').toString().toLowerCase();vB=(b[currentSortBy]||'').toString().toLowerCase()}if(vA<vB)return currentSortOrder==='asc'?-1:1;if(vA>vB)return currentSortOrder==='asc'?1:-1;return 0});return fil}
 function setSortColumn(col){if(currentSortBy===col){currentSortOrder=currentSortOrder==='asc'?'desc':'asc'}else{currentSortBy=col;currentSortOrder='asc'}$$('th.sortable').forEach(th=>{th.classList.remove('sorted-asc','sorted-desc');if(th.dataset.sort===col){th.classList.add('sorted-'+currentSortOrder)}});renderCoinsTable()}
-function showSection(n){const sec={'overview':$('#overview-section'),'mobile-overview':$('#mobile-overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section')};Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});$$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));if(n==='overview'){updateOverviewTotals()}else if(n==='mobile-overview'){updateMobileOverview()}else if(n==='all-coins'){renderCoinsTable()}else if(n==='manage-types'){renderTypesTable()}else if(n==='add-coin'){if(!editModeId){isViewMode=false;$('#coinForm').reset();$('#coinId').value=genId();currentCoinImages=[];renderCoinImagesPreview();setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#editCoinBtn').style.display='none'}}else if(n==='fx-chart'){initTradingViewChart()}else if(n==='price-simulation'){updateSimulationRates()}else if(n==='coin-verification'){renderKBList();showKBListView()}else if(n==='github-settings'){loadGithubSettings()}}
+function showSection(n){
+    const sec={'overview':$('#overview-section'),'mobile-overview':$('#mobile-overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section')};
+    Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});
+    $$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));
+    
+    // Mobile mode: hide sidebar and toggle button
+    const sidebar = $('.sidebar');
+    const sidebarToggle = $('#sidebarToggle');
+    if(n==='mobile-overview'){
+        if(sidebar) sidebar.style.display='none';
+        if(sidebarToggle) sidebarToggle.style.display='none';
+    } else {
+        if(sidebar) sidebar.style.display='';
+        if(sidebarToggle) sidebarToggle.style.display='';
+    }
+    
+    if(n==='overview'){updateOverviewTotals()}else if(n==='mobile-overview'){updateMobileOverview()}else if(n==='all-coins'){renderCoinsTable()}else if(n==='manage-types'){renderTypesTable()}else if(n==='add-coin'){if(!editModeId){isViewMode=false;$('#coinForm').reset();$('#coinId').value=genId();currentCoinImages=[];renderCoinImagesPreview();setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#editCoinBtn').style.display='none'}}else if(n==='fx-chart'){initTradingViewChart()}else if(n==='price-simulation'){updateSimulationRates()}else if(n==='coin-verification'){renderKBList();showKBListView()}else if(n==='github-settings'){loadGithubSettings()}
+}
 let tvWidget=null;
 function initTradingViewChart(){if(tvWidget)return;const pair=$('#currencyPair')?.value||'XAUUSD';tvWidget=new TradingView.widget({autosize:true,symbol:pair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'});$('#currencyPair')?.addEventListener('change',function(){const newPair=this.value;if(tvWidget){tvWidget.remove();tvWidget=null}tvWidget=new TradingView.widget({autosize:true,symbol:newPair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'})})}
 function updateSimulationRates(){const metal=$('#simMetal')?.value||'AG';const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(rate){const ratePerGram=rate/31.1034768;$('#simCurrentRate').textContent='$'+rate.toFixed(2)+' /oz';$('#simCurrentRatePerGram').textContent='$'+ratePerGram.toFixed(2)+' /g'}else{$('#simCurrentRate').textContent='Rate not available';$('#simCurrentRatePerGram').textContent='-'}}
@@ -1973,6 +1993,7 @@ $('#filterPurchaseDate')?.addEventListener('change',()=>renderCoinsTable());
 $('#clearFilters')?.addEventListener('click',()=>{$('#filterName').value='';$('#filterCountry').value='';$('#filterYear').value='';$('#filterType').value='';$('#filterMaterial').value='';$('#filterPurity').value='';$('#filterPurchaseDate').value='';renderCoinsTable()});
 $('#sidebarToggle')?.addEventListener('click',function(){const sidebar=$('.sidebar');const body=document.body;const btn=this;sidebar.classList.toggle('collapsed');body.classList.toggle('sidebar-collapsed');btn.textContent=sidebar.classList.contains('collapsed')?'☰':'✕';localStorage.setItem('sidebarCollapsed',sidebar.classList.contains('collapsed'))});
 if(localStorage.getItem('sidebarCollapsed')==='true'){$('.sidebar')?.classList.add('collapsed');document.body.classList.add('sidebar-collapsed');$('#sidebarToggle').textContent='☰'}
+$('#backToDesktopBtn')?.addEventListener('click',()=>{showSection('overview')});
 $('#addTypeBtn')?.addEventListener('click',async()=>{
     const i=$('#newTypeName');
     if(!i){

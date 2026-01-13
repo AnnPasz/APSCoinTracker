@@ -949,13 +949,23 @@ async function uploadCoinsInChunks(coins){
     
     // Clean up old chunk files if we have fewer chunks now
     let chunkIndex = chunks.length;
-    while(true){
+    let maxAttempts = 20; // Don't try forever
+    while(maxAttempts > 0){
         const filename = `coins_data_${chunkIndex}.json`;
         const file = await readGitHubFile(filename);
-        if(!file) break; // No more chunks to delete
+        if(!file){
+            console.log(`No more old chunks found at ${filename}`);
+            break; // No more chunks to delete
+        }
+        // File exists (we got SHA even if no data)
         console.log(`Deleting old chunk ${filename}...`);
-        await deleteGitHubFile(filename);
+        const deleted = await deleteGitHubFile(filename);
+        if(!deleted){
+            console.warn(`Failed to delete ${filename}, stopping cleanup`);
+            break;
+        }
         chunkIndex++;
+        maxAttempts--;
     }
     
     return true;

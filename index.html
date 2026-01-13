@@ -656,41 +656,47 @@
                         <div style="font-size: 16px; opacity: 0.85;" id="mobileGainLoss">Gain/Loss: 0.00 PLN</div>
                     </div>
                     
-                    <!-- Quick Stats -->
+                    <!-- Quick Stats - Metal Weights -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                         <div style="background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 50%, #c0c0c0 100%); padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <div style="font-size: 28px; font-weight: 700; color: #333;" id="mobileSilverCount">0</div>
-                            <div style="font-size: 13px; color: #666; margin-top: 4px;">🥈 Silver Coins</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #333;" id="mobileSilverWeight">0 g</div>
+                            <div style="font-size: 13px; color: #666; margin-top: 4px;">🥈 Total Silver</div>
                         </div>
                         <div style="background: linear-gradient(135deg, #d4af37 0%, #f9e79f 50%, #d4af37 100%); padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <div style="font-size: 28px; font-weight: 700; color: #333;" id="mobileGoldCount">0</div>
-                            <div style="font-size: 13px; color: #666; margin-top: 4px;">🥇 Gold Coins</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #333;" id="mobileGoldWeight">0 g</div>
+                            <div style="font-size: 13px; color: #666; margin-top: 4px;">🥇 Total Gold</div>
                         </div>
                     </div>
                     
                     <!-- Metal Rates -->
-                    <div style="background: rgba(255,255,255,0.95); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                    <div style="background: rgba(255,255,255,0.95); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
                         <div style="font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 16px;">Current Metal Rates</div>
                         <div style="display: grid; gap: 12px;">
-                            <div style="display: flex; justify-content: space-between; padding: 12px; background: #f5f5f7; border-radius: 8px;">
-                                <span style="color: #666;">🥈 Silver (oz)</span>
-                                <span style="font-weight: 600;" id="mobileSilverRate">-</span>
+                            <div style="padding: 12px; background: #f5f5f7; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <span style="color: #666;">🥈 Silver (oz)</span>
+                                    <span style="font-weight: 600;" id="mobileSilverRate">-</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: #999; font-size: 13px;"></span>
+                                    <span style="color: #999; font-size: 13px;" id="mobileSilverRatePLN">-</span>
+                                </div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; padding: 12px; background: #f5f5f7; border-radius: 8px;">
-                                <span style="color: #666;">🥇 Gold (oz)</span>
-                                <span style="font-weight: 600;" id="mobileGoldRate">-</span>
+                            <div style="padding: 12px; background: #f5f5f7; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <span style="color: #666;">🥇 Gold (oz)</span>
+                                    <span style="font-weight: 600;" id="mobileGoldRate">-</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: #999; font-size: 13px;"></span>
+                                    <span style="color: #999; font-size: 13px;" id="mobileGoldRatePLN">-</span>
+                                </div>
                             </div>
                             <div style="display: flex; justify-content: space-between; padding: 12px; background: #f5f5f7; border-radius: 8px;">
                                 <span style="color: #666;">Ratio</span>
                                 <span style="font-weight: 600;" id="mobileRatio">-</span>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Recent Coins -->
-                    <div style="background: rgba(255,255,255,0.95); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <div style="font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 16px;">Recent Coins</div>
-                        <div id="mobileRecentCoins"></div>
                     </div>
                 </div>
             </div>
@@ -1106,11 +1112,11 @@ function updateOverviewTotals(){
 function updateMobileOverview(){
     const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);
     const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);
-    let sC=0,gC=0;
+    let sW=0,gW=0;
     coins.forEach(c=>{
         const m=(c.coinMaterial||'Other').toUpperCase();
-        if(m==='AG')sC++;
-        if(m==='AU')gC++;
+        if(m==='AG')sW+=parseFloat(c.coinWeight)||0;
+        if(m==='AU')gW+=parseFloat(c.coinWeight)||0;
     });
     
     // Update values
@@ -1118,15 +1124,33 @@ function updateMobileOverview(){
     const gl=cur-p;
     $('#mobileGainLoss').textContent='Gain/Loss: '+fmt(gl)+' PLN';
     $('#mobileGainLoss').style.color=gl<0?'red':(gl>0?'green':'inherit');
-    $('#mobileSilverCount').textContent=sC;
-    $('#mobileGoldCount').textContent=gC;
     
-    // Metal rates
+    // Metal weights
+    $('#mobileSilverWeight').textContent=fmt(sW)+' g';
+    $('#mobileGoldWeight').textContent=fmt(gW)+' g';
+    
+    // Metal rates in USD and PLN
     const silverRate=metalRatesUSD.AG?'$'+metalRatesUSD.AG.toFixed(2):'-';
     const goldRate=metalRatesUSD.AU?'$'+metalRatesUSD.AU.toFixed(2):'-';
     $('#mobileSilverRate').textContent=silverRate;
     $('#mobileGoldRate').textContent=goldRate;
     
+    // Calculate PLN rates
+    if(metalRatesUSD.AG&&exchangeRatesPLN&&exchangeRatesPLN.USD){
+        const silverPLN=(metalRatesUSD.AG/exchangeRatesPLN.USD).toFixed(2);
+        $('#mobileSilverRatePLN').textContent=silverPLN+' PLN/oz';
+    }else{
+        $('#mobileSilverRatePLN').textContent='-';
+    }
+    
+    if(metalRatesUSD.AU&&exchangeRatesPLN&&exchangeRatesPLN.USD){
+        const goldPLN=(metalRatesUSD.AU/exchangeRatesPLN.USD).toFixed(2);
+        $('#mobileGoldRatePLN').textContent=goldPLN+' PLN/oz';
+    }else{
+        $('#mobileGoldRatePLN').textContent='-';
+    }
+    
+    // Ratio
     if(metalRatesUSD.AU&&metalRatesUSD.AG){
         const ratio=(metalRatesUSD.AU/metalRatesUSD.AG).toFixed(2)+':1';
         $('#mobileRatio').textContent=ratio;
@@ -1140,35 +1164,6 @@ function updateMobileOverview(){
         const now=new Date();
         const options={weekday:'long',year:'numeric',month:'long',day:'numeric'};
         dateEl.textContent=now.toLocaleDateString('en-US',options);
-    }
-    
-    // Recent coins (last 5)
-    const recent=coins.slice().sort((a,b)=>{
-        const dateA=a.purchaseDate||'';
-        const dateB=b.purchaseDate||'';
-        return dateB.localeCompare(dateA);
-    }).slice(0,5);
-    
-    const recentEl=$('#mobileRecentCoins');
-    if(recent.length===0){
-        recentEl.innerHTML='<div style="text-align:center;color:#999;padding:20px;">No coins yet</div>';
-    }else{
-        recentEl.innerHTML=recent.map(c=>`
-            <div style="padding: 12px; border-bottom: 1px solid #e0e0e0; cursor: pointer;" onclick="viewCoin('${c.coinId}')">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div style="font-weight: 600; color: #1d1d1f;">${c.coinName||'Unnamed'}</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 2px;">${c.coinCountry||'-'} • ${c.coinYear||'-'}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 600; color: #4ecdc4;">${fmt(computeCurrentValuePLN(c))} PLN</div>
-                        <div style="font-size: 12px; color: ${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">
-                            ${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `).join('');
     }
 }
 

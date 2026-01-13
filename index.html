@@ -912,11 +912,13 @@ async function readJSONFile(filename,defaultValue=[]){
 
 // Helper to ensure SHA is fetched before upload
 async function ensureFileSHA(filename){
-    if(!fileSHAs[filename]){
-        const file=await readGitHubFile(filename);
-        if(file){
-            fileSHAs[filename]=file.sha;
-        }
+    console.log('Ensuring SHA for',filename,'Current SHA:',fileSHAs[filename]);
+    const file=await readGitHubFile(filename);
+    if(file&&file.sha){
+        fileSHAs[filename]=file.sha;
+        console.log('Fetched SHA for',filename,':',file.sha);
+    }else{
+        console.warn('Could not fetch SHA for',filename,'- file may not exist yet');
     }
 }
 
@@ -2248,20 +2250,31 @@ $('#uploadToGithubBtn')?.addEventListener('click',async()=>{
     statusDiv.innerHTML='⏳ Uploading data to GitHub...';
     
     try{
+        console.log('Starting upload to GitHub...');
+        
         // Ensure we have SHAs for all files before uploading
+        console.log('Fetching SHAs for existing files...');
         await ensureFileSHA('coins_data.json');
         await ensureFileSHA('kb_data.json');
         await ensureFileSHA('images_data.json');
         await ensureFileSHA('names_data.json');
         await ensureFileSHA('types_data.json');
         
+        console.log('All SHAs fetched. Starting uploads...');
+        console.log('Current SHA cache:',fileSHAs);
+        
         // Upload all data files
+        console.log('Uploading coins_data.json...');
         await writeJSONFile('coins_data.json',coins);
+        console.log('Uploading kb_data.json...');
         await writeJSONFile('kb_data.json',kbEntries);
+        console.log('Uploading images_data.json...');
         await writeJSONFile('images_data.json',imagesCache);
         const names=await loadNames();
+        console.log('Uploading names_data.json...');
         await writeJSONFile('names_data.json',names);
         const types=await loadTypes();
+        console.log('Uploading types_data.json...');
         await writeJSONFile('types_data.json',types);
         
         statusDiv.style.background='#d4edda';

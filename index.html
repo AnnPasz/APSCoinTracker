@@ -762,9 +762,25 @@
                                 <div style="font-size: 32px; font-weight: 700; color: white;" id="mobileSimValuePLN">-</div>
                             </div>
 
-                            <button id="mobileAddMarginBtn" style="width: 100%; padding: 14px; margin-top: 16px; background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(230,126,34,0.3);">
-                                💰 Add Margin?
-                            </button>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;">
+                                <button id="mobileTargetPriceBtn" style="padding: 14px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(155,89,182,0.3);">
+                                    🎯 Target Price
+                                </button>
+                                <button id="mobileAddMarginBtn" style="padding: 14px; background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(230,126,34,0.3);">
+                                    💰 Add Margin?
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Target Price Result -->
+                        <div id="mobileTargetPriceResult" style="display: none; margin-top: 16px;">
+                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">Target Allegro Price</h4>
+                            
+                            <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 6px;">Suggested Price on Allegro</div>
+                                <div style="font-size: 32px; font-weight: 700; color: white;" id="mobileTargetPrice">-</div>
+                            </div>
+                            <div style="font-size: 11px; color: #999; margin-top: 8px; text-align: center;">Formula: X = 10000 × (K + 11.49) ÷ 9631</div>
                         </div>
 
                         <!-- Margin Calculation Result -->
@@ -1575,11 +1591,32 @@ function calculateMobileSimulation(){
     $('#mobileSimValuePLN').textContent=valuePLN.toFixed(2)+' PLN';
     const resultDiv=$('#mobileSimResult');
     resultDiv.style.display='block';
-    // Hide margin result when recalculating
+    // Hide margin and target price results when recalculating
     $('#mobileMarginResult').style.display='none';
+    $('#mobileTargetPriceResult').style.display='none';
     // Scroll to results
     setTimeout(()=>{
         resultDiv.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },100);
+}
+
+function calculateTargetPrice(){
+    if(!lastCalculatedValuePLN){
+        alert('⚠️ Please calculate coin value first');
+        return;
+    }
+    const K=lastCalculatedValuePLN; // Base coin value
+    const T=11.49; // Transport fee
+    // Formula: X = 10000 * (K + T) / 9631
+    const targetPrice=(10000*(K+T))/9631;
+    
+    $('#mobileTargetPrice').textContent=targetPrice.toFixed(2)+' PLN';
+    
+    const targetDiv=$('#mobileTargetPriceResult');
+    targetDiv.style.display='block';
+    // Scroll to target price result
+    setTimeout(()=>{
+        targetDiv.scrollIntoView({behavior:'smooth',block:'nearest'});
     },100);
 }
 
@@ -1613,6 +1650,7 @@ function calculateMobileMargin(){
 
 $('#mobileSimMetal')?.addEventListener('change',updateMobileSimulationRates);
 $('#mobileCalculateSimBtn')?.addEventListener('click',calculateMobileSimulation);
+$('#mobileTargetPriceBtn')?.addEventListener('click',calculateTargetPrice);
 $('#mobileAddMarginBtn')?.addEventListener('click',calculateMobileMargin);
 $('#mobileGoUpBtn')?.addEventListener('click',()=>{
     const mobileSection=$('#mobile-overview-section');

@@ -40,8 +40,7 @@
     "category": "Bulion",
     "type": "Bulion Australia",
     "checked": true,
-    "coinLink": "",
-    "images": []
+    "coinLink": ""
   },
   {
     "coinId": "CMIM3WWLW2TDB",
@@ -85,11 +84,7 @@
     "fxRatesOnPurchase": null,
     "photos": [],
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215897407_yokqpfekz7m",
-      "coin_img_1768215905402_c6g4gqiv7g"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMIM5VYUB77XU",
@@ -111,10 +106,6 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768215543548_dyhxov84ohd",
-      "coin_img_1768215553388_dpot6ky2plj"
-    ]
+    "coinLink": ""
   }
 ]

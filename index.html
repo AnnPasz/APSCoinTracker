@@ -769,13 +769,25 @@
 
                         <!-- Target Price Result -->
                         <div id="mobileTargetPriceResult" style="display: none; margin-top: 16px;">
-                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">Target Allegro Price</h4>
+                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">Target Allegro Prices</h4>
                             
-                            <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 6px;">Suggested Price on Allegro</div>
-                                <div style="font-size: 32px; font-weight: 700; color: white;" id="mobileTargetPrice">-</div>
+                            <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">Base Price</div>
+                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice">-</div>
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (K + 11.49) ÷ 9631</div>
                             </div>
-                            <div style="font-size: 11px; color: #999; margin-top: 8px; text-align: center;">Formula: X = 10000 × (K + 11.49) ÷ 9631</div>
+
+                            <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">+10% Margin</div>
+                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice10">-</div>
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (1.1K + 11.49) ÷ 9631</div>
+                            </div>
+
+                            <div style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); padding: 16px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">+20% Margin</div>
+                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice20">-</div>
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (1.2K + 11.49) ÷ 9631</div>
+                            </div>
                         </div>
                         
                         <!-- Go Up Button -->
@@ -1576,10 +1588,19 @@ function calculateTargetPrice(){
     }
     const K=lastCalculatedValuePLN; // Base coin value
     const T=11.49; // Transport fee
-    // Formula: X = 10000 * (K + T) / 9631
+    
+    // Base price: X = 10000 * (K + T) / 9631
     const targetPrice=(10000*(K+T))/9631;
     
+    // +10% margin: X = 10000 * (1.1*K + T) / 9631
+    const targetPrice10=(10000*(1.1*K+T))/9631;
+    
+    // +20% margin: X = 10000 * (1.2*K + T) / 9631
+    const targetPrice20=(10000*(1.2*K+T))/9631;
+    
     $('#mobileTargetPrice').textContent=targetPrice.toFixed(2)+' PLN';
+    $('#mobileTargetPrice10').textContent=targetPrice10.toFixed(2)+' PLN';
+    $('#mobileTargetPrice20').textContent=targetPrice20.toFixed(2)+' PLN';
     
     const targetDiv=$('#mobileTargetPriceResult');
     targetDiv.style.display='block';

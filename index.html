@@ -657,25 +657,25 @@
                     
                     <!-- Coins Summary -->
                     <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 24px; border-radius: 16px; color: white; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); text-align: center;">
-                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Total Collection Value</div>
-                        <div style="font-size: 36px; font-weight: 700;" id="mobileTotalValue">0.00 PLN</div>
+                        <div style="font-size: 13px; opacity: 0.9; margin-bottom: 8px;">Total Collection Value</div>
+                        <div style="font-size: 28px; font-weight: 700;" id="mobileTotalValue">0.00 PLN</div>
                     </div>
                     
                     <!-- Gain/Loss -->
                     <div style="background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%); padding: 20px; border-radius: 16px; color: white; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); text-align: center;">
-                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Gain/Loss</div>
-                        <div style="font-size: 32px; font-weight: 700;" id="mobileGainLoss">0.00 PLN</div>
+                        <div style="font-size: 13px; opacity: 0.9; margin-bottom: 8px;">Gain/Loss</div>
+                        <div style="font-size: 26px; font-weight: 700;" id="mobileGainLoss">0.00 PLN</div>
                     </div>
                     
                     <!-- Quick Stats - Metal Weights -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                         <div style="background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 50%, #c0c0c0 100%); padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <div style="font-size: 28px; font-weight: 700; color: #333;" id="mobileSilverWeight">0 g</div>
-                            <div style="font-size: 13px; color: #666; margin-top: 4px;">🥈 Total Silver</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #333;" id="mobileSilverWeight">0 g</div>
+                            <div style="font-size: 12px; color: #666; margin-top: 4px;">🥈 Total Silver</div>
                         </div>
                         <div style="background: linear-gradient(135deg, #d4af37 0%, #f9e79f 50%, #d4af37 100%); padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <div style="font-size: 28px; font-weight: 700; color: #333;" id="mobileGoldWeight">0 g</div>
-                            <div style="font-size: 13px; color: #666; margin-top: 4px;">🥇 Total Gold</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #333;" id="mobileGoldWeight">0 g</div>
+                            <div style="font-size: 12px; color: #666; margin-top: 4px;">🥇 Total Gold</div>
                         </div>
                     </div>
                     
@@ -771,6 +771,11 @@
                                 <div style="font-size: 32px; font-weight: 700; color: white;" id="mobileSimValuePLN">-</div>
                             </div>
                         </div>
+                        
+                        <!-- Go Up Button -->
+                        <button id="mobileGoUpBtn" style="width: 100%; padding: 12px; margin-top: 24px; background: #f5f5f7; color: #666; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                            ↑ Go to Top
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1545,11 +1550,22 @@ function calculateMobileSimulation(){
     $('#mobileSimPureWeight').textContent=pureWeight.toFixed(2)+' g';
     $('#mobileSimValueUSD').textContent='$'+valueUSD.toFixed(2);
     $('#mobileSimValuePLN').textContent=valuePLN.toFixed(2)+' PLN';
-    $('#mobileSimResult').style.display='block';
+    const resultDiv=$('#mobileSimResult');
+    resultDiv.style.display='block';
+    // Scroll to results
+    setTimeout(()=>{
+        resultDiv.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },100);
 }
 
 $('#mobileSimMetal')?.addEventListener('change',updateMobileSimulationRates);
 $('#mobileCalculateSimBtn')?.addEventListener('click',calculateMobileSimulation);
+$('#mobileGoUpBtn')?.addEventListener('click',()=>{
+    const mobileSection=$('#mobile-overview-section');
+    if(mobileSection){
+        mobileSection.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+});
 
 
 // Coin Images Functions

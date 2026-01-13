@@ -1,0 +1,17 @@
+# Backup files
+*.json.backup
+*_Backup_*.json
+
+# macOS
+.DS_Store
+
+# Old files
+*_old.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# VSCode
+.vscode/

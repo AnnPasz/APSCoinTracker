@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Collection Tracker</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%239b59b6'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 50%, #45b7a0 100%);
+            position: relative;
+        }
+        .wrapper { position: relative; z-index: 1; }
+        .logo-container {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        th.sortable:hover {
+            background: rgba(78, 205, 196, 0.1);
+        }
+        th.sortable::after {
+            content: '⇅';
+            margin-left: 5px;
+            opacity: 0.3;
+        }
+        th.sortable.sorted-asc::after {
+            content: '↑';
+            opacity: 1;
+        }
+        th.sortable.sorted-desc::after {
+            content: '↓';
+            opacity: 1;
+        }
+        .filter-row th {
+            padding: 8px 4px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 2px solid #4ecdc4;
+        }
+        .filter-row input,
+        .filter-row select {
+            box-sizing: border-box;
+        }
+        .filter-row input:focus,
+        .filter-row select:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.2);
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 231px;
+            z-index: 1000;
+            background: rgba(155, 89, 182, 0.9);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        .sidebar-toggle:hover {
+            background: rgba(142, 68, 173, 1);
+            transform: scale(1.1);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-221px);
+        }
+        .sidebar.collapsed + .sidebar-toggle {
+            left: 10px;
+        }
+        body.sidebar-collapsed .main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+        #price-simulation-section .form-group {
+            margin-bottom: 20px;
+        }
+        #price-simulation-section > div {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            #price-simulation-section > div {
+                padding: 16px;
+            }
+            #price-simulation-section h2 {
+                font-size: 24px;
+            }
+            #price-simulation-section input,
+            #price-simulation-section select {
+                font-size: 16px;
+                padding: 12px;
+            }
+            #calculateSimBtn {
+                padding: 14px !important;
+                font-size: 15px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="aps_coin_logo.png" alt="APS Coin Tracker Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Ccircle cx=\'200\' cy=\'200\' r=\'190\' fill=\'%23c0c0c0\' stroke=\'%23888\' stroke-width=\'4\'/%3E%3Ctext x=\'200\' y=\'120\' font-size=\'60\' font-weight=\'bold\' text-anchor=\'middle\' fill=\'%23333\'%3EAPS Coin%3C/text%3E%3Ctext x=\'200\' y=\'180\' font-size=\'48\' font-weight=\'bold\' text-anchor=\'middle\' fill=\'%23333\'%3ETracker%3C/text%3E%3Ctext x=\'200\' y=\'340\' font-size=\'40\' text-anchor=\'middle\' fill=\'%23555\'%3E2025%3C/text%3E%3C/svg%3E'">
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" data-section="overview">
+                    <span>📊</span> Overview
+                </a>
+                <a href="#" class="nav-link" data-section="add-coin">
+                    <span>➕</span> Add New Coin
+                </a>
+                <a href="#" class="nav-link" data-section="all-coins">
+                    <span>📋</span> All Coins
+                </a>
+                <a href="#" class="nav-link" data-section="manage-types">
+                    <span>🏷️</span> Manage Types
+                </a>
+                <a href="#" class="nav-link" data-section="fx-chart">
+                    <span>📈</span> FX Chart
+                </a>
+                <a href="#" class="nav-link" data-section="price-simulation">
+                    <span>🧮</span> Price Simulation
+                </a>
+                <a href="#" class="nav-link" data-section="coin-verification">
+                    <span>🔍</span> Coin Verification
+                </a>
+                <div style="margin-top: 30px; padding: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <button id="enableFileSystemBtn" style="width: 100%; padding: 12px; background: rgba(52, 152, 219, 0.3); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(52, 152, 219, 0.4)'" onmouseout="this.style.background='rgba(52, 152, 219, 0.3)'">
+                        📁 Enable File Storage
+                    </button>
+                    <div id="fileSystemStatus" style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 10px;"></div>
+                    <button id="refreshRatesBtn" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                        🔄 Refresh FX Rates
+                    </button>
+                    <button id="exportDataBtn" style="width: 100%; padding: 12px; background: rgba(78, 205, 196, 0.3); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(78, 205, 196, 0.4)'" onmouseout="this.style.background='rgba(78, 205, 196, 0.3)'">
+                        💾 Export All Data
+                    </button>
+                    <button id="importDataBtn" style="width: 100%; padding: 12px; background: rgba(155, 89, 182, 0.3); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s;" onmouseover="this.style.background='rgba(155, 89, 182, 0.4)'" onmouseout="this.style.background='rgba(155, 89, 182, 0.3)'">
+                        📂 Import Data
+                    </button>
+                    <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                </div>
+            </nav>
+        </aside>
+        <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Menu">☰</button>
+
+        <main class="main-content">
+            <div class="section" id="overview-section">
+                <div class="overview-section">
+                    <h2>Overview</h2>
+                    <div class="overview-grid">
+                        <div class="overview-card" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">
+                            <p class="overview-label">Total Purchased Price</p>
+                            <p class="overview-value" id="totalPurchased">0.00 PLN</p>
+                        </div>
+                        <div class="overview-card" style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);">
+                            <p class="overview-label">Current Collection Value</p>
+                            <p class="overview-value" id="totalCurrent">0.00 PLN</p>
+                        </div>
+                        <div class="overview-card" style="background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);">
+                            <p class="overview-label">Gain/Loss</p>
+                            <p class="overview-value" id="gainLoss">0.00 PLN</p>
+                        </div>
+                        <div class="overview-card" style="background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 50%, #c0c0c0 100%);">
+                            <p class="overview-label">🥈 Silver Coins</p>
+                            <p class="overview-value" id="silverCount">0</p>
+                        </div>
+                        <div class="overview-card" style="background: linear-gradient(135deg, #d4af37 0%, #f9e79f 50%, #d4af37 100%);">
+                            <p class="overview-label">🥇 Gold Coins</p>
+                            <p class="overview-value" id="goldCount">0</p>
+                        </div>
+                        <div class="overview-card" style="background: linear-gradient(135deg, #95a5a6 0%, #bdc3c7 50%, #95a5a6 100%);">
+                            <p class="overview-label">⚖️ Total Silver Weight</p>
+                            <p class="overview-value" id="silverWeight">0.00 g</p>
+                        </div>
+                        <div class="overview-card" style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 50%, #f39c12 100%);">
+                            <p class="overview-label">⚖️ Total Gold Weight</p>
+                            <p class="overview-value" id="goldWeight">0.00 g</p>
+                        </div>
+                    </div>
+                    <div class="metal-rates">
+                        <div class="rate-input">
+                            <label for="silverRate">Silver Rate ($/oz):</label>
+                            <input type="number" id="silverRate" step="0.01" placeholder="e.g., 25.50">
+                            <div id="silverRatePLN" style="font-size: 12px; color: #666; margin-top: 4px; font-weight: 600;"></div>
+                        </div>
+                        <div class="rate-input">
+                            <label for="goldRate">Gold Rate ($/oz):</label>
+                            <input type="number" id="goldRate" step="0.01" placeholder="e.g., 2000.00">
+                            <div id="goldRatePLN" style="font-size: 12px; color: #666; margin-top: 4px; font-weight: 600;"></div>
+                        </div>
+                        <div class="rate-input">
+                            <label for="goldSilverRatio">Gold/Silver Ratio:</label>
+                            <input type="text" id="goldSilverRatio" readonly style="background-color: #f8f9fa; cursor: default;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="add-coin-section" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 id="coinFormHeader" style="margin: 0;">Add New Coin</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" id="editCoinBtn" style="display: none; background: rgba(78, 205, 196, 0.9); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">✏️ EDIT</button>
+                        <button type="button" id="backToCoinsBtn" style="background: rgba(108, 92, 231, 0.9); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">⬅ BACK</button>
+                    </div>
+                </div>
+                <form id="coinForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinId">Unique ID:</label>
+                            <input type="text" id="coinId" readonly style="background: rgba(0,0,0,0.05); cursor: not-allowed;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinName">Coin Name:</label>
+                            <input type="text" id="coinName" list="coinNameList" required>
+                            <datalist id="coinNameList"></datalist>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinCountry">Country:</label>
+                            <input type="text" id="coinCountry" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinLink">Link (URL):</label>
+                            <input type="url" id="coinLink" placeholder="https://example.com">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinYear">Year:</label>
+                            <input type="number" id="coinYear" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinWeight">Weight (g):</label>
+                            <input type="number" id="coinWeight" step="0.01" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinSize">Size (mm):</label>
+                            <input type="number" id="coinSize" step="0.1" required>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinCategory">Category:</label>
+                            <select id="coinCategory" required>
+                                <option value="Bulion">Bulion</option>
+                                <option value="Coin">Coin</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinType">Type:</label>
+                            <select id="coinType">
+                                <option value="">-- Select Type --</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinMaterial">Material:</label>
+                            <select id="coinMaterial" required>
+                                <option value="Other">Other (non-precious)</option>
+                                <option value="AG">AG (Silver)</option>
+                                <option value="AU">AU (Gold)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="coinMetalContent">Purity (‰):</label>
+                            <input type="number" id="coinMetalContent" step="1" placeholder="e.g. 900" disabled>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="purchasePrice">Purchase Price:</label>
+                            <input type="number" id="purchasePrice" step="0.01" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="purchaseCurrency">Currency:</label>
+                            <select id="purchaseCurrency" required>
+                                <option value="PLN">PLN</option>
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                                <option value="CHF">CHF</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; margin-top: 15px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="purchaseDate">Purchase Date:</label>
+                            <input type="date" id="purchaseDate" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="comments">Comments:</label>
+                            <textarea id="comments" rows="2" placeholder="Any notes about this coin..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Images:</label>
+                        <div id="coinImagesPreview" style="margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 8px;">
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                            <input type="file" id="coinImageUpload" accept="image/*" multiple style="display: none;">
+                            <button type="button" id="addCoinImageBtn" style="padding: 6px 12px; background: rgba(78, 205, 196, 0.2); color: #44a08d; border: 2px solid #4ecdc4; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">📁 Browse Files</button>
+                            <button type="button" id="pasteCoinImageBtn" style="padding: 6px 12px; background: rgba(155, 89, 182, 0.2); color: #9b59b6; border: 2px solid #9b59b6; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">📋 Paste from Clipboard</button>
+                        </div>
+                        <div id="coinPasteArea" contenteditable="true" style="display: none; min-height: 60px; padding: 10px; border: 2px dashed #9b59b6; border-radius: 8px; background: rgba(155, 89, 182, 0.05); color: #999; font-size: 12px; text-align: center; outline: none;">Click here and press Ctrl+V (or Cmd+V) to paste an image from clipboard</div>
+                    </div>
+                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <button type="submit" id="submitBtn">Add Coin</button>
+                            <button type="button" id="cancelEdit" style="display:none; margin-left:8px;">Cancel</button>
+                        </div>
+                        <button type="button" id="deleteCoinBtn" style="display:none; background: #e74c3c;">Delete Coin</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="section" id="all-coins-section" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0;">All Coins</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="clearFilters" type="button" style="padding: 12px 24px; background: rgba(231, 76, 60, 0.9); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">🗑️ CLEAR FILTERS</button>
+                        <button id="addCoinFromListBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">➕ ADD COIN</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="coinsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="sortable" data-sort="coinName">Name</th>
+                                <th class="sortable" data-sort="coinCountry">Country</th>
+                                <th class="sortable" data-sort="coinYear">Year</th>
+                                <th class="sortable" data-sort="type">Type</th>
+                                <th style="width: 60px;"></th>
+                                <th style="width: 60px;"></th>
+                                <th class="sortable" data-sort="purchaseDate">Purchase Date</th>
+                                <th class="sortable" data-sort="purchasePrice" style="font-weight: bold;">Purchase Price</th>
+                                <th class="sortable" data-sort="currentValue" style="font-weight: bold;">Current Value</th>
+                                <th class="sortable" data-sort="gain">Gain/Loss</th>
+                                <th style="width: 50px; text-align: center;">📷</th>
+                                <th>Checked?</th>
+                            </tr>
+                            <tr class="filter-row">
+                                <th></th>
+                                <th><input type="text" id="filterName" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                                <th><input type="text" id="filterCountry" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                                <th><input type="number" id="filterYear" placeholder="Year..." style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                                <th><input type="text" id="filterType" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                                <th style="width: 60px;">
+                                    <select id="filterMaterial" style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px;">
+                                        <option value="">All</option>
+                                        <option value="Other">Other</option>
+                                        <option value="AG">AG</option>
+                                        <option value="AU">AU</option>
+                                    </select>
+                                </th>
+                                <th style="width: 60px;"><input type="number" id="filterPurity" placeholder="..." style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                                <th><input type="date" id="filterPurchaseDate" style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="coinsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="manage-types-section" style="display: none;">
+                <h2>Manage Coin Types</h2>
+                <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px; margin-bottom: 20px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px;">Add New Type</h3>
+                    <div style="display: flex; gap: 12px;">
+                        <input type="text" id="newTypeName" placeholder="Enter type name..." style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
+                        <button id="addTypeBtn" class="btn" style="padding: 12px 24px;">Add Type</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Type Name</th>
+                                <th>Coins Using This Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="typesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="fx-chart-section" style="display: none;">
+                <h2>Exchange Rates Chart</h2>
+                <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px;">
+                    <div style="margin-bottom: 20px;">
+                        <label for="currencyPair" style="font-size: 14px; font-weight: 600; margin-right: 10px;">Currency Pair:</label>
+                        <select id="currencyPair" style="padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;">
+                            <option value="USDPLN">USD/PLN</option>
+                            <option value="EURPLN">EUR/PLN</option>
+                            <option value="GBPPLN">GBP/PLN</option>
+                            <option value="CHFPLN">CHF/PLN</option>
+                            <option value="XAUUSD" selected>Gold (XAU/USD)</option>
+                            <option value="XAGUSD">Silver (XAG/USD)</option>
+                        </select>
+                    </div>
+                    <!-- TradingView Widget BEGIN -->
+                    <div class="tradingview-widget-container" style="height: 500px;">
+                        <div id="tradingview_chart" style="height: 100%;"></div>
+                    </div>
+                    <!-- TradingView Widget END -->
+                </div>
+            </div>
+
+            <div class="section" id="price-simulation-section" style="display: none;">
+                <h2>Price Simulation</h2>
+                <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 20px;">
+                    <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Calculate the value of a coin based on current metal prices.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label for="simMetal" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Metal Type:</label>
+                            <select id="simMetal" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
+                                <option value="AG">Silver (AG)</option>
+                                <option value="AU">Gold (AU)</option>
+                            </select>
+                        </div>
+
+                        <div style="background: rgba(78, 205, 196, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #4ecdc4;">
+                            <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Current Rate</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #1d1d1f;" id="simCurrentRate">-</div>
+                            <div style="font-size: 11px; color: #666; margin-top: 4px;">Per Gram: <span style="font-weight: 600; color: #1d1d1f;" id="simCurrentRatePerGram">-</span></div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label for="simPurity" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Purity (‰):</label>
+                            <input type="number" id="simPurity" placeholder="e.g., 925" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
+                            <small style="color: #666; font-size: 11px; margin-top: 3px; display: block;">900 = 90%, 925 = 92.5%</small>
+                        </div>
+
+                        <div>
+                            <label for="simWeight" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Weight (grams):</label>
+                            <input type="number" step="0.01" id="simWeight" placeholder="e.g., 31.1" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
+                        </div>
+                    </div>
+
+                    <button id="calculateSimBtn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; margin-bottom: 15px;">
+                        🧮 Calculate Value
+                    </button>
+
+                    <div id="simResult" style="display: none;">
+                        <h3 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">Result</h3>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div style="background: rgba(155, 89, 182, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #9b59b6;">
+                                <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Pure Metal</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #1d1d1f;" id="simPureWeight">-</div>
+                            </div>
+                            
+                            <div style="background: rgba(78, 205, 196, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #4ecdc4;">
+                                <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Value USD</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #1d1d1f;" id="simValueUSD">-</div>
+                            </div>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); padding: 16px; border-radius: 8px; text-align: center; margin-top: 10px;">
+                            <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">Value in PLN</div>
+                            <div style="font-size: 28px; font-weight: 700; color: white;" id="simValuePLN">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="coin-verification-section" style="display: none;">
+                <h2>Coin Verification Knowledge Base</h2>
+                
+                <!-- List View -->
+                <div id="verificationListView">
+                    <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <p style="color: #666; margin: 0;">Store verification details and security features for any coins.</p>
+                            <button id="addNewKBEntry" style="padding: 12px 24px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+ Add New Coin</button>
+                        </div>
+                        
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid #e0e0e0;">
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #1d1d1f;">#</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #1d1d1f;">Country</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #1d1d1f;">Coin Name</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; color: #1d1d1f;">Security Features</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; color: #1d1d1f;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="verificationListBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail View -->
+                <div id="verificationDetailView" style="display: none;">
+                    <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px;">
+                        <button id="backToVerificationList" style="padding: 10px 20px; background: rgba(155, 89, 182, 0.2); color: #9b59b6; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 20px;">← Back to List</button>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                            <div class="form-group">
+                                <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Country:</label>
+                                <input type="text" id="kbCountry" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;" placeholder="e.g., Poland, USA, Germany">
+                            </div>
+                            <div class="form-group">
+                                <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Coin Name:</label>
+                                <input type="text" id="kbCoinName" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;" placeholder="e.g., Silver Eagle, Maple Leaf">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 30px;">
+                            <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">General Notes:</label>
+                            <textarea id="kbGeneralNotes" rows="4" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 16px; font-family: inherit; resize: vertical;" placeholder="Enter any general verification notes or observations..."></textarea>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="font-size: 20px; margin: 0;">Security Features</h3>
+                            <button id="addSecurityFeatureBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+ Add Security Feature</button>
+                        </div>
+
+                        <div id="securityFeaturesContainer">
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-top: 30px;">
+                            <button id="saveKBEntryBtn" style="flex: 1; padding: 16px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;">💾 Save Entry</button>
+                            <button id="deleteKBEntryBtn" style="padding: 16px 24px; background: #e74c3c; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;">🗑️ Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded',()=>{
+const STORAGE_KEY='aps_coins_v1';const NAMES_KEY='aps_coin_names_v1';const TYPES_KEY='aps_coin_types_v1';const KB_KEY='aps_coin_kb_v1';
+let coins=[];let metalRatesUSD={AU:null,AG:null};let exchangeRatesPLN=null;let editModeId=null;let currentSortBy='purchaseDate';let currentSortOrder='desc';
+let kbEntries=[];let currentKBId=null;let currentCoinImages=[];
+const $=s=>document.querySelector(s);const $$=s=>Array.from(document.querySelectorAll(s));const fmt=v=>isNaN(v)?'-':Number(v).toFixed(2);
+
+// File System Access API for JSON storage
+let directoryHandle=null;
+let useFileSystem=false;
+
+async function initFileSystem(){
+    try{
+        // Check if File System Access API is supported
+        if(!('showDirectoryPicker' in window)){
+            console.warn('File System Access API not supported, falling back to localStorage');
+            useFileSystem=false;
+            return false;
+        }
+        
+        // Try to get stored directory handle
+        const stored=await navigator.storage.getDirectory();
+        if(stored){
+            directoryHandle=stored;
+            useFileSystem=true;
+            return true;
+        }
+    }catch(err){
+        console.warn('Could not init file system, using localStorage:',err);
+        useFileSystem=false;
+    }
+    return false;
+}
+
+async function requestDirectoryAccess(){
+    try{
+        directoryHandle=await window.showDirectoryPicker({mode:'readwrite'});
+        useFileSystem=true;
+        alert('✅ Folder access granted! Data will now be saved to JSON files in this folder.');
+        return true;
+    }catch(err){
+        console.warn('Directory access denied:',err);
+        return false;
+    }
+}
+
+async function writeJSONFile(filename,data){
+    if(!useFileSystem||!directoryHandle){
+        return false;
+    }
+    try{
+        const fileHandle=await directoryHandle.getFileHandle(filename,{create:true});
+        const writable=await fileHandle.createWritable();
+        await writable.write(JSON.stringify(data,null,2));
+        await writable.close();
+        return true;
+    }catch(err){
+        console.error('Error writing file:',err);
+        return false;
+    }
+}
+
+async function readJSONFile(filename,defaultValue=[]){
+    if(!useFileSystem||!directoryHandle){
+        return null;
+    }
+    try{
+        const fileHandle=await directoryHandle.getFileHandle(filename);
+        const file=await fileHandle.getFile();
+        const text=await file.text();
+        return JSON.parse(text);
+    }catch(err){
+        // File doesn't exist or error reading
+        return null;
+    }
+}
+
+// IndexedDB for images (fallback) + JSON file storage
+let db;
+let imagesCache={};
+
+function initDB(){
+    return new Promise((resolve,reject)=>{
+        const request=indexedDB.open('APSCoinTrackerDB',1);
+        request.onerror=()=>reject(request.error);
+        request.onsuccess=()=>{db=request.result;resolve(db)};
+        request.onupgradeneeded=(e)=>{
+            const database=e.target.result;
+            if(!database.objectStoreNames.contains('images')){
+                database.createObjectStore('images',{keyPath:'id'});
+            }
+        };
+    });
+}
+
+async function loadImagesFromFile(){
+    const fileData=await readJSONFile('images_data.json',{});
+    if(fileData!==null){
+        imagesCache=fileData;
+    }
+}
+
+async function saveImagesToFile(){
+    await writeJSONFile('images_data.json',imagesCache);
+}
+
+async function saveImageToDB(id,imageData){
+    // Save to cache and file
+    imagesCache[id]=imageData;
+    await saveImagesToFile();
+    
+    // Also save to IndexedDB as fallback
+    if(!db)await initDB();
+    return new Promise((resolve,reject)=>{
+        const transaction=db.transaction(['images'],'readwrite');
+        const store=transaction.objectStore('images');
+        const request=store.put({id:id,data:imageData});
+        request.onsuccess=()=>resolve(id);
+        request.onerror=()=>reject(request.error);
+    });
+}
+
+async function getImageFromDB(id){
+    // Try cache first
+    if(imagesCache[id]){
+        return imagesCache[id];
+    }
+    
+    // Fallback to IndexedDB
+    if(!db)await initDB();
+    return new Promise((resolve,reject)=>{
+        const transaction=db.transaction(['images'],'readonly');
+        const store=transaction.objectStore('images');
+        const request=store.get(id);
+        request.onsuccess=()=>{
+            const data=request.result?.data||null;
+            if(data){
+                imagesCache[id]=data;
+            }
+            resolve(data);
+        };
+        request.onerror=()=>reject(request.error);
+    });
+}
+
+async function deleteImageFromDB(id){
+    // Delete from cache and file
+    delete imagesCache[id];
+    await saveImagesToFile();
+    
+    // Also delete from IndexedDB
+    if(!db)await initDB();
+    return new Promise((resolve,reject)=>{
+        const transaction=db.transaction(['images'],'readwrite');
+        const store=transaction.objectStore('images');
+        const request=store.delete(id);
+        request.onsuccess=()=>resolve();
+        request.onerror=()=>reject(request.error);
+    });
+}
+
+const loadJSON=(k,f=[])=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch{return f}};
+const saveJSON=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+
+async function loadCoins(){
+    const fileData=await readJSONFile('coins_data.json',[]);
+    if(fileData!==null){
+        coins=fileData;
+    }else{
+        coins=loadJSON(STORAGE_KEY,[]);
+    }
+    return coins;
+}
+
+async function loadKBEntries(){
+    const fileData=await readJSONFile('kb_data.json',[]);
+    if(fileData!==null){
+        kbEntries=fileData;
+    }else{
+        kbEntries=loadJSON(KB_KEY,[]);
+    }
+    return kbEntries;
+}
+
+async function saveKBEntries(){
+    saveJSON(KB_KEY,kbEntries);
+    await writeJSONFile('kb_data.json',kbEntries);
+}
+
+async function saveCoins(){
+    saveJSON(STORAGE_KEY,coins);
+    await writeJSONFile('coins_data.json',coins);
+}
+
+async function loadNames(){
+    const fileData=await readJSONFile('names_data.json',[]);
+    return fileData!==null?fileData:loadJSON(NAMES_KEY,[]);
+}
+
+async function saveNames(l){
+    saveJSON(NAMES_KEY,l);
+    await writeJSONFile('names_data.json',l);
+}
+
+async function loadTypes(){
+    const fileData=await readJSONFile('types_data.json',[]);
+    return fileData!==null?fileData:loadJSON(TYPES_KEY,[]);
+}
+
+async function saveTypes(l){
+    saveJSON(TYPES_KEY,l);
+    await writeJSONFile('types_data.json',l);
+}
+
+function genId(){return'C'+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,6).toUpperCase()}
+function updateGoldSilverRatio(){const r=$('#goldSilverRatio');if(!r)return;let g=metalRatesUSD.AU||parseFloat($('#goldRate')?.value);let s=metalRatesUSD.AG||parseFloat($('#silverRate')?.value);if(g&&s&&s>0){r.value=(g/s).toFixed(2)+':1'}else{r.value='-'}updatePLNRates()}
+function updatePLNRates(){const sPLN=$('#silverRatePLN');const gPLN=$('#goldRatePLN');if(!sPLN||!gPLN)return;let s=metalRatesUSD.AG||parseFloat($('#silverRate')?.value);let g=metalRatesUSD.AU||parseFloat($('#goldRate')?.value);if(s&&exchangeRatesPLN&&exchangeRatesPLN.USD){const sInPLN=s/exchangeRatesPLN.USD;sPLN.textContent=sInPLN.toFixed(2)+' PLN/oz'}else{sPLN.textContent=''}if(g&&exchangeRatesPLN&&exchangeRatesPLN.USD){const gInPLN=g/exchangeRatesPLN.USD;gPLN.textContent=gInPLN.toFixed(2)+' PLN/oz'}else{gPLN.textContent=''}}
+function updateMetalInputs(){
+    try{
+        const sIn=document.getElementById('silverRate'),gIn=document.getElementById('goldRate');
+        if(sIn){if(metalRatesUSD.AG){sIn.value=Number(metalRatesUSD.AG).toFixed(2);sIn.disabled=true}else{sIn.disabled=false}}
+        if(gIn){if(metalRatesUSD.AU){gIn.value=Number(metalRatesUSD.AU).toFixed(2);gIn.disabled=true}else{gIn.disabled=false}}
+    }catch(e){console.warn('updateMetalInputs error',e)}
+}
+async function fetchRates(){
+    const attempts=[
+        async()=>{const r=await fetch('https://api.metals.live/v1/spot');return r.ok?await r.json():null},
+        async()=>{const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD');return r.ok?await r.json():null}
+    ];
+    for(const fn of attempts){
+        try{
+            const data=await fn();if(!data)continue;
+            if(Array.isArray(data)){
+                for(const it of data){
+                    if(!it)continue;
+                    if(it.metal&&it.price){
+                        const m=(it.metal||'').toLowerCase();
+                        if(m.includes('gold'))metalRatesUSD.AU=parseFloat(it.price)||metalRatesUSD.AU;
+                        if(m.includes('silver'))metalRatesUSD.AG=parseFloat(it.price)||metalRatesUSD.AG;
+                    }else{
+                        if(it.gold)metalRatesUSD.AU=metalRatesUSD.AU||parseFloat(it.gold);
+                        if(it.silver)metalRatesUSD.AG=metalRatesUSD.AG||parseFloat(it.silver);
+                    }
+                }
+            }else if(typeof data==='object'){
+                if(data.items&&Array.isArray(data.items)&&data.items.length){
+                    const item=data.items[0];
+                    if(item.xauPrice)metalRatesUSD.AU=metalRatesUSD.AU||parseFloat(item.xauPrice);
+                    if(item.xagPrice)metalRatesUSD.AG=metalRatesUSD.AG||parseFloat(item.xagPrice);
+                }else{
+                    if(data.gold)metalRatesUSD.AU=metalRatesUSD.AU||parseFloat(data.gold);
+                    if(data.silver)metalRatesUSD.AG=metalRatesUSD.AG||parseFloat(data.silver);
+                }
+            }
+            if(metalRatesUSD.AU&&metalRatesUSD.AG)break;
+        }catch(err){console.warn('metal attempt failed',err)}
+    }
+    
+    let fxOk=false;
+    try{const r=await fetch('https://api.exchangerate.host/latest?base=PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (base=PLN) failed',e)}
+    if(!fxOk){
+        try{
+            const r=await fetch('https://api.exchangerate.host/latest');
+            if(r.ok){const j=await r.json();if(j&&j.rates&&j.rates.PLN){exchangeRatesPLN={};Object.keys(j.rates).forEach(c=>exchangeRatesPLN[c]=j.rates[c]/j.rates.PLN);fxOk=true}}
+        }catch(e){console.warn('FX fetch (convert) failed',e)}
+    }
+    if(!fxOk){
+        try{const r=await fetch('https://open.er-api.com/v6/latest/PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (open.er-api) failed',e)}
+    }
+    updateMetalInputs();
+    updateGoldSilverRatio();
+    updateOverviewTotals();
+    console.info('fetchRates result:',{metalRatesUSD,fxResolved:!!exchangeRatesPLN});
+}
+function convertToPLN(a,c){if(!a)return 0;if(!c||c==='PLN')return Number(a);if(exchangeRatesPLN&&exchangeRatesPLN[c])return a/exchangeRatesPLN[c];return Number(a)}
+function convertUSDToPLN(a){if(!exchangeRatesPLN||!exchangeRatesPLN.USD)return a;return a/exchangeRatesPLN.USD}
+function costBasisPLN(c){return convertToPLN(parseFloat(c.purchasePrice)||0,c.purchaseCurrency||'PLN')}
+function computeCurrentValuePLN(c){
+    const m=(c.coinMaterial||'Other').toUpperCase();
+    if(m==='AU'||m==='AG'){
+        const p=(parseFloat(c.coinMetalContent)||0)/1000;
+        const w=parseFloat(c.coinWeight)||0;
+        
+        // If no purity, can't calculate metal value
+        if(p===0){
+            console.log(`⚠️ ${c.coinName}: No purity data, using cost basis`);
+            return costBasisPLN(c);
+        }
+        
+        const oz=(w*p)/31.1034768;
+        let r=(m==='AU')?metalRatesUSD.AU:metalRatesUSD.AG;
+        if(!r)r=parseFloat((m==='AU'?$('#goldRate'):$('#silverRate'))?.value)||null;
+        
+        if(r&&oz>0){
+            const valueUSD=r*oz;
+            const valuePLN=convertUSDToPLN(valueUSD);
+            console.log(`💰 ${c.coinName}: ${w}g × ${(p*100).toFixed(1)}% = ${oz.toFixed(4)} oz × $${r} = ${valuePLN.toFixed(2)} PLN (FX: ${exchangeRatesPLN?.USD?.toFixed(4)})`);
+            return valuePLN;
+        }
+    }
+    // For non-precious metals or missing data, use cost basis
+    console.log(`📌 ${c.coinName}: Using cost basis ${costBasisPLN(c).toFixed(2)} PLN`);
+    return costBasisPLN(c);
+}
+function updateOverviewTotals(){const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);let sC=0,gC=0,sW=0,gW=0;coins.forEach(c=>{const m=(c.coinMaterial||'Other').toUpperCase();if(m==='AG'){sC++;sW+=parseFloat(c.coinWeight)||0}if(m==='AU'){gC++;gW+=parseFloat(c.coinWeight)||0}});$('#totalPurchased').textContent=fmt(p)+' PLN';$('#totalCurrent').textContent=fmt(cur)+' PLN';$('#silverCount').textContent=sC;$('#goldCount').textContent=gC;$('#silverWeight').textContent=fmt(sW)+' g';$('#goldWeight').textContent=fmt(gW)+' g';const gl=cur-p;$('#gainLoss').textContent=fmt(gl)+' PLN';$('#gainLoss').style.color=gl<0?'red':(gl>0?'green':'inherit');updateGoldSilverRatio()}
+async function populateTypeDropdown(){const s=$('#coinType');if(!s)return;const cv=s.value;s.innerHTML='<option value="">-- Select Type --</option>';const types=await loadTypes();types.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;s.appendChild(o)});if(cv)s.value=cv}
+async function populateDatalist(){const d=$('#coinNameList');if(!d)return;d.innerHTML='';const names=await loadNames();names.forEach(n=>{const o=document.createElement('option');o.value=n;d.appendChild(o)})}
+async function addName(n){if(!n||typeof n!=='string')return;const v=n.trim();if(v.length<2)return;const l=await loadNames();if(!l.some(x=>x.toLowerCase()===v.toLowerCase())){l.unshift(v);await saveNames(l.slice(0,200));populateDatalist()}}
+async function addType(t){if(!t||typeof t!=='string')return;const v=t.trim();if(v.length<1)return;const l=await loadTypes();if(!l.some(x=>x.toLowerCase()===v.toLowerCase())){l.push(v);l.sort();await saveTypes(l);populateTypeDropdown();renderTypesTable()}}
+window.deleteType=async function(tn){const cu=coins.filter(c=>c.type===tn).length;if(cu>0){if(!confirm(`${cu} coin(s) use this type. Delete anyway?`))return;coins.forEach(c=>{if(c.type===tn)c.type=''});await saveCoins()}const l=(await loadTypes()).filter(t=>t!==tn);await saveTypes(l);populateTypeDropdown();renderTypesTable();renderCoinsTable()};
+async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.innerHTML='';const ts=await loadTypes();if(!ts.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:#999">No types defined</td></tr>';return}ts.forEach((t,i)=>{const cu=coins.filter(c=>c.type===t).length;const tr=document.createElement('tr');tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td style="font-weight:600">${t}</td><td>${cu} coin${cu!==1?'s':''}</td><td><button class="delete-btn" onclick="deleteType('${t.replace(/'/g,"\\'")}')">Delete</button></td>`;tb.appendChild(tr)})}
+function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const hasPhotos=c.images&&Array.isArray(c.images)&&c.images.length>0;const photoIcon=hasPhotos?'<span style="color:green;font-size:18px">✓</span>':'<span style="color:red;font-size:18px">✗</span>';tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td><td style="text-align:center">${photoIcon}</td><td style="text-align:center" onclick="event.stopPropagation()"><input type="checkbox" class="coin-checkbox" data-id="${c.coinId}" ${c.checked?'checked':''}></td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)});$$('.coin-checkbox').forEach(cb=>cb.addEventListener('change',function(){const coin=coins.find(c=>c.coinId===this.dataset.id);if(coin){coin.checked=this.checked;saveCoins()}}))}
+function getFilteredAndSortedCoins(){const nf=($('#filterName')?.value||'').toLowerCase();const cf=($('#filterCountry')?.value||'').toLowerCase();const yf=$('#filterYear')?.value||'';const tf=($('#filterType')?.value||'').toLowerCase();const mf=$('#filterMaterial')?.value||'';const pf=$('#filterPurity')?.value||'';const df=$('#filterPurchaseDate')?.value||'';let fil=coins.filter(c=>{if(nf&&!(c.coinName||'').toLowerCase().includes(nf))return false;if(cf&&!(c.coinCountry||'').toLowerCase().includes(cf))return false;if(yf&&c.coinYear!=yf)return false;if(tf&&!(c.type||'').toLowerCase().includes(tf))return false;if(mf&&c.coinMaterial!==mf)return false;if(pf&&c.coinMetalContent!=pf)return false;if(df&&c.purchaseDate!==df)return false;return true});fil.sort((a,b)=>{let vA,vB;if(currentSortBy==='currentValue'){vA=computeCurrentValuePLN(a);vB=computeCurrentValuePLN(b)}else if(currentSortBy==='gain'){vA=computeCurrentValuePLN(a)-costBasisPLN(a);vB=computeCurrentValuePLN(b)-costBasisPLN(b)}else if(currentSortBy==='coinYear'||currentSortBy==='purchasePrice'){vA=parseFloat(a[currentSortBy])||0;vB=parseFloat(b[currentSortBy])||0}else if(currentSortBy==='purchaseDate'){vA=a.purchaseDate||'';vB=b.purchaseDate||''}else{vA=(a[currentSortBy]||'').toString().toLowerCase();vB=(b[currentSortBy]||'').toString().toLowerCase()}if(vA<vB)return currentSortOrder==='asc'?-1:1;if(vA>vB)return currentSortOrder==='asc'?1:-1;return 0});return fil}
+function setSortColumn(col){if(currentSortBy===col){currentSortOrder=currentSortOrder==='asc'?'desc':'asc'}else{currentSortBy=col;currentSortOrder='asc'}$$('th.sortable').forEach(th=>{th.classList.remove('sorted-asc','sorted-desc');if(th.dataset.sort===col){th.classList.add('sorted-'+currentSortOrder)}});renderCoinsTable()}
+function showSection(n){const sec={'overview':$('#overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section')};Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});$$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));if(n==='overview'){updateOverviewTotals()}else if(n==='all-coins'){renderCoinsTable()}else if(n==='manage-types'){renderTypesTable()}else if(n==='add-coin'){if(!editModeId){isViewMode=false;$('#coinForm').reset();$('#coinId').value=genId();currentCoinImages=[];renderCoinImagesPreview();setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#editCoinBtn').style.display='none'}}else if(n==='fx-chart'){initTradingViewChart()}else if(n==='price-simulation'){updateSimulationRates()}else if(n==='coin-verification'){renderKBList();showKBListView()}}
+let tvWidget=null;
+function initTradingViewChart(){if(tvWidget)return;const pair=$('#currencyPair')?.value||'XAUUSD';tvWidget=new TradingView.widget({autosize:true,symbol:pair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'});$('#currencyPair')?.addEventListener('change',function(){const newPair=this.value;if(tvWidget){tvWidget.remove();tvWidget=null}tvWidget=new TradingView.widget({autosize:true,symbol:newPair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'})})}
+function updateSimulationRates(){const metal=$('#simMetal')?.value||'AG';const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(rate){const ratePerGram=rate/31.1034768;$('#simCurrentRate').textContent='$'+rate.toFixed(2)+' /oz';$('#simCurrentRatePerGram').textContent='$'+ratePerGram.toFixed(2)+' /g'}else{$('#simCurrentRate').textContent='Rate not available';$('#simCurrentRatePerGram').textContent='-'}}
+function calculateSimulation(){const metal=$('#simMetal')?.value||'AG';const purity=parseFloat($('#simPurity')?.value)||0;const weight=parseFloat($('#simWeight')?.value)||0;if(!purity||!weight){alert('⚠️ Please enter purity and weight');return}const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(!rate){alert('⚠️ Metal rate not available. Please refresh FX rates.');return}const purityDecimal=purity/1000;const pureWeight=weight*purityDecimal;const ratePerGram=rate/31.1034768;const valueUSD=pureWeight*ratePerGram;const valuePLN=convertUSDToPLN(valueUSD);$('#simPureWeight').textContent=pureWeight.toFixed(2)+' g';$('#simValueUSD').textContent='$'+valueUSD.toFixed(2);$('#simValuePLN').textContent=valuePLN.toFixed(2)+' PLN';$('#simResult').style.display='block'}
+$('#simMetal')?.addEventListener('change',updateSimulationRates);
+$('#calculateSimBtn')?.addEventListener('click',calculateSimulation);
+
+// Coin Images Functions
+async function renderCoinImagesPreview(){
+    const container=$('#coinImagesPreview');
+    if(!container)return;
+    container.innerHTML='';
+    
+    if(!currentCoinImages||!currentCoinImages.length){
+        container.innerHTML='<p style="color: #999; font-size: 14px; margin: 0;">No images added</p>';
+        return;
+    }
+    
+    for(let idx=0;idx<currentCoinImages.length;idx++){
+        const imageId=currentCoinImages[idx];
+        const imageData=await getImageFromDB(imageId);
+        if(imageData){
+            const imgDiv=document.createElement('div');
+            imgDiv.style.cssText='position: relative; display: inline-block;';
+            imgDiv.innerHTML=`
+                <img src="${imageData}" class="coin-img-preview" data-img-index="${idx}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid #ddd; cursor: pointer;">
+                <button type="button" class="delete-coin-image" data-index="${idx}" style="position: absolute; top: -8px; right: -8px; background: red; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold;">×</button>
+            `;
+            container.appendChild(imgDiv);
+        }
+    }
+    
+    $$('.coin-img-preview').forEach(img=>img.addEventListener('click',async function(){
+        const idx=parseInt(this.dataset.imgIndex);
+        if(currentCoinImages[idx]){
+            const imageData=await getImageFromDB(currentCoinImages[idx]);
+            if(imageData){
+                const newWindow=window.open();
+                newWindow.document.write('<html><head><title>Image</title><style>body{margin:0;display:flex;align-items:center;justify-content:center;background:#000;}</style></head><body><img src="'+imageData+'" style="max-width:100%;max-height:100vh;"/></body></html>');
+                newWindow.document.close();
+            }
+        }
+    }));
+    
+    $$('.delete-coin-image').forEach(btn=>btn.addEventListener('click',async function(){
+        const idx=parseInt(this.dataset.index);
+        const imageId=currentCoinImages[idx];
+        if(imageId){
+            await deleteImageFromDB(imageId);
+        }
+        currentCoinImages.splice(idx,1);
+        renderCoinImagesPreview();
+    }));
+}
+
+$('#addCoinImageBtn')?.addEventListener('click',()=>{
+    $('#coinImageUpload').click();
+});
+
+$('#coinImageUpload')?.addEventListener('change',function(){
+    if(!this.files.length)return;
+    
+    Array.from(this.files).forEach(async file=>{
+        const reader=new FileReader();
+        reader.onload=async function(e){
+            const imageId='coin_img_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+            await saveImageToDB(imageId,e.target.result);
+            if(!currentCoinImages)currentCoinImages=[];
+            currentCoinImages.push(imageId);
+            renderCoinImagesPreview();
+        };
+        reader.readAsDataURL(file);
+    });
+    
+    this.value='';
+});
+
+$('#pasteCoinImageBtn')?.addEventListener('click',()=>{
+    const pasteArea=$('#coinPasteArea');
+    if(pasteArea){
+        pasteArea.style.display=pasteArea.style.display==='none'?'block':'none';
+        if(pasteArea.style.display==='block'){
+            pasteArea.focus();
+        }
+    }
+});
+
+$('#coinPasteArea')?.addEventListener('paste',function(e){
+    e.preventDefault();
+    const items=e.clipboardData.items;
+    
+    for(let i=0;i<items.length;i++){
+        if(items[i].type.indexOf('image')!==-1){
+            const blob=items[i].getAsFile();
+            const reader=new FileReader();
+            reader.onload=async function(evt){
+                const imageId='coin_img_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+                await saveImageToDB(imageId,evt.target.result);
+                if(!currentCoinImages)currentCoinImages=[];
+                currentCoinImages.push(imageId);
+                renderCoinImagesPreview();
+            };
+            reader.readAsDataURL(blob);
+            
+            setTimeout(()=>{
+                const pasteArea=$('#coinPasteArea');
+                if(pasteArea)pasteArea.style.display='none';
+            },100);
+            break;
+        }
+    }
+});
+
+$('#coinPasteArea')?.addEventListener('focus',function(){
+    this.style.borderColor='#9b59b6';
+    this.style.background='rgba(155, 89, 182, 0.1)';
+});
+
+$('#coinPasteArea')?.addEventListener('blur',function(){
+    this.style.borderColor='#9b59b6';
+    this.style.background='rgba(155, 89, 182, 0.05)';
+});
+
+// Coin Verification KB Functions
+function renderKBList(){
+    const tb=$('#verificationListBody');
+    if(!tb)return;
+    tb.innerHTML='';
+    if(!kbEntries.length){
+        tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:40px;color:#999">No entries yet. Click "Add New Coin" to create your first entry.</td></tr>';
+        return;
+    }
+    kbEntries.forEach((entry,i)=>{
+        const featureCount=(entry.securityFeatures||[]).length;
+        const tr=document.createElement('tr');
+        tr.style.borderBottom='1px solid #e0e0e0';
+        tr.innerHTML=`
+            <td style="padding: 12px; font-weight: bold; color: #666;">${i+1}</td>
+            <td style="padding: 12px;">${entry.country||'-'}</td>
+            <td style="padding: 12px; font-weight: 600;">${entry.coinName||'-'}</td>
+            <td style="padding: 12px; text-align: center;">
+                <span style="background: ${featureCount>0?'rgba(78, 205, 196, 0.2)':'rgba(0,0,0,0.05)'}; padding: 4px 12px; border-radius: 12px; font-weight: 600; color: ${featureCount>0?'#44a08d':'#999'};">${featureCount}</span>
+            </td>
+            <td style="padding: 12px; text-align: center;">
+                <button class="view-kb-btn" data-id="${entry.id}" style="padding: 8px 16px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Edit/View</button>
+            </td>
+        `;
+        tb.appendChild(tr);
+    });
+    $$('.view-kb-btn').forEach(btn=>btn.addEventListener('click',function(){
+        showKBDetail(this.dataset.id);
+    }));
+}
+
+function showKBListView(){
+    $('#verificationListView').style.display='block';
+    $('#verificationDetailView').style.display='none';
+    currentKBId=null;
+}
+
+function showKBDetail(entryId){
+    currentKBId=entryId;
+    const entry=kbEntries.find(e=>e.id===entryId);
+    
+    if(entry){
+        $('#kbCountry').value=entry.country||'';
+        $('#kbCoinName').value=entry.coinName||'';
+        $('#kbGeneralNotes').value=entry.generalNotes||'';
+        renderSecurityFeatures(entry.securityFeatures||[]);
+        $('#deleteKBEntryBtn').style.display='block';
+    }else{
+        $('#kbCountry').value='';
+        $('#kbCoinName').value='';
+        $('#kbGeneralNotes').value='';
+        renderSecurityFeatures([]);
+        $('#deleteKBEntryBtn').style.display='none';
+    }
+    
+    $('#verificationListView').style.display='none';
+    $('#verificationDetailView').style.display='block';
+}
+
+async function renderSecurityFeatures(features){
+    currentKBSecurityFeatures=features||[];
+    console.log('renderSecurityFeatures called with', currentKBSecurityFeatures.length, 'features');
+    currentKBSecurityFeatures.forEach((f,i)=>console.log(`  Feature ${i}:`, f.name, 'has', f.images?.length||0, 'images'));
+    const container=$('#securityFeaturesContainer');
+    if(!container)return;
+    container.innerHTML='';
+    
+    if(!currentKBSecurityFeatures.length){
+        container.innerHTML='<p style="text-align: center; color: #999; padding: 40px;">No security features added yet. Click "Add Security Feature" to begin.</p>';
+        return;
+    }
+    
+    for(let idx=0;idx<currentKBSecurityFeatures.length;idx++){
+        const f=currentKBSecurityFeatures[idx];
+        const featureDiv=document.createElement('div');
+        featureDiv.className='security-feature-item';
+        featureDiv.dataset.index=idx;
+        featureDiv.style.cssText='background: rgba(155, 89, 182, 0.05); border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 20px;';
+        
+        let imagesHTML='';
+        if(f.images&&f.images.length){
+            const imagePromises=f.images.map(async(imageId,imgIdx)=>{
+                const imageData=await getImageFromDB(imageId);
+                if(imageData){
+                    return `
+                        <div style="display: inline-block; position: relative; margin-right: 10px; margin-bottom: 10px;">
+                            <img src="${imageData}" class="kb-img-preview" data-img-idx="${imgIdx}" data-feature-idx="${idx}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid #ddd;">
+                            <button class="delete-image-btn" data-feature-idx="${idx}" data-img-idx="${imgIdx}" style="position: absolute; top: -8px; right: -8px; background: red; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold;">×</button>
+                        </div>
+                    `;
+                }
+                return '';
+            });
+            const resolvedImages=await Promise.all(imagePromises);
+            imagesHTML=resolvedImages.join('');
+        }
+        
+        featureDiv.innerHTML=`
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h4 style="margin: 0; color: #9b59b6;">Security Feature #${idx+1}</h4>
+                <button class="delete-feature-btn" data-index="${idx}" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Delete</button>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Feature Name:</label>
+                <input type="text" class="feature-name" data-index="${idx}" value="${f.name||''}" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;" placeholder="e.g., Holographic strip, Microtext, etc.">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Year (Optional):</label>
+                <input type="text" class="feature-year" data-index="${idx}" value="${f.year||''}" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;" placeholder="e.g., 2020">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Description:</label>
+                <textarea class="feature-text" data-index="${idx}" rows="3" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: inherit; resize: vertical;" placeholder="Describe this security feature...">${f.text||''}</textarea>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Images:</label>
+                <div class="feature-images" style="margin-bottom: 10px;">
+                    ${imagesHTML||'<p style="color: #999; font-size: 14px;">No images added</p>'}
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="file" class="feature-image-upload" data-index="${idx}" accept="image/*" multiple style="display: none;">
+                    <button class="add-image-btn" data-index="${idx}" style="padding: 8px 16px; background: rgba(78, 205, 196, 0.2); color: #44a08d; border: 2px solid #4ecdc4; border-radius: 6px; cursor: pointer; font-weight: 600;">📁 Browse Files</button>
+                    <button class="paste-image-btn" data-index="${idx}" style="padding: 8px 16px; background: rgba(155, 89, 182, 0.2); color: #9b59b6; border: 2px solid #9b59b6; border-radius: 6px; cursor: pointer; font-weight: 600;">📋 Paste from Clipboard</button>
+                </div>
+                <div class="paste-area" data-index="${idx}" contenteditable="true" style="display: none; min-height: 80px; padding: 12px; border: 2px dashed #9b59b6; border-radius: 8px; background: rgba(155, 89, 182, 0.05); color: #999; font-size: 13px; text-align: center; margin-bottom: 10px; outline: none;">Click here and press Ctrl+V (or Cmd+V) to paste an image from clipboard</div>
+            </div>
+        `;
+        
+        container.appendChild(featureDiv);
+    }
+    
+    // Attach event listeners
+    $$('.delete-feature-btn').forEach(btn=>btn.addEventListener('click',function(){
+        deleteSecurityFeature(parseInt(this.dataset.index));
+    }));
+    
+    $$('.add-image-btn').forEach(btn=>btn.addEventListener('click',function(){
+        const idx=this.dataset.index;
+        $(`.feature-image-upload[data-index="${idx}"]`).click();
+    }));
+    
+    $$('.paste-image-btn').forEach(btn=>btn.addEventListener('click',function(){
+        const idx=this.dataset.index;
+        const pasteArea=$(`.paste-area[data-index="${idx}"]`);
+        if(pasteArea){
+            pasteArea.style.display=pasteArea.style.display==='none'?'block':'none';
+            if(pasteArea.style.display==='block'){
+                pasteArea.focus();
+            }
+        }
+    }));
+    
+    $$('.paste-area').forEach(area=>{
+        area.addEventListener('paste',function(e){
+            e.preventDefault();
+            const idx=parseInt(this.dataset.index);
+            const items=e.clipboardData.items;
+            
+            for(let i=0;i<items.length;i++){
+                if(items[i].type.indexOf('image')!==-1){
+                    const blob=items[i].getAsFile();
+                    const reader=new FileReader();
+                    reader.onload=async function(evt){
+                        const imageId='img_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+                        await saveImageToDB(imageId,evt.target.result);
+                        if(!currentKBSecurityFeatures[idx].images){
+                            currentKBSecurityFeatures[idx].images=[];
+                        }
+                        currentKBSecurityFeatures[idx].images.push(imageId);
+                        await renderSecurityFeatures(currentKBSecurityFeatures);
+                    };
+                    reader.readAsDataURL(blob);
+                    
+                    // Hide paste area after successful paste
+                    setTimeout(()=>{
+                        const pasteArea=$(`.paste-area[data-index="${idx}"]`);
+                        if(pasteArea)pasteArea.style.display='none';
+                    },100);
+                    break;
+                }
+            }
+        });
+        
+        area.addEventListener('focus',function(){
+            this.style.borderColor='#9b59b6';
+            this.style.background='rgba(155, 89, 182, 0.1)';
+        });
+        
+        area.addEventListener('blur',function(){
+            this.style.borderColor='#9b59b6';
+            this.style.background='rgba(155, 89, 182, 0.05)';
+        });
+    });
+    
+    $$('.feature-image-upload').forEach(input=>input.addEventListener('change',function(){
+        const idx=parseInt(this.dataset.index);
+        handleImageUpload(idx,this.files);
+    }));
+    
+    $$('.delete-image-btn').forEach(btn=>btn.addEventListener('click',function(){
+        const featureIdx=parseInt(this.dataset.featureIdx);
+        const imgIdx=parseInt(this.dataset.imgIdx);
+        deleteImage(featureIdx,imgIdx);
+    }));
+    
+    $$('.kb-img-preview').forEach(img=>img.addEventListener('click',async function(){
+        const featureIdx=parseInt(this.dataset.featureIdx);
+        const imgIdx=parseInt(this.dataset.imgIdx);
+        if(currentKBSecurityFeatures[featureIdx]&&currentKBSecurityFeatures[featureIdx].images[imgIdx]){
+            const imageId=currentKBSecurityFeatures[featureIdx].images[imgIdx];
+            const imgData=await getImageFromDB(imageId);
+            if(imgData){
+                const newWindow=window.open();
+                newWindow.document.write('<html><head><title>Image</title><style>body{margin:0;display:flex;align-items:center;justify-content:center;background:#000;}</style></head><body><img src="'+imgData+'" style="max-width:100%;max-height:100vh;"/></body></html>');
+                newWindow.document.close();
+            }
+        }
+    }));
+}
+
+let currentKBSecurityFeatures=[];
+
+function addSecurityFeature(){
+    currentKBSecurityFeatures.push({name:'',year:'',text:'',images:[]});
+    renderSecurityFeatures(currentKBSecurityFeatures);
+}
+
+function deleteSecurityFeature(idx){
+    if(!confirm('Delete this security feature?'))return;
+    currentKBSecurityFeatures.splice(idx,1);
+    renderSecurityFeatures(currentKBSecurityFeatures);
+}
+
+function handleImageUpload(featureIdx,files){
+    if(!files.length||!currentKBSecurityFeatures[featureIdx])return;
+    
+    Array.from(files).forEach(async file=>{
+        const reader=new FileReader();
+        reader.onload=async function(e){
+            const imageId='img_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+            await saveImageToDB(imageId,e.target.result);
+            if(!currentKBSecurityFeatures[featureIdx].images){
+                currentKBSecurityFeatures[featureIdx].images=[];
+            }
+            currentKBSecurityFeatures[featureIdx].images.push(imageId);
+            await renderSecurityFeatures(currentKBSecurityFeatures);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+async function deleteImage(featureIdx,imgIdx){
+    if(currentKBSecurityFeatures[featureIdx]&&currentKBSecurityFeatures[featureIdx].images){
+        const imageId=currentKBSecurityFeatures[featureIdx].images[imgIdx];
+        if(imageId){
+            await deleteImageFromDB(imageId);
+        }
+        currentKBSecurityFeatures[featureIdx].images.splice(imgIdx,1);
+        await renderSecurityFeatures(currentKBSecurityFeatures);
+    }
+}
+
+function saveKBEntry(){
+    const country=$('#kbCountry')?.value?.trim()||'';
+    const coinName=$('#kbCoinName')?.value?.trim()||'';
+    
+    if(!country||!coinName){
+        alert('⚠️ Please enter both Country and Coin Name');
+        return;
+    }
+    
+    const generalNotes=$('#kbGeneralNotes')?.value||'';
+    const features=[];
+    
+    // Collect features from currentKBSecurityFeatures to preserve images
+    currentKBSecurityFeatures.forEach((feature,idx)=>{
+        const name=$(`.feature-name[data-index="${idx}"]`)?.value||'';
+        const year=$(`.feature-year[data-index="${idx}"]`)?.value||'';
+        const text=$(`.feature-text[data-index="${idx}"]`)?.value||'';
+        const images=feature.images||[]; // Get images directly from the array
+        
+        features.push({name,year,text,images});
+    });
+    
+    if(currentKBId){
+        const idx=kbEntries.findIndex(e=>e.id===currentKBId);
+        if(idx!==-1){
+            kbEntries[idx]={id:currentKBId,country,coinName,generalNotes,securityFeatures:features};
+        }
+    }else{
+        const newEntry={id:genId(),country,coinName,generalNotes,securityFeatures:features};
+        kbEntries.push(newEntry);
+    }
+    
+    saveKBEntries();
+    console.log('Saved KB entry with', features.length, 'features');
+    features.forEach((f,i)=>console.log(`  Feature ${i}: ${f.images?.length||0} images`));
+    alert('✅ Entry saved successfully!');
+    renderKBList();
+    showKBListView();
+}
+
+function deleteKBEntry(){
+    if(!currentKBId)return;
+    if(!confirm('Delete this entry permanently?'))return;
+    kbEntries=kbEntries.filter(e=>e.id!==currentKBId);
+    saveKBEntries();
+    renderKBList();
+    showKBListView();
+}
+
+$('#addNewKBEntry')?.addEventListener('click',()=>{
+    currentKBId=null;
+    currentKBSecurityFeatures=[];
+    showKBDetail(null);
+});
+$('#addSecurityFeatureBtn')?.addEventListener('click',addSecurityFeature);
+$('#saveKBEntryBtn')?.addEventListener('click',saveKBEntry);
+$('#deleteKBEntryBtn')?.addEventListener('click',deleteKBEntry);
+$('#backToVerificationList')?.addEventListener('click',showKBListView);
+
+$$('.nav-link').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showSection(a.dataset.section)}));
+$$('th.sortable').forEach(th=>th.addEventListener('click',()=>setSortColumn(th.dataset.sort)));
+$('#filterName')?.addEventListener('input',()=>renderCoinsTable());
+$('#filterCountry')?.addEventListener('input',()=>renderCoinsTable());
+$('#filterYear')?.addEventListener('input',()=>renderCoinsTable());
+$('#filterType')?.addEventListener('input',()=>renderCoinsTable());
+$('#filterMaterial')?.addEventListener('change',()=>renderCoinsTable());
+$('#filterPurity')?.addEventListener('input',()=>renderCoinsTable());
+$('#filterPurchaseDate')?.addEventListener('change',()=>renderCoinsTable());
+$('#clearFilters')?.addEventListener('click',()=>{$('#filterName').value='';$('#filterCountry').value='';$('#filterYear').value='';$('#filterType').value='';$('#filterMaterial').value='';$('#filterPurity').value='';$('#filterPurchaseDate').value='';renderCoinsTable()});
+$('#sidebarToggle')?.addEventListener('click',function(){const sidebar=$('.sidebar');const body=document.body;const btn=this;sidebar.classList.toggle('collapsed');body.classList.toggle('sidebar-collapsed');btn.textContent=sidebar.classList.contains('collapsed')?'☰':'✕';localStorage.setItem('sidebarCollapsed',sidebar.classList.contains('collapsed'))});
+if(localStorage.getItem('sidebarCollapsed')==='true'){$('.sidebar')?.classList.add('collapsed');document.body.classList.add('sidebar-collapsed');$('#sidebarToggle').textContent='☰'}
+$('#addTypeBtn')?.addEventListener('click',()=>{const i=$('#newTypeName');if(i&&i.value.trim()){addType(i.value);i.value=''}});
+$('#silverRate')?.addEventListener('input',()=>{metalRatesUSD.AG=parseFloat($('#silverRate').value);updateGoldSilverRatio();updateOverviewTotals()});
+$('#goldRate')?.addEventListener('input',()=>{metalRatesUSD.AU=parseFloat($('#goldRate').value);updateGoldSilverRatio();updateOverviewTotals()});
+$('#coinMaterial')?.addEventListener('change',function(){const v=this.value;const p=$('#coinMetalContent');if(p){if(v==='AG'||v==='AU'){p.disabled=false;p.required=true}else{p.disabled=true;p.required=false;p.value=''}}});
+$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,coinLink:$('#coinLink')?.value,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
+
+let isViewMode=false;
+
+function viewCoin(coinId){
+    const coin=coins.find(c=>c.coinId===coinId);
+    if(!coin)return;
+    isViewMode=true;
+    populateCoinForm(coin);
+    setFormReadOnly(true);
+    editModeId=coin.coinId;
+    $('#coinFormHeader').textContent='Coin Record View';
+    $('#submitBtn').style.display='none';
+    $('#cancelEdit').style.display='none';
+    $('#deleteCoinBtn').style.display='none';
+    $('#editCoinBtn').style.display='inline-block';
+    showSection('add-coin');
+}
+
+function editCoin(coinId){
+    const coin=coins.find(c=>c.coinId===coinId);
+    if(!coin)return;
+    isViewMode=false;
+    populateCoinForm(coin);
+    setFormReadOnly(false);
+    editModeId=coin.coinId;
+    $('#coinFormHeader').textContent='Coin Record Editing';
+    $('#submitBtn').style.display='inline-block';
+    $('#submitBtn').textContent='Save Changes';
+    $('#cancelEdit').style.display='inline-block';
+    $('#deleteCoinBtn').style.display='inline-block';
+    $('#editCoinBtn').style.display='none';
+    showSection('add-coin');
+}
+
+function populateCoinForm(coin){
+    $('#coinId').value=coin.coinId||'';
+    $('#coinName').value=coin.coinName||'';
+    $('#coinCountry').value=coin.coinCountry||'';
+    $('#coinYear').value=coin.coinYear||'';
+    $('#coinWeight').value=coin.coinWeight||'';
+    $('#coinSize').value=coin.coinSize||'';
+    $('#coinCategory').value=coin.category||'Other';
+    $('#coinType').value=coin.type||'';
+    $('#coinMaterial').value=coin.coinMaterial||'Other';
+    const p=$('#coinMetalContent');
+    if(p){
+        if(coin.coinMaterial==='AG'||coin.coinMaterial==='AU'){
+            p.value=coin.coinMetalContent||'';
+            if(!isViewMode){
+                p.disabled=false;
+                p.required=true;
+            }
+        }else{
+            p.value='';
+            if(!isViewMode){
+                p.disabled=true;
+                p.required=false;
+            }
+        }
+    }
+    $('#purchasePrice').value=coin.purchasePrice||'';
+    $('#purchaseCurrency').value=coin.purchaseCurrency||'PLN';
+    $('#purchaseDate').value=coin.purchaseDate||'';
+    $('#comments').value=coin.comments||'';
+    $('#coinLink').value=coin.coinLink||'';
+    currentCoinImages=coin.images||[];
+    renderCoinImagesPreview();
+}
+
+function setFormReadOnly(readonly){
+    const formElements=['#coinName','#coinCountry','#coinYear','#coinWeight','#coinSize','#coinCategory','#coinType','#coinMaterial','#coinMetalContent','#purchasePrice','#purchaseCurrency','#purchaseDate','#comments','#coinLink'];
+    formElements.forEach(selector=>{
+        const el=$(selector);
+        if(el){
+            if(readonly){
+                el.setAttribute('readonly',true);
+                if(el.tagName==='SELECT'){
+                    el.style.pointerEvents='none';
+                    el.style.background='rgba(0,0,0,0.05)';
+                }else{
+                    el.style.background='rgba(0,0,0,0.05)';
+                }
+            }else{
+                el.removeAttribute('readonly');
+                if(el.tagName==='SELECT'){
+                    el.style.pointerEvents='auto';
+                    el.style.background='';
+                }else{
+                    if(el.id!=='coinId')el.style.background='';
+                }
+            }
+        }
+    });
+    const imageButtons=['#addCoinImageBtn','#pasteCoinImageBtn'];
+    imageButtons.forEach(selector=>{
+        const btn=$(selector);
+        if(btn)btn.style.display=readonly?'none':'inline-block';
+    });
+}
+
+$('#addCoinFromListBtn')?.addEventListener('click',()=>{
+    isViewMode=false;
+    editModeId=null;
+    $('#coinForm').reset();
+    $('#coinId').value=genId();
+    currentCoinImages=[];
+    renderCoinImagesPreview();
+    setFormReadOnly(false);
+    $('#coinFormHeader').textContent='Add New Coin';
+    $('#submitBtn').style.display='inline-block';
+    $('#submitBtn').textContent='Add Coin';
+    $('#cancelEdit').style.display='none';
+    $('#deleteCoinBtn').style.display='none';
+    $('#editCoinBtn').style.display='none';
+    showSection('add-coin');
+});
+
+$('#coinsBody')?.addEventListener('click',e=>{
+    // Event delegation handled by row click listeners in renderCoinsTable
+});
+
+$('#deleteCoinBtn')?.addEventListener('click',()=>{
+    if(!editModeId)return;
+    const coin=coins.find(c=>c.coinId===editModeId);
+    if(!coin)return;
+    const coinType=coin.type||'Unknown Type';
+    const coinName=coin.coinName||'Unknown Coin';
+    const confirmMsg=`Do you really want to delete ${coinType} - ${coinName}?`;
+    
+    if(confirm(confirmMsg)){
+        coins=coins.filter(c=>c.coinId!==editModeId);
+        saveCoins();
+        $('#coinForm').reset();
+        currentCoinImages=[];
+        renderCoinImagesPreview();
+        editModeId=null;
+        $('#submitBtn').textContent='Add Coin';
+        $('#cancelEdit').style.display='none';
+        $('#deleteCoinBtn').style.display='none';
+        showSection('all-coins');
+        renderCoinsTable();
+        updateOverviewTotals();
+    }
+});
+$('#cancelEdit')?.addEventListener('click',()=>{
+    isViewMode=false;
+    editModeId=null;
+    $('#coinForm').reset();
+    $('#coinId').value='';
+    currentCoinImages=[];
+    renderCoinImagesPreview();
+    setFormReadOnly(false);
+    const p=$('#coinMetalContent');
+    if(p)p.disabled=true;
+    $('#coinFormHeader').textContent='Add New Coin';
+    $('#submitBtn').style.display='inline-block';
+    $('#submitBtn').textContent='Add Coin';
+    $('#cancelEdit').style.display='none';
+    $('#deleteCoinBtn').style.display='none';
+    $('#editCoinBtn').style.display='none';
+    showSection('overview');
+});
+$('#editCoinBtn')?.addEventListener('click',()=>{
+    if(editModeId){
+        editCoin(editModeId);
+    }
+});
+$('#backToCoinsBtn')?.addEventListener('click',()=>{
+    showSection('all-coins');
+});
+$('#refreshRatesBtn')?.addEventListener('click',async function(){const btn=this;btn.disabled=true;btn.textContent='🔄 Refreshing...';try{await fetchRates();location.reload()}catch(err){alert('❌ Failed to refresh rates');btn.disabled=false;btn.textContent='🔄 Refresh FX Rates'}});
+
+// Export/Import Functions
+async function exportAllData(){
+    try{
+        const btn=$('#exportDataBtn');
+        if(btn){
+            btn.disabled=true;
+            btn.textContent='💾 Exporting...';
+        }
+        
+        // Collect all image IDs from coins and KB entries
+        const imageIds=new Set();
+        coins.forEach(coin=>{
+            if(coin.images&&Array.isArray(coin.images)){
+                coin.images.forEach(id=>imageIds.add(id));
+            }
+        });
+        kbEntries.forEach(entry=>{
+            if(entry.securityFeatures&&Array.isArray(entry.securityFeatures)){
+                entry.securityFeatures.forEach(feature=>{
+                    if(feature.images&&Array.isArray(feature.images)){
+                        feature.images.forEach(id=>imageIds.add(id));
+                    }
+                });
+            }
+        });
+        
+        // Load all images from IndexedDB
+        const images={};
+        for(const id of imageIds){
+            const imgData=await getImageFromDB(id);
+            if(imgData){
+                images[id]=imgData;
+            }
+        }
+        
+        // Create export object
+        const exportData={
+            version:'1.0',
+            exportDate:new Date().toISOString(),
+            coins:coins,
+            kbEntries:kbEntries,
+            coinTypes:loadTypes(),
+            coinNames:loadNames(),
+            images:images
+        };
+        
+        // Create and download file
+        const jsonString=JSON.stringify(exportData,null,2);
+        const blob=new Blob([jsonString],{type:'application/json'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url;
+        a.download=`APSCoinTracker_Backup_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        alert('✅ Data exported successfully!\n\nFile includes:\n- '+coins.length+' coins\n- '+kbEntries.length+' KB entries\n- '+imageIds.size+' images\n\nYou can import this file in any browser.');
+        
+        if(btn){
+            btn.disabled=false;
+            btn.textContent='💾 Export All Data';
+        }
+    }catch(err){
+        console.error('Export failed:',err);
+        alert('❌ Export failed: '+err.message);
+        const btn=$('#exportDataBtn');
+        if(btn){
+            btn.disabled=false;
+            btn.textContent='💾 Export All Data';
+        }
+    }
+}
+
+async function importAllData(file){
+    if(!file)return;
+    
+    try{
+        const btn=$('#importDataBtn');
+        if(btn){
+            btn.disabled=true;
+            btn.textContent='📂 Importing...';
+        }
+        
+        const text=await file.text();
+        const importData=JSON.parse(text);
+        
+        if(!importData.version||!importData.coins){
+            throw new Error('Invalid backup file format');
+        }
+        
+        // Confirm before overwriting
+        const confirmMsg=`This will replace all current data with:\n\n`+
+            `- ${importData.coins.length} coins\n`+
+            `- ${importData.kbEntries?.length||0} KB entries\n`+
+            `- ${Object.keys(importData.images||{}).length} images\n\n`+
+            `Current data will be LOST. Continue?`;
+        
+        if(!confirm(confirmMsg)){
+            if(btn){
+                btn.disabled=false;
+                btn.textContent='📂 Import Data';
+            }
+            return;
+        }
+        
+        // Import images to IndexedDB
+        if(importData.images){
+            for(const[id,data]of Object.entries(importData.images)){
+                await saveImageToDB(id,data);
+            }
+        }
+        
+        // Import data to localStorage
+        coins=importData.coins||[];
+        saveCoins();
+        
+        kbEntries=importData.kbEntries||[];
+        saveKBEntries();
+        
+        if(importData.coinTypes){
+            saveTypes(importData.coinTypes);
+        }
+        
+        if(importData.coinNames){
+            saveNames(importData.coinNames);
+        }
+        
+        alert('✅ Import successful!\n\nImported:\n- '+coins.length+' coins\n- '+kbEntries.length+' KB entries\n- '+Object.keys(importData.images||{}).length+' images\n\nPage will reload now.');
+        
+        location.reload();
+    }catch(err){
+        console.error('Import failed:',err);
+        alert('❌ Import failed: '+err.message+'\n\nPlease ensure the file is a valid APSCoinTracker backup.');
+        const btn=$('#importDataBtn');
+        if(btn){
+            btn.disabled=false;
+            btn.textContent='📂 Import Data';
+        }
+    }
+}
+
+$('#exportDataBtn')?.addEventListener('click',exportAllData);
+$('#importDataBtn')?.addEventListener('click',()=>{
+    $('#importFileInput').click();
+});
+$('#importFileInput')?.addEventListener('change',function(){
+    if(this.files&&this.files[0]){
+        importAllData(this.files[0]);
+        this.value=''; // Reset input
+    }
+});
+
+// Enable File System button
+$('#enableFileSystemBtn')?.addEventListener('click',async()=>{
+    const success=await requestDirectoryAccess();
+    if(success){
+        updateFileSystemStatus();
+        // Reload data from files
+        await initializeApp();
+    }
+});
+
+function updateFileSystemStatus(){
+    const status=$('#fileSystemStatus');
+    if(!status)return;
+    if(useFileSystem){
+        status.textContent='✓ File storage enabled';
+        status.style.color='#4ecdc4';
+        const btn=$('#enableFileSystemBtn');
+        if(btn){
+            btn.style.display='none';
+        }
+    }else{
+        status.textContent='Using browser storage';
+        status.style.color='rgba(255,255,255,0.5)';
+    }
+}
+
+async function initializeApp(){
+    await initDB();
+    await initFileSystem();
+    await loadImagesFromFile();
+    await loadCoins();
+    await loadKBEntries();
+    populateDatalist();
+    populateTypeDropdown();
+    fetchRates();
+    showSection('overview');
+    updateOverviewTotals();
+    renderCoinImagesPreview();
+    updateFileSystemStatus();
+}
+
+initializeApp().then(()=>{
+    console.log('App initialized successfully');
+}).catch(err=>{
+    console.error('Failed to initialize app:',err);
+    alert('⚠️ Initialization failed. Some features may not work correctly.');
+});
+});
+    </script>
+</body>
+</html>

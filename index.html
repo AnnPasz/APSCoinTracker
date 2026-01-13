@@ -1144,14 +1144,8 @@ const loadJSON=(k,f=[])=>{try{return JSON.parse(localStorage.getItem(k)||JSON.st
 const saveJSON=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
 
 async function loadCoins(){
-    // Try to load from chunked files first
-    const fileData=await downloadCoinsFromChunks();
-    if(fileData!==null && fileData.length > 0){
-        coins=fileData;
-    }else{
-        // Fall back to localStorage
-        coins=loadJSON(STORAGE_KEY,[]);
-    }
+    // Load from localStorage only
+    coins=loadJSON(STORAGE_KEY,[]);
     return coins;
 }
 
@@ -1172,8 +1166,6 @@ async function saveKBEntries(){
 
 async function saveCoins(){
     saveJSON(STORAGE_KEY,coins);
-    // Upload coins in chunks to handle large files
-    await uploadCoinsInChunks(coins);
 }
 
 async function loadNames(){

@@ -132,7 +132,7 @@
                     <span>📊</span> Overview
                 </a>
                 <a href="#" class="nav-link" data-section="mobile-overview">
-                    <span>📱</span> Mobile View
+                    <span>📱</span> Mobile Overview
                 </a>
                 <a href="#" class="nav-link" data-section="add-coin">
                     <span>➕</span> Add New Coin
@@ -643,7 +643,7 @@
             </div>
 
             <div class="section" id="mobile-overview-section" style="display: none;">
-                <h2>📱 Mobile View</h2>
+                <h2>📱 Mobile Overview</h2>
                 
                 <div style="max-width: 600px; margin: 0 auto;">
                     <!-- Date -->
@@ -700,6 +700,64 @@
                             <div style="display: flex; justify-content: space-between; padding: 12px; background: #f5f5f7; border-radius: 8px;">
                                 <span style="color: #666;">Ratio</span>
                                 <span style="font-weight: 600;" id="mobileRatio">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Simulation Button -->
+                    <button id="mobileSimToggle" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(78,205,196,0.3);">
+                        🧮 Simulation
+                    </button>
+                    
+                    <!-- Mobile Simulation Form -->
+                    <div id="mobileSimForm" style="display: none; background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px; margin-top: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <h3 style="font-size: 18px; margin-bottom: 16px; color: #1d1d1f;">Price Calculator</h3>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label for="mobileSimMetal" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Metal Type:</label>
+                            <select id="mobileSimMetal" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; background: white;">
+                                <option value="AG">Silver (AG)</option>
+                                <option value="AU">Gold (AU)</option>
+                            </select>
+                        </div>
+
+                        <div style="background: rgba(78, 205, 196, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #4ecdc4; margin-bottom: 20px;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Current Rate</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #1d1d1f;" id="mobileSimCurrentRate">-</div>
+                            <div style="font-size: 12px; color: #666; margin-top: 6px;">Per Gram: <span style="font-weight: 600; color: #1d1d1f;" id="mobileSimCurrentRatePerGram">-</span></div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <label for="mobileSimPurity" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Purity (‰):</label>
+                            <input type="number" id="mobileSimPurity" placeholder="e.g., 925" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                            <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">900 = 90%, 925 = 92.5%</small>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <label for="mobileSimWeight" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Weight (grams):</label>
+                            <input type="number" step="0.01" id="mobileSimWeight" placeholder="e.g., 31.1" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                        </div>
+
+                        <button id="mobileCalculateSimBtn" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(78,205,196,0.3);">
+                            🧮 Calculate Value
+                        </button>
+
+                        <div id="mobileSimResult" style="display: none;">
+                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">Result</h4>
+                            
+                            <div style="background: rgba(155, 89, 182, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #9b59b6; margin-bottom: 12px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Pure Metal</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #1d1d1f;" id="mobileSimPureWeight">-</div>
+                            </div>
+                            
+                            <div style="background: rgba(78, 205, 196, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #4ecdc4; margin-bottom: 12px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Value USD</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #1d1d1f;" id="mobileSimValueUSD">-</div>
+                            </div>
+
+                            <div style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 6px;">Value in PLN</div>
+                                <div style="font-size: 32px; font-weight: 700; color: white;" id="mobileSimValuePLN">-</div>
                             </div>
                         </div>
                     </div>
@@ -1212,6 +1270,60 @@ function updateSimulationRates(){const metal=$('#simMetal')?.value||'AG';const r
 function calculateSimulation(){const metal=$('#simMetal')?.value||'AG';const purity=parseFloat($('#simPurity')?.value)||0;const weight=parseFloat($('#simWeight')?.value)||0;if(!purity||!weight){alert('⚠️ Please enter purity and weight');return}const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(!rate){alert('⚠️ Metal rate not available. Please refresh FX rates.');return}const purityDecimal=purity/1000;const pureWeight=weight*purityDecimal;const ratePerGram=rate/31.1034768;const valueUSD=pureWeight*ratePerGram;const valuePLN=convertUSDToPLN(valueUSD);$('#simPureWeight').textContent=pureWeight.toFixed(2)+' g';$('#simValueUSD').textContent='$'+valueUSD.toFixed(2);$('#simValuePLN').textContent=valuePLN.toFixed(2)+' PLN';$('#simResult').style.display='block'}
 $('#simMetal')?.addEventListener('change',updateSimulationRates);
 $('#calculateSimBtn')?.addEventListener('click',calculateSimulation);
+
+// Mobile Simulation Functions
+$('#mobileSimToggle')?.addEventListener('click',function(){
+    const form=$('#mobileSimForm');
+    if(form){
+        if(form.style.display==='none'){
+            form.style.display='block';
+            updateMobileSimulationRates();
+        }else{
+            form.style.display='none';
+        }
+    }
+});
+
+function updateMobileSimulationRates(){
+    const metal=$('#mobileSimMetal')?.value||'AG';
+    const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;
+    if(rate){
+        const ratePerGram=rate/31.1034768;
+        $('#mobileSimCurrentRate').textContent='$'+rate.toFixed(2)+' /oz';
+        $('#mobileSimCurrentRatePerGram').textContent='$'+ratePerGram.toFixed(2)+' /g';
+    }else{
+        $('#mobileSimCurrentRate').textContent='Rate not available';
+        $('#mobileSimCurrentRatePerGram').textContent='-';
+    }
+}
+
+function calculateMobileSimulation(){
+    const metal=$('#mobileSimMetal')?.value||'AG';
+    const purity=parseFloat($('#mobileSimPurity')?.value)||0;
+    const weight=parseFloat($('#mobileSimWeight')?.value)||0;
+    if(!purity||!weight){
+        alert('⚠️ Please enter purity and weight');
+        return;
+    }
+    const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;
+    if(!rate){
+        alert('⚠️ Metal rate not available. Please refresh FX rates.');
+        return;
+    }
+    const purityDecimal=purity/1000;
+    const pureWeight=weight*purityDecimal;
+    const ratePerGram=rate/31.1034768;
+    const valueUSD=pureWeight*ratePerGram;
+    const valuePLN=convertUSDToPLN(valueUSD);
+    $('#mobileSimPureWeight').textContent=pureWeight.toFixed(2)+' g';
+    $('#mobileSimValueUSD').textContent='$'+valueUSD.toFixed(2);
+    $('#mobileSimValuePLN').textContent=valuePLN.toFixed(2)+' PLN';
+    $('#mobileSimResult').style.display='block';
+}
+
+$('#mobileSimMetal')?.addEventListener('change',updateMobileSimulationRates);
+$('#mobileCalculateSimBtn')?.addEventListener('click',calculateMobileSimulation);
+
 
 // Coin Images Functions
 async function renderCoinImagesPreview(){

@@ -32,11 +32,7 @@
     "purchaseDate": "2026-01-07",
     "comments": "Numimarket Poznan przez allegro",
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768214887019_kfo485c8a6",
-      "coin_img_1768214896192_0qjopytpa2j"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMK3TFMC4PEJY",
@@ -54,11 +50,7 @@
     "purchaseDate": "2026-01-06",
     "comments": "gnjerzykowski przez Allegro",
     "checked": true,
-    "coinLink": "",
-    "images": [
-      "coin_img_1768214913868_ymxrczvprj",
-      "coin_img_1768214921600_f338d9tju2"
-    ]
+    "coinLink": ""
   },
   {
     "coinId": "CMK4A2GG4FZYA",
@@ -92,10 +84,6 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-09",
     "comments": "AUKRO",
-    "coinLink": "",
-    "images": [
-      "coin_img_1768214783272_yajon8v935",
-      "coin_img_1768214792583_eiis3phow5n"
-    ]
+    "coinLink": ""
   }
 ]

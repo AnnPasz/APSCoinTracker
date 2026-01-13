@@ -1964,12 +1964,23 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
         await loadKBEntries();
         await loadImagesFromFile();
         
-        // Reload UI
+        // Reload names and types
+        const names=await loadNames();
+        const types=await loadTypes();
+        
+        // Refresh UI dropdowns
+        populateDatalist();
+        populateTypeDropdown();
+        
+        // Reload current view
         if($('#overview-section').style.display!=='none'){
             updateOverviewTotals();
         }
         if($('#all-coins-section').style.display!=='none'){
             renderCoinsTable();
+        }
+        if($('#manage-types-section').style.display!=='none'){
+            renderTypesTable();
         }
         
         statusDiv.style.background='#d4edda';

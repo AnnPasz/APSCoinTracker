@@ -1964,9 +1964,16 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
         await loadKBEntries();
         await loadImagesFromFile();
         
-        // Reload names and types
-        const names=await loadNames();
-        const types=await loadTypes();
+        // Reload names and types and save to localStorage
+        const namesFile=await readJSONFile('names_data.json',[]);
+        if(namesFile!==null){
+            saveJSON(NAMES_KEY,namesFile);
+        }
+        
+        const typesFile=await readJSONFile('types_data.json',[]);
+        if(typesFile!==null){
+            saveJSON(TYPES_KEY,typesFile);
+        }
         
         // Refresh UI dropdowns
         populateDatalist();

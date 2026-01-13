@@ -844,8 +844,19 @@ async function readGitHubFile(filename){
     console.log(`Reading GitHub file: ${filename} from ${endpoint}`);
     const data=await githubApiCall(endpoint);
     
-    if(!data||!data.content){
+    if(!data){
         console.warn(`Could not read ${filename} - file may not exist or API call failed`);
+        return null;
+    }
+    
+    // If file exists but content is too large, we get the SHA but no content
+    if(!data.content && data.sha){
+        console.log(`File ${filename} exists (SHA: ${data.sha}) but content not returned (likely too large)`);
+        return {data:null, sha:data.sha};
+    }
+    
+    if(!data.content){
+        console.warn(`Could not read ${filename} - no content returned`);
         return null;
     }
     
@@ -920,24 +931,13 @@ async function uploadCoinsInChunks(coins){
     }
     console.log(`Created ${chunks.length} chunks`);
     
-    // Upload each chunk
+    // Upload each chunk - don't pre-fetch SHA, let writeGitHubFile handle it
     for(let i = 0; i < chunks.length; i++){
         const filename = `coins_data_${i}.json`;
         console.log(`Uploading ${filename} (${chunks[i].length} coins)...`);
         
-        // Always fetch the latest SHA before uploading (to handle updates)
-        // Clear any stale SHA from cache first
+        // Clear any stale SHA from cache
         delete fileSHAs[filename];
-        
-        const existingFile = await readGitHubFile(filename);
-        if(existingFile && existingFile.sha){
-            fileSHAs[filename] = existingFile.sha;
-            console.log(`Found existing ${filename}, will update with SHA: ${existingFile.sha}`);
-        }else{
-            console.log(`${filename} doesn't exist or couldn't be read, will create new file`);
-            // Ensure no SHA is in cache for this file
-            delete fileSHAs[filename];
-        }
         
         const success = await writeJSONFile(filename, chunks[i]);
         if(!success){

@@ -1,0 +1,43 @@
+[
+  {
+    "coinId": "CMIM619FP1MO4",
+    "coinName": "Walking Liberty",
+    "coinCountry": "USA",
+    "coinYear": "2012",
+    "coinWeight": "31.3",
+    "coinSize": "40.5",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "155",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-08-01",
+    "comments": "Feniks",
+    "metalValuePLN": 155,
+    "metalRateOnPurchaseUSD": 56.7249,
+    "fxRatesOnPurchase": null,
+    "checked": true
+  },
+  {
+    "coinId": "CMIM62KGQGURF",
+    "coinName": "Britania",
+    "coinCountry": "UK",
+    "coinYear": "2021",
+    "coinWeight": "31.1",
+    "coinSize": "38.6",
+    "category": "Bulion",
+    "type": "Bulion UK",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "155",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-08-01",
+    "comments": "Feniks",
+    "metalValuePLN": 155,
+    "metalRateOnPurchaseUSD": 56.7249,
+    "fxRatesOnPurchase": null,
+    "photos": [],
+    "checked": true
+  }
+]

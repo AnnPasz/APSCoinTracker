@@ -920,7 +920,7 @@ async function writeGitHubFile(filename,data,sha=null){
 let fileSHAs={};
 
 // Constants for splitting large files
-const COINS_PER_CHUNK = 10; // Split coins into chunks of 10 (keeps files well under 1MB for GitHub API)
+const COINS_PER_CHUNK = 5; // Split coins into chunks of 5 (keeps files well under 1MB even with large images)
 
 // Split coins into multiple chunks for upload
 async function uploadCoinsInChunks(coins){
@@ -976,6 +976,7 @@ async function downloadCoinsFromChunks(){
     console.log('Downloading coin chunks...');
     let allCoins = [];
     let chunkIndex = 0;
+    let skippedChunks = [];
     
     while(true){
         const filename = `coins_data_${chunkIndex}.json`;
@@ -988,8 +989,9 @@ async function downloadCoinsFromChunks(){
         
         // Check if we got data or just SHA (file too large for Contents API)
         if(!file.data){
-            console.log(`File ${filename} too large, skipping download on page load`);
-            // Still count it as existing
+            console.error(`File ${filename} is too large (over 1MB) - cannot download via Contents API`);
+            skippedChunks.push(filename);
+            // Still count it as existing so we keep checking for more chunks
             fileSHAs[filename] = file.sha;
             chunkIndex++;
             continue;
@@ -999,6 +1001,12 @@ async function downloadCoinsFromChunks(){
         fileSHAs[filename] = file.sha;
         allCoins = allCoins.concat(file.data);
         chunkIndex++;
+    }
+    
+    if(skippedChunks.length > 0){
+        console.error(`Failed to download ${skippedChunks.length} chunk(s): ${skippedChunks.join(', ')}`);
+        console.error('These files are over 1MB. You need to reduce COINS_PER_CHUNK or optimize coin data (images).');
+        throw new Error(`Cannot download ${skippedChunks.length} chunk(s) - files too large: ${skippedChunks.join(', ')}`);
     }
     
     console.log(`Total coins downloaded: ${allCoins.length} from ${chunkIndex} chunks`);

@@ -872,7 +872,12 @@ async function writeGitHubFile(filename,data,sha=null){
     }
     
     const result=await githubApiCall(endpoint,'PUT',body);
-    return result!==null;
+    
+    // If successful, return the new SHA from the response
+    if(result&&result.content&&result.content.sha){
+        return result.content.sha;
+    }
+    return null;
 }
 
 // Cache for file SHAs (needed for updates)
@@ -887,15 +892,13 @@ async function writeJSONFile(filename,data){
     }
     
     const sha=fileSHAs[filename];
-    const result=await writeGitHubFile(filename,data,sha);
-    if(result){
-        // Update SHA cache (need to read it back)
-        const file=await readGitHubFile(filename);
-        if(file){
-            fileSHAs[filename]=file.sha;
-        }
+    const newSha=await writeGitHubFile(filename,data,sha);
+    if(newSha){
+        // Update SHA cache with the new SHA from the commit
+        fileSHAs[filename]=newSha;
+        return true;
     }
-    return result;
+    return false;
 }
 
 async function readJSONFile(filename,defaultValue=[]){

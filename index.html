@@ -152,12 +152,20 @@
                 <a href="#" class="nav-link" data-section="coin-verification">
                     <span>🔍</span> Coin Verification
                 </a>
-                <a href="#" class="nav-link" data-section="github-settings">
-                    <span>⚙️</span> GitHub Settings
+                <a href="#" class="nav-link" id="toolsToggle" style="position: relative;">
+                    <span>🔧</span> Tools <span id="toolsArrow" style="position: absolute; right: 15px;">▼</span>
                 </a>
-                <a href="#" class="nav-link" data-section="sold-coins">
-                    <span>💰</span> Sold Coins
-                </a>
+                <div id="toolsSubmenu" style="display: none; padding-left: 20px; background: rgba(0,0,0,0.1); border-radius: 8px; margin: 5px 10px;">
+                    <a href="#" class="nav-link" data-section="sold-coins" style="padding: 10px 15px; font-size: 14px;">
+                        <span>💰</span> Sold Coins
+                    </a>
+                    <a href="#" class="nav-link" data-section="manage-types" style="padding: 10px 15px; font-size: 14px;">
+                        <span>🏷️</span> Manage Types
+                    </a>
+                    <a href="#" class="nav-link" data-section="github-settings" style="padding: 10px 15px; font-size: 14px;">
+                        <span>⚙️</span> GitHub Settings
+                    </a>
+                </div>
                 <div style="margin-top: 30px; padding: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
                     <div id="githubStatus" style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 10px;"></div>
                     <button id="refreshRatesBtn" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
@@ -487,7 +495,6 @@
             </div>
 
             <div class="section" id="manage-types-section" style="display: none;">
-                <h2>Manage Coin Types</h2>
                 <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px; margin-bottom: 20px;">
                     <h3 style="color: #2c3e50; margin-bottom: 20px;">Add New Type</h3>
                     <div style="display: flex; gap: 12px;">
@@ -1768,6 +1775,19 @@ function deleteSoldCoin(coinId){
     renderSoldCoinsTable();
 }
 
+window.toggleToolsMenu=function(e){
+    e.preventDefault();
+    const submenu=$('#toolsSubmenu');
+    const arrow=$('#toolsArrow');
+    if(submenu.style.display==='none'||submenu.style.display===''){
+        submenu.style.display='block';
+        arrow.textContent='▲';
+    }else{
+        submenu.style.display='none';
+        arrow.textContent='▼';
+    }
+}
+
 function setSortColumn(col){if(currentSortBy===col){currentSortOrder=currentSortOrder==='asc'?'desc':'asc'}else{currentSortBy=col;currentSortOrder='asc'}$$('th.sortable').forEach(th=>{th.classList.remove('sorted-asc','sorted-desc');if(th.dataset.sort===col){th.classList.add('sorted-'+currentSortOrder)}});renderCoinsTable()}
 function showSection(n){
     const sec={'overview':$('#overview-section'),'mobile-overview':$('#mobile-overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section'),'sold-coins':$('#sold-coins-section')};
@@ -2366,7 +2386,8 @@ $('#saveKBEntryBtn')?.addEventListener('click',saveKBEntry);
 $('#deleteKBEntryBtn')?.addEventListener('click',deleteKBEntry);
 $('#backToVerificationList')?.addEventListener('click',showKBListView);
 
-$$('.nav-link').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showSection(a.dataset.section)}));
+$('#toolsToggle')?.addEventListener('click',window.toggleToolsMenu);
+$$('.nav-link').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();if(a.id!=='toolsToggle')showSection(a.dataset.section)}));
 $$('th.sortable').forEach(th=>th.addEventListener('click',()=>setSortColumn(th.dataset.sort)));
 $('#filterName')?.addEventListener('input',()=>renderCoinsTable());
 $('#filterCountry')?.addEventListener('input',()=>renderCoinsTable());

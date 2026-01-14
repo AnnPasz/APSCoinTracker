@@ -95,8 +95,15 @@
     "id": "CMKB03OLYVWHV",
     "country": "Kanada",
     "coinName": "Maple Leaf",
-    "generalNotes": "x",
-    "securityFeatures": []
+    "generalNotes": "Radial Lines\nSince 2015, the Royal Canadian Mint has incorporated micro radial lines into the background of both sides of the Gold Maple Leaf coin. These fine, intricate lines are precisely machined to within microns, forming a light-diffracting pattern that adds another layer of security, making it even more challenging for counterfeiters to replicate the coin's design.\n\nBullionDNA\nIn 2014, the Royal Canadian Mint (RCM) began to apply its proprietary Bullion Non-Destructive Activation (BullionDNA) technology to Gold Maple Leaf coins. BullionDNA was also introduced for Silver Maple Leaf coins in 2015.\n\nAccording to the Royal Canadian Mint, BullionDNA records the micro-engraved maple leaf security mark from every die used to produce Gold and Silver Maple Leaf coins in the mint's secure database. The data stored is images encrypted with a string of codes.\n\nBullion dealers registered as BullionDNA dealers with the mint are then issued a specialized BullionDNA device. A sample coin is then inserted into the device, and the dealer uses an associated software to take a high-resolution photo of the coin. This photo is matched to the image in the mint's database, verifying if the coin is registered with the mint.\n\nWhile BullionDNA seems promising as an anti-counterfeiting measure, it should not be entirely relied upon for authenticating Canadian Maple Leaf gold and silver coins as it challenges the will of counterfeiters to be able to obtain similar equipment for precise micro-engraving. When it comes to testing precious metals, it is best to rely on non-destructive testing methods that penetrate and authenticate the coin's material, such as testing for celerity (speed of sound), density, electrical conductivity, and magnetic susceptibility. ",
+    "securityFeatures": [
+      {
+        "name": "Microtext",
+        "year": "2013-present",
+        "text": "na dole jest mały liśc klonowy, w przybliżeniu ma ostatnie dwie cyfry roku. LIśc co roku jest pod inimalnie innym kątem",
+        "images": []
+      }
+    ]
   },
   {
     "id": "CMKB044I6RCXE",

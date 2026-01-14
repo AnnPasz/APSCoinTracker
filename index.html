@@ -159,6 +159,9 @@
                     <a href="#" class="nav-link" data-section="sold-coins" style="padding: 10px 15px; font-size: 14px;">
                         <span>💰</span> Sold Coins
                     </a>
+                    <a href="#" class="nav-link" data-section="local-backup" style="padding: 10px 15px; font-size: 14px;">
+                        <span>💾</span> Local Backup
+                    </a>
                     <a href="#" class="nav-link" data-section="manage-types" style="padding: 10px 15px; font-size: 14px;">
                         <span>🏷️</span> Manage Types
                     </a>
@@ -168,16 +171,9 @@
                 </div>
                 <div style="margin-top: 30px; padding: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
                     <div id="githubStatus" style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 10px;"></div>
-                    <button id="refreshRatesBtn" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    <button id="refreshRatesBtn" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
                         🔄 Refresh FX Rates
                     </button>
-                    <button id="exportDataBtn" style="width: 100%; padding: 12px; background: rgba(78, 205, 196, 0.3); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(78, 205, 196, 0.4)'" onmouseout="this.style.background='rgba(78, 205, 196, 0.3)'">
-                        💾 Export All Data
-                    </button>
-                    <button id="importDataBtn" style="width: 100%; padding: 12px; background: rgba(155, 89, 182, 0.3); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s;" onmouseover="this.style.background='rgba(155, 89, 182, 0.4)'" onmouseout="this.style.background='rgba(155, 89, 182, 0.3)'">
-                        📂 Import Data
-                    </button>
-                    <input type="file" id="importFileInput" accept=".json" style="display: none;">
                 </div>
             </nav>
         </aside>
@@ -901,6 +897,40 @@
                             ↑ Go to Top
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <div class="section" id="local-backup-section" style="display: none;">
+                <h2>💾 Local Backup</h2>
+                
+                <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 32px; max-width: 600px; margin: 0 auto;">
+                    <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                        <p style="margin: 0 0 8px 0; font-weight: 600; color: #1976d2;">ℹ️ About Local Backup</p>
+                        <p style="margin: 0; color: #555; font-size: 14px; line-height: 1.6;">
+                            Create local JSON backups of your coin data as an offline safety net.
+                            <br>• Export: Download all data to a JSON file on your computer
+                            <br>• Import: Restore data from a previously exported JSON file
+                            <br>• Works offline without GitHub or internet connection
+                        </p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <button id="exportDataBtn" style="padding: 24px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                            <span style="font-size: 32px;">💾</span>
+                            <span>Export All Data</span>
+                        </button>
+                        
+                        <button id="importDataBtn" style="padding: 24px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                            <span style="font-size: 32px;">📂</span>
+                            <span>Import Data</span>
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                    
+                    <p style="margin-top: 24px; font-size: 13px; color: #666; text-align: center; line-height: 1.6;">
+                        <strong>Note:</strong> Import will overwrite all local data. Make sure to export your current data before importing.
+                    </p>
                 </div>
             </div>
 
@@ -1798,7 +1828,7 @@ window.toggleChecked=async function(coinId){
 
 function setSortColumn(col){if(currentSortBy===col){currentSortOrder=currentSortOrder==='asc'?'desc':'asc'}else{currentSortBy=col;currentSortOrder='asc'}$$('th.sortable').forEach(th=>{th.classList.remove('sorted-asc','sorted-desc');if(th.dataset.sort===col){th.classList.add('sorted-'+currentSortOrder)}});renderCoinsTable()}
 function showSection(n){
-    const sec={'overview':$('#overview-section'),'mobile-overview':$('#mobile-overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section'),'sold-coins':$('#sold-coins-section')};
+    const sec={'overview':$('#overview-section'),'mobile-overview':$('#mobile-overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section'),'local-backup':$('#local-backup-section'),'sold-coins':$('#sold-coins-section')};
     Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});
     $$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));
     

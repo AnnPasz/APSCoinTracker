@@ -1787,6 +1787,15 @@ window.toggleToolsMenu=function(e){
     }
 }
 
+window.toggleChecked=async function(coinId){
+    const coin=coins.find(c=>c.coinId===coinId);
+    if(coin){
+        coin.isChecked=!coin.isChecked;
+        await saveCoins();
+        console.log(`Checkbox toggled for ${coin.coinName}: ${coin.isChecked}`);
+    }
+}
+
 function setSortColumn(col){if(currentSortBy===col){currentSortOrder=currentSortOrder==='asc'?'desc':'asc'}else{currentSortBy=col;currentSortOrder='asc'}$$('th.sortable').forEach(th=>{th.classList.remove('sorted-asc','sorted-desc');if(th.dataset.sort===col){th.classList.add('sorted-'+currentSortOrder)}});renderCoinsTable()}
 function showSection(n){
     const sec={'overview':$('#overview-section'),'mobile-overview':$('#mobile-overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section'),'sold-coins':$('#sold-coins-section')};
@@ -1796,6 +1805,11 @@ function showSection(n){
     // Render sold coins when navigating to that section
     if(n==='sold-coins'){
         if(window.renderSoldCoinsTable) window.renderSoldCoinsTable();
+    }
+    
+    // Render all coins table when navigating to that section
+    if(n==='all-coins'){
+        renderCoinsTable();
     }
     
     // Update URL for mobile mode

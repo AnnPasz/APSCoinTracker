@@ -19,7 +19,8 @@
     "metalRateOnPurchaseUSD": 72.1763,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMJLDL495VWY4",
@@ -41,7 +42,8 @@
     "metalRateOnPurchaseUSD": 71.913,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMJLDQ0N4OX05",
@@ -63,7 +65,8 @@
     "metalRateOnPurchaseUSD": 71.913,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMJLMJETMXM3T",
@@ -85,7 +88,8 @@
     "metalRateOnPurchaseUSD": 71.913,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMJNCSOOTLWZ0",
@@ -130,7 +134,8 @@
     "metalRateOnPurchaseUSD": 78.1869,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMJOCYRO54WT9",
@@ -151,7 +156,8 @@
     "metalValuePLN": 216,
     "metalRateOnPurchaseUSD": 79.2521,
     "fxRatesOnPurchase": null,
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJOD36OOYFVA",
@@ -172,7 +178,8 @@
     "metalValuePLN": 174,
     "metalRateOnPurchaseUSD": 79.2521,
     "fxRatesOnPurchase": null,
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJODH70PUG17",
@@ -193,7 +200,8 @@
     "metalValuePLN": 300,
     "metalRateOnPurchaseUSD": 79.2521,
     "fxRatesOnPurchase": null,
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSHVJLYYYJP",
@@ -231,7 +239,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-09-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXDUI62T3P",
@@ -248,7 +257,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-08-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXF633DYTN",
@@ -265,7 +275,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-09-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXGXVBVYAW",
@@ -282,7 +293,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-08-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXKRKXF58K",
@@ -299,7 +311,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-08-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXMJ59CYAW",
@@ -316,7 +329,8 @@
     "purchaseCurrency": "USD",
     "purchaseDate": "2025-09-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXPBW3V1QR",
@@ -333,7 +347,8 @@
     "purchaseCurrency": "USD",
     "purchaseDate": "2025-09-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXRMFTFBVV",
@@ -350,7 +365,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-09-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXW7TW196H",
@@ -367,7 +383,8 @@
     "purchaseCurrency": "USD",
     "purchaseDate": "2025-09-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMJSXXL835RM5",
@@ -384,7 +401,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-08-01",
     "comments": "",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMK2TPBYTW1LW",
@@ -401,7 +419,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-12-26",
     "comments": "SK granica",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMK3TEP9M48CM",
@@ -456,7 +475,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-12-26",
     "comments": "numijana numimarket",
-    "checked": true
+    "checked": true,
+    "isChecked": true
   },
   {
     "coinId": "CMK9MJGH3EIV0",

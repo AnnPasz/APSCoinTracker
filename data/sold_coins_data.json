@@ -21,5 +21,28 @@
     "saleCurrency": "PLN",
     "saleComment": "1xd",
     "soldAt": "2026-01-14T12:28:02.662Z"
+  },
+  {
+    "coinId": "CMKDZZ3D0AKPX",
+    "coinName": "tests",
+    "coinCountry": "tetsts",
+    "coinYear": "1111",
+    "coinWeight": "1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bar",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1111",
+    "purchasePrice": "1",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "1111-11-11",
+    "comments": "",
+    "coinLink": "",
+    "images": [],
+    "saleDate": "2026-01-14",
+    "salePrice": 1,
+    "saleCurrency": "PLN",
+    "saleComment": "1",
+    "soldAt": "2026-01-14T12:29:34.905Z"
   }
 ]

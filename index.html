@@ -1446,7 +1446,20 @@ async function loadKBEntries(){
 
 async function saveKBEntries(){
     saveJSON(KB_KEY,kbEntries);
-    await writeJSONFile('kb_data.json',kbEntries);
+    
+    // Strip images from KB entries before uploading to GitHub (images kept local only)
+    const kbEntriesWithoutImages = kbEntries.map(entry => {
+        const cleanEntry = {...entry};
+        if(cleanEntry.securityFeatures){
+            cleanEntry.securityFeatures = cleanEntry.securityFeatures.map(feature => {
+                const {images, ...featureWithoutImages} = feature;
+                return featureWithoutImages;
+            });
+        }
+        return cleanEntry;
+    });
+    
+    await writeJSONFile('kb_data.json',kbEntriesWithoutImages);
 }
 
 async function saveCoins(){
@@ -3149,6 +3162,7 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
             fileSHAs['kb_data.json']=kbFileObj.sha;
             saveJSON(KB_KEY,kbEntries);
             console.log('KB entries loaded:',kbEntries.length,'entries');
+            console.log('Note: KB entries downloaded without images - local images in IndexedDB will be preserved');
         }else{
             console.warn('No KB data found on GitHub');
         }

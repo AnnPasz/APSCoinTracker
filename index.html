@@ -2286,9 +2286,21 @@ async function renderSecurityFeatures(features){
 
 let currentKBSecurityFeatures=[];
 
-function addSecurityFeature(){
+async function addSecurityFeature(){
     currentKBSecurityFeatures.push({name:'',year:'',text:'',images:[]});
-    renderSecurityFeatures(currentKBSecurityFeatures);
+    await renderSecurityFeatures(currentKBSecurityFeatures);
+    
+    // Scroll to the newly added feature
+    setTimeout(()=>{
+        const newFeatureIndex=currentKBSecurityFeatures.length-1;
+        const newFeatureEl=document.querySelector(`.security-feature-item[data-index="${newFeatureIndex}"]`);
+        if(newFeatureEl){
+            newFeatureEl.scrollIntoView({behavior:'smooth',block:'start'});
+            // Focus on the name input of the new feature
+            const nameInput=newFeatureEl.querySelector('.feature-name');
+            if(nameInput)nameInput.focus();
+        }
+    },100);
 }
 
 function deleteSecurityFeature(idx){
@@ -2361,9 +2373,19 @@ function saveKBEntry(){
     saveKBEntries();
     console.log('Saved KB entry with', features.length, 'features');
     features.forEach((f,i)=>console.log(`  Feature ${i}: ${f.images?.length||0} images`));
-    alert('✅ Entry saved successfully!');
+    // Stay in the form after saving, just update the list in background
     renderKBList();
-    showKBListView();
+    // Show brief success feedback without blocking
+    const saveBtn=document.getElementById('saveKBEntryBtn');
+    if(saveBtn){
+        const originalText=saveBtn.innerHTML;
+        saveBtn.innerHTML='✅ Saved!';
+        saveBtn.style.background='linear-gradient(135deg, #27ae60 0%, #229954 100%)';
+        setTimeout(()=>{
+            saveBtn.innerHTML=originalText;
+            saveBtn.style.background='linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)';
+        },1500);
+    }
 }
 
 function deleteKBEntry(){

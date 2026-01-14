@@ -33,7 +33,8 @@
     "purchaseDate": "2026-01-11",
     "comments": "allegro",
     "coinLink": "",
-    "checked": false
+    "checked": false,
+    "isChecked": true
   },
   {
     "coinId": "CMKAXVU2JA61P",
@@ -49,7 +50,8 @@
     "purchasePrice": "369",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-11",
-    "comments": "allegro"
+    "comments": "allegro",
+    "isChecked": true
   },
   {
     "coinId": "CMKB25OE9XLON",

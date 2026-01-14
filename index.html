@@ -3062,7 +3062,6 @@ $('#uploadToGithubBtn')?.addEventListener('click',async()=>{
         // Ensure we have SHAs for all files before uploading
         console.log('Fetching SHAs for existing files...');
         await ensureFileSHA('kb_data.json');
-        await ensureFileSHA('images_data.json');
         await ensureFileSHA('names_data.json');
         await ensureFileSHA('types_data.json');
         
@@ -3082,8 +3081,7 @@ $('#uploadToGithubBtn')?.addEventListener('click',async()=>{
         
         console.log('Uploading kb_data.json...');
         await writeJSONFile('kb_data.json',kbEntries);
-        console.log('Uploading images_data.json...');
-        await writeJSONFile('images_data.json',imagesCache);
+        console.log('Skipping images_data.json upload - images are kept local only');
         const names=await loadNames();
         console.log('Uploading names_data.json...');
         await writeJSONFile('names_data.json',names);
@@ -3155,25 +3153,7 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
             console.warn('No KB data found on GitHub');
         }
         
-        console.log('Downloading images_data.json...');
-        const imagesFileObj=await readGitHubFile('images_data.json');
-        if(imagesFileObj!==null){
-            imagesCache=imagesFileObj.data;
-            fileSHAs['images_data.json']=imagesFileObj.sha;
-            
-            // Save images to IndexedDB
-            if(!db)await initDB();
-            const imageIds=Object.keys(imagesCache);
-            console.log('Loading',imageIds.length,'images to IndexedDB...');
-            for(const[imageId,imageData]of Object.entries(imagesCache)){
-                const transaction=db.transaction(['images'],'readwrite');
-                const store=transaction.objectStore('images');
-                store.put({id:imageId,data:imageData});
-            }
-            console.log('Images saved to IndexedDB');
-        }else{
-            console.warn('No images data found on GitHub');
-        }
+        console.log('Skipping images_data.json download - images are kept local only');
         
         // Reload names and types and save to localStorage
         console.log('Downloading names_data.json...');

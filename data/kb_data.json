@@ -82,7 +82,14 @@
     "country": "Australia",
     "coinName": "Koala",
     "generalNotes": "literka P",
-    "securityFeatures": []
+    "securityFeatures": [
+      {
+        "name": "Microtext",
+        "year": "",
+        "text": "na monecie, znajduje się się literka mikro \"P\", np na liściu",
+        "images": []
+      }
+    ]
   },
   {
     "id": "CMKB03DKZ2GOE",

@@ -96,7 +96,14 @@
     "country": "Australia",
     "coinName": "Kokaburra",
     "generalNotes": "literka P",
-    "securityFeatures": []
+    "securityFeatures": [
+      {
+        "name": "Micotext",
+        "year": "",
+        "text": "literka \"P\"",
+        "images": []
+      }
+    ]
   },
   {
     "id": "CMKB03OLYVWHV",

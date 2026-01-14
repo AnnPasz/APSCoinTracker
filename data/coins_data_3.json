@@ -154,23 +154,6 @@
     "coinLink": ""
   },
   {
-    "coinId": "CMKDX7A2E2YFQ",
-    "coinName": "TEST",
-    "coinCountry": "TEST",
-    "coinYear": "2026",
-    "coinWeight": "1",
-    "coinSize": "1",
-    "category": "Bulion",
-    "type": "Bar",
-    "coinMaterial": "AG",
-    "coinMetalContent": "100",
-    "purchasePrice": "1",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2026-01-16",
-    "comments": "test",
-    "coinLink": ""
-  },
-  {
     "coinId": "CMKDXD3V8YALC",
     "coinName": "Royal Mint Sztabka",
     "coinCountry": "UK",

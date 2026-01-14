@@ -2,12 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const STORAGE_KEY = 'aps_coins_v1';
   const NAMES_KEY = 'aps_coin_names_v1';
   const TYPES_KEY = 'aps_coin_types_v1';
+  const SOLD_COINS_KEY = 'aps_sold_coins_v1';
 
-  let coins = [];
+  // Use window scope to share with inline script
+  if (!window.coins) window.coins = [];
+  if (!window.soldCoins) window.soldCoins = [];
+  let coins = window.coins;
+  let soldCoins = window.soldCoins;
   let metalRatesUSD = { AU: null, AG: null };
   let exchangeRatesPLN = null;
   let editModeId = null;
   let currentPhotos = [];
+  let pendingSaleCoinId = null;
 
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
@@ -18,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function loadCoins() { coins = loadJSON(STORAGE_KEY, []); return coins; }
   function saveCoins() { saveJSON(STORAGE_KEY, coins); }
+  function loadSoldCoins() { soldCoins = loadJSON(SOLD_COINS_KEY, []); return soldCoins; }
+  function saveSoldCoins() { saveJSON(SOLD_COINS_KEY, soldCoins); }
   function loadNames() { return loadJSON(NAMES_KEY, []); }
   function saveNames(list) { saveJSON(NAMES_KEY, list); }
   function loadTypes() { return loadJSON(TYPES_KEY, []); }
@@ -55,6 +63,29 @@ document.addEventListener('DOMContentLoaded', () => {
       if (sIn) { if (metalRatesUSD.AG) { sIn.value = Number(metalRatesUSD.AG).toFixed(2); sIn.disabled = true; } else { sIn.disabled = false; } }
       if (gIn) { if (metalRatesUSD.AU) { gIn.value = Number(metalRatesUSD.AU).toFixed(2); gIn.disabled = true; } else { gIn.disabled = false; } }
     } catch (e) { console.warn('updateMetalInputs error', e); }
+  }
+
+  function updateMobileRateDisplays() {
+    try {
+      const mobileSilver = document.getElementById('mobileSilverRate');
+      const mobileGold = document.getElementById('mobileGoldRate');
+      const mobileRatio = document.getElementById('mobileRatio');
+      
+      if (mobileSilver) {
+        mobileSilver.textContent = metalRatesUSD.AG ? `$${Number(metalRatesUSD.AG).toFixed(2)}` : '-';
+      }
+      if (mobileGold) {
+        mobileGold.textContent = metalRatesUSD.AU ? `$${Number(metalRatesUSD.AU).toFixed(2)}` : '-';
+      }
+      if (mobileRatio) {
+        if (metalRatesUSD.AU && metalRatesUSD.AG) {
+          const ratio = metalRatesUSD.AU / metalRatesUSD.AG;
+          mobileRatio.textContent = ratio.toFixed(2);
+        } else {
+          mobileRatio.textContent = '-';
+        }
+      }
+    } catch (e) { console.warn('updateMobileRateDisplays error', e); }
   }
 
   async function fetchRates() {
@@ -104,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try { const r = await fetch('https://open.er-api.com/v6/latest/PLN'); if (r.ok) { const j = await r.json(); if (j && j.rates) { exchangeRatesPLN = j.rates; fxOk = true; } } } catch (e) { console.warn('FX fetch (open.er-api) failed', e); }
     }
     updateMetalInputs();
+    updateMobileRateDisplays();
     console.info('fetchRates result:', { metalRatesUSD, fxResolved: !!exchangeRatesPLN });
   }
 
@@ -201,11 +233,18 @@ document.addEventListener('DOMContentLoaded', () => {
       editBtn.textContent = 'Edit';
       editBtn.className = 'edit-btn';
       editBtn.dataset.id = coin.coinId;
+      const soldBtn = document.createElement('button');
+      soldBtn.textContent = 'SOLD';
+      soldBtn.className = 'sold-btn';
+      soldBtn.dataset.id = coin.coinId;
+      soldBtn.style.background = 'linear-gradient(135deg, #27ae60 0%, #229954 100%)';
+      soldBtn.style.color = 'white';
       const delBtn = document.createElement('button');
       delBtn.textContent = '✖';
       delBtn.className = 'delete-btn';
       delBtn.dataset.id = coin.coinId;
       tdAction.appendChild(editBtn);
+      tdAction.appendChild(soldBtn);
       tdAction.appendChild(delBtn);
       tr.appendChild(tdAction);
       
@@ -269,6 +308,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const gl = current - purchased;
     $('#gainLoss').textContent = fmt(gl) + ' PLN';
     $('#gainLoss').style.color = gl < 0 ? 'red' : (gl > 0 ? 'green' : 'inherit');
+    
+    // Update mobile displays
+    const mobileTotalValue = document.getElementById('mobileTotalValue');
+    const mobileGainLoss = document.getElementById('mobileGainLoss');
+    if (mobileTotalValue) mobileTotalValue.textContent = fmt(current) + ' PLN';
+    if (mobileGainLoss) mobileGainLoss.textContent = fmt(gl) + ' PLN';
+    
+    // Calculate and update metal weights for mobile
+    let silverGrams = 0, goldGrams = 0;
+    coins.forEach(c => {
+      const mat = (c.coinMaterial || 'Other').toUpperCase();
+      if (mat === 'AG' || mat === 'AU') {
+        const purity = (parseFloat(c.coinMetalContent) || 0) / 1000;
+        const weightGr = parseFloat(c.coinWeight) || 0;
+        const metalGr = weightGr * purity;
+        if (mat === 'AG') silverGrams += metalGr;
+        if (mat === 'AU') goldGrams += metalGr;
+      }
+    });
+    
+    const mobileSilverWeight = document.getElementById('mobileSilverWeight');
+    const mobileGoldWeight = document.getElementById('mobileGoldWeight');
+    if (mobileSilverWeight) mobileSilverWeight.textContent = silverGrams.toFixed(2) + ' g';
+    if (mobileGoldWeight) mobileGoldWeight.textContent = goldGrams.toFixed(2) + ' g';
   }
 
   (function wireNav() {
@@ -442,10 +505,14 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#coinsBody')?.addEventListener('click', (e) => {
     const edit = e.target.closest('.edit-btn');
     const del = e.target.closest('.delete-btn');
+    const sold = e.target.closest('.sold-btn');
     
     if (edit) {
       e.stopPropagation();
       openCoinForEdit(edit.dataset.id);
+    } else if (sold) {
+      e.stopPropagation();
+      openSaleDialog(sold.dataset.id);
     } else if (del) {
       e.stopPropagation();
       const coin = coins.find(c => c.coinId === del.dataset.id);
@@ -457,6 +524,221 @@ document.addEventListener('DOMContentLoaded', () => {
       updateOverviewTotals();
     }
   });
+
+  function openSaleDialog(coinId) {
+    pendingSaleCoinId = coinId;
+    const modal = document.getElementById('saleDialogModal');
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('saleDate').value = today;
+    document.getElementById('salePrice').value = '';
+    document.getElementById('saleCurrency').value = 'PLN';
+    document.getElementById('saleComment').value = '';
+    modal.style.display = 'flex';
+    console.log('Opening sale dialog for coin:', coinId);
+  }
+
+  document.getElementById('cancelSaleBtn')?.addEventListener('click', () => {
+    pendingSaleCoinId = null;
+    document.getElementById('saleDialogModal').style.display = 'none';
+  });
+
+  document.getElementById('confirmSaleBtn')?.addEventListener('click', () => {
+    if (!pendingSaleCoinId) return;
+    
+    const saleDate = document.getElementById('saleDate').value;
+    const salePrice = parseFloat(document.getElementById('salePrice').value);
+    const saleCurrency = document.getElementById('saleCurrency').value;
+    const saleComment = document.getElementById('saleComment').value;
+    
+    if (!saleDate || !salePrice || isNaN(salePrice)) {
+      alert('Please fill in sale date and price.');
+      return;
+    }
+    
+    // Use window.coins to ensure we're working with the shared array
+    const coinIndex = window.coins.findIndex(c => c.coinId === pendingSaleCoinId);
+    if (coinIndex === -1) {
+      alert('Coin not found.');
+      return;
+    }
+    
+    const coin = window.coins[coinIndex];
+    const soldCoin = {
+      ...coin,
+      saleDate,
+      salePrice,
+      saleCurrency,
+      saleComment,
+      soldAt: new Date().toISOString()
+    };
+    
+    window.soldCoins.push(soldCoin);
+    window.coins.splice(coinIndex, 1);
+    
+    // Update the local references
+    coins = window.coins;
+    soldCoins = window.soldCoins;
+    
+    saveSoldCoins();
+    saveCoins();
+    
+    // Call global render functions if available
+    if (window.renderCoinsTable) window.renderCoinsTable();
+    else renderCoinsTable();
+    
+    renderSoldCoinsTable();
+    
+    if (window.updateOverviewTotals) window.updateOverviewTotals();
+    else updateOverviewTotals();
+    
+    document.getElementById('saleDialogModal').style.display = 'none';
+    pendingSaleCoinId = null;
+    
+    alert(`Coin "${coin.coinName}" marked as sold!`);
+  });
+
+  function renderSoldCoinsTable() {
+    const tbody = document.getElementById('soldCoinsBody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    // Use window.soldCoins to ensure we have the latest data
+    const soldCoinsData = window.soldCoins || [];
+    
+    console.log('Rendering sold coins table. Count:', soldCoinsData.length);
+    console.log('Sold coins data:', soldCoinsData);
+    
+    if (!soldCoinsData.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 14;
+      td.style.padding = '24px';
+      td.style.textAlign = 'center';
+      td.style.color = '#666';
+      td.textContent = 'No coins have been sold yet.';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+      return;
+    }
+    
+    soldCoinsData.forEach(coin => {
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #e0e0e0';
+      
+      const push = (v) => { 
+        const td = document.createElement('td'); 
+        td.style.padding = '12px';
+        td.textContent = v || '-'; 
+        tr.appendChild(td); 
+      };
+      
+      push(coin.coinName);
+      push(coin.coinCountry);
+      push(coin.coinYear);
+      push(coin.category);
+      push(coin.type);
+      push(coin.coinMaterial);
+      push(coin.purchaseDate);
+      push(coin.purchasePrice + ' ' + (coin.purchaseCurrency || 'PLN'));
+      push(coin.saleDate);
+      push(coin.salePrice);
+      push(coin.saleCurrency);
+      
+      // Calculate profit/loss in PLN
+      const purchasePLN = convertToPLN(parseFloat(coin.purchasePrice) || 0, coin.purchaseCurrency || 'PLN');
+      const salePLN = convertToPLN(parseFloat(coin.salePrice) || 0, coin.saleCurrency || 'PLN');
+      const profitLoss = salePLN - purchasePLN;
+      
+      const tdProfitLoss = document.createElement('td');
+      tdProfitLoss.style.padding = '12px';
+      tdProfitLoss.textContent = fmt(profitLoss) + ' PLN';
+      tdProfitLoss.style.color = profitLoss < 0 ? 'red' : (profitLoss > 0 ? 'green' : 'inherit');
+      tdProfitLoss.style.fontWeight = '600';
+      tr.appendChild(tdProfitLoss);
+      
+      push(coin.saleComment);
+      
+      const tdAction = document.createElement('td');
+      tdAction.style.padding = '12px';
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit Sale';
+      editBtn.className = 'edit-sale-btn';
+      editBtn.dataset.id = coin.coinId;
+      editBtn.style.padding = '6px 12px';
+      editBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+      editBtn.style.color = 'white';
+      editBtn.style.border = 'none';
+      editBtn.style.borderRadius = '6px';
+      editBtn.style.cursor = 'pointer';
+      editBtn.style.fontSize = '13px';
+      editBtn.style.fontWeight = '600';
+      tdAction.appendChild(editBtn);
+      tr.appendChild(tdAction);
+      
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.getElementById('soldCoinsBody')?.addEventListener('click', (e) => {
+    const editSale = e.target.closest('.edit-sale-btn');
+    
+    if (editSale) {
+      e.stopPropagation();
+      openEditSaleDialog(editSale.dataset.id);
+    }
+  });
+
+  function openEditSaleDialog(coinId) {
+    const soldCoinsData = window.soldCoins || [];
+    const coin = soldCoinsData.find(c => c.coinId === coinId);
+    if (!coin) return;
+    
+    pendingSaleCoinId = coinId;
+    const modal = document.getElementById('saleDialogModal');
+    document.getElementById('saleDate').value = coin.saleDate || '';
+    document.getElementById('salePrice').value = coin.salePrice || '';
+    document.getElementById('saleCurrency').value = coin.saleCurrency || 'PLN';
+    document.getElementById('saleComment').value = coin.saleComment || '';
+    modal.style.display = 'flex';
+    
+    // Change confirm button to update mode
+    const confirmBtn = document.getElementById('confirmSaleBtn');
+    const oldHandler = confirmBtn.onclick;
+    confirmBtn.textContent = '✓ Update Sale';
+    confirmBtn.onclick = () => {
+      const saleDate = document.getElementById('saleDate').value;
+      const salePrice = parseFloat(document.getElementById('salePrice').value);
+      const saleCurrency = document.getElementById('saleCurrency').value;
+      const saleComment = document.getElementById('saleComment').value;
+      
+      if (!saleDate || !salePrice || isNaN(salePrice)) {
+        alert('Please fill in sale date and price.');
+        return;
+      }
+      
+      const coinIndex = window.soldCoins.findIndex(c => c.coinId === coinId);
+      if (coinIndex === -1) {
+        alert('Sold coin not found.');
+        return;
+      }
+      
+      window.soldCoins[coinIndex].saleDate = saleDate;
+      window.soldCoins[coinIndex].salePrice = salePrice;
+      window.soldCoins[coinIndex].saleCurrency = saleCurrency;
+      window.soldCoins[coinIndex].saleComment = saleComment;
+      
+      saveSoldCoins();
+      renderSoldCoinsTable();
+      
+      modal.style.display = 'none';
+      confirmBtn.textContent = '✓ Confirm Sale';
+      confirmBtn.onclick = oldHandler;
+      pendingSaleCoinId = null;
+      
+      alert('Sale information updated!');
+    };
+  }
 
   $('#cancelEdit')?.addEventListener('click', () => {
     editModeId = null;
@@ -594,9 +876,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const mobileRefreshBtn = document.getElementById('mobileRefreshRatesBtn');
+  if (mobileRefreshBtn) {
+    mobileRefreshBtn.addEventListener('click', async () => {
+      mobileRefreshBtn.disabled = true;
+      mobileRefreshBtn.textContent = '⏳';
+      try {
+        await fetchRates();
+        updateOverviewTotals();
+      } catch (e) {
+        console.warn('Refresh rates error', e);
+      } finally {
+        mobileRefreshBtn.disabled = false;
+        mobileRefreshBtn.textContent = '🔄';
+      }
+    });
+  }
+
+  // Expose functions to global scope for use in inline script
+  window.renderSoldCoinsTable = renderSoldCoinsTable;
+  window.openSaleDialog = openSaleDialog;
+
   (async function init() {
     try {
       loadCoins();
+      loadSoldCoins();
       populateDatalist();
       populateTypeList();
       await fetchRates();
@@ -604,6 +908,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(fetchRates, 10 * 60 * 1000);
       } catch (e) {}
       renderCoinsTable();
+      renderSoldCoinsTable();
       const active = document.querySelector('.nav-link.active');
       if (active && active.dataset.section) showSection(active.dataset.section);
       else showSection('overview');

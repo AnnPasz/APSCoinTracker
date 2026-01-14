@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Coin Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/1.1.0/modern-normalize.min.css"/>
+  <style>
+    body{font-family:Arial,sans-serif;margin:16px}
+    .nav a{margin-right:12px}
+    table{border-collapse:collapse;width:100%}
+    td,th{border:1px solid #ddd;padding:8px}
+    .btn{display:inline-block;padding:8px 12px;border-radius:6px;text-decoration:none}
+    .btn-blue{background:#1e90ff;color:#fff}
+    .btn-red{background:#e34d4d;color:#fff}
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <a href="{% url 'overview' %}">Overview</a> |
+    <a href="{% url 'coin_add' %}">Add</a> |
+    <a href="{% url 'coin_list' %}">All Coins</a>
+  </div>
+  <hr/>
+  {% block content %}{% endblock %}
+</body>
+</html>

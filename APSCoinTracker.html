@@ -128,9 +128,6 @@
                 <img src="aps_coin_logo.png" alt="APS Coin Tracker Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Ccircle cx=\'200\' cy=\'200\' r=\'190\' fill=\'%23c0c0c0\' stroke=\'%23888\' stroke-width=\'4\'/%3E%3Ctext x=\'200\' y=\'120\' font-size=\'60\' font-weight=\'bold\' text-anchor=\'middle\' fill=\'%23333\'%3EAPS Coin%3C/text%3E%3Ctext x=\'200\' y=\'180\' font-size=\'48\' font-weight=\'bold\' text-anchor=\'middle\' fill=\'%23333\'%3ETracker%3C/text%3E%3Ctext x=\'200\' y=\'340\' font-size=\'40\' text-anchor=\'middle\' fill=\'%23555\'%3E2025%3C/text%3E%3C/svg%3E'">
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-link" data-section="mobile-overview" id="mobileModeLink">
-                    <span>📱</span> Mobile Mode
-                </a>
                 <a href="#" class="nav-link active" data-section="overview">
                     <span>📊</span> Overview
                 </a>
@@ -155,9 +152,6 @@
                 <a href="#" class="nav-link" data-section="github-settings">
                     <span>⚙️</span> GitHub Settings
                 </a>
-                <a href="#" class="nav-link" data-section="sold-coins">
-                    <span>💰</span> Sold Coins
-                </a>
                 <div style="margin-top: 30px; padding: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
                     <div id="githubStatus" style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 10px;"></div>
                     <button id="refreshRatesBtn" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s; margin-bottom: 10px;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
@@ -178,10 +172,7 @@
         <main class="main-content">
             <div class="section" id="overview-section">
                 <div class="overview-section">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h2 style="margin: 0;">Overview</h2>
-                        <div style="color: #666; font-size: 14px;" id="currentDate"></div>
-                    </div>
+                    <h2>Overview</h2>
                     <div class="overview-grid">
                         <div class="overview-card" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">
                             <p class="overview-label">Total Purchased Price</p>
@@ -348,88 +339,9 @@
                             <button type="submit" id="submitBtn">Add Coin</button>
                             <button type="button" id="cancelEdit" style="display:none; margin-left:8px;">Cancel</button>
                         </div>
-                        <div style="display: flex; gap: 10px;">
-                            <button type="button" id="soldCoinBtn" style="display:none; background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">💰 MARK AS SOLD</button>
-                            <button type="button" id="deleteCoinBtn" style="display:none; background: #e74c3c;">Delete Coin</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Sale Information Section (Hidden by default) -->
-                    <div id="saleInfoSection" style="display: none; margin-top: 30px; padding: 24px; background: rgba(39, 174, 96, 0.05); border: 2px solid #27ae60; border-radius: 12px;">
-                        <h3 style="margin: 0 0 20px 0; color: #27ae60; font-size: 18px;">💰 Sale Information</h3>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                            <div class="form-group">
-                                <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Sale Date:</label>
-                                <input type="date" id="saleDate" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Sale Price:</label>
-                                <input type="number" step="0.01" id="salePrice" placeholder="e.g., 150.00" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Sale Currency:</label>
-                                <select id="saleCurrency" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                                    <option value="PLN">PLN</option>
-                                    <option value="USD">USD</option>
-                                    <option value="EUR">EUR</option>
-                                    <option value="GBP">GBP</option>
-                                    <option value="CHF">CHF</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Sale Comment (optional):</label>
-                            <textarea id="saleComment" rows="2" placeholder="Notes about the sale..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: inherit; resize: vertical;"></textarea>
-                        </div>
-                        
-                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                            <button type="button" id="cancelSaleFormBtn" style="padding: 12px 24px; background: #95a5a6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">✕ Cancel</button>
-                            <button type="button" id="confirmSaleFormBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">✓ Confirm Sale</button>
-                        </div>
+                        <button type="button" id="deleteCoinBtn" style="display:none; background: #e74c3c;">Delete Coin</button>
                     </div>
                 </form>
-            </div>
-
-            <!-- Edit Sold Coin Modal -->
-            <div id="editSoldCoinModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);">
-                <div style="background: white; margin: 5% auto; padding: 32px; border-radius: 16px; width: 90%; max-width: 600px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
-                    <h2 style="margin-top: 0; color: #2c3e50;">Edit Sale Information</h2>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Sale Date:</label>
-                        <input type="date" id="editSaleDate" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Sale Price:</label>
-                        <input type="number" id="editSalePrice" step="0.01" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Sale Currency:</label>
-                        <select id="editSaleCurrency" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                            <option value="PLN">PLN</option>
-                            <option value="USD">USD</option>
-                            <option value="EUR">EUR</option>
-                            <option value="GBP">GBP</option>
-                            <option value="CHF">CHF</option>
-                        </select>
-                    </div>
-                    
-                    <div style="margin-bottom: 24px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Comment:</label>
-                        <textarea id="editSaleComment" rows="3" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; resize: vertical;"></textarea>
-                    </div>
-                    
-                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                        <button type="button" id="cancelEditSoldBtn" style="padding: 12px 24px; background: #95a5a6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">Cancel</button>
-                        <button type="button" id="saveEditSoldBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">Save Changes</button>
-                    </div>
-                </div>
             </div>
 
             <div class="section" id="all-coins-section" style="display: none;">
@@ -717,257 +629,9 @@
                                 ⬇️ Download Data from GitHub
                             </button>
                         </div>
-                        <button id="deleteAllChunksBtn" style="margin-top: 12px; padding: 10px; width: 100%; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 2px solid #e74c3c; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            🗑️ Delete All Coin Chunks from GitHub
-                        </button>
                         <p style="margin: 12px 0 0 0; font-size: 13px; color: #666; text-align: center;">
                             Upload will overwrite GitHub data. Download will overwrite local data.
                         </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section" id="mobile-overview-section" style="display: none;">
-                <button id="backToDesktopBtn" style="margin-bottom: 12px; padding: 8px 16px; background: #666; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
-                    ← Back to Desktop
-                </button>
-                
-                <div style="max-width: 600px; margin: 0 auto;">
-                    <!-- Date -->
-                    <div style="text-align: center; color: #666; font-size: 12px; margin-bottom: 12px;" id="mobileCurrentDate"></div>
-                    
-                    <!-- Coins Summary -->
-                    <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 16px; border-radius: 12px; color: white; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
-                        <div style="font-size: 11px; opacity: 0.9; margin-bottom: 4px;">Total Collection Value</div>
-                        <div style="font-size: 24px; font-weight: 700;" id="mobileTotalValue">0.00 PLN</div>
-                    </div>
-                    
-                    <!-- Gain/Loss -->
-                    <div style="background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%); padding: 14px; border-radius: 12px; color: white; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
-                        <div style="font-size: 11px; opacity: 0.9; margin-bottom: 4px;">Gain/Loss</div>
-                        <div style="font-size: 22px; font-weight: 700;" id="mobileGainLoss">0.00 PLN</div>
-                    </div>
-                    
-                    <!-- Quick Stats - Metal Weights -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                        <div style="background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 50%, #c0c0c0 100%); padding: 14px; border-radius: 10px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                            <div style="font-size: 20px; font-weight: 700; color: #333;" id="mobileSilverWeight">0 g</div>
-                            <div style="font-size: 11px; color: #666; margin-top: 2px;">🥈 Silver</div>
-                        </div>
-                        <div style="background: linear-gradient(135deg, #d4af37 0%, #f9e79f 50%, #d4af37 100%); padding: 14px; border-radius: 10px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                            <div style="font-size: 20px; font-weight: 700; color: #333;" id="mobileGoldWeight">0 g</div>
-                            <div style="font-size: 11px; color: #666; margin-top: 2px;">🥇 Gold</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Metal Rates -->
-                    <div style="background: rgba(255,255,255,0.95); border-radius: 10px; padding: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 10px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <div style="font-size: 14px; font-weight: 600; color: #1d1d1f;">Current Rates</div>
-                            <button id="mobileRefreshRatesBtn" style="padding: 6px 12px; background: rgba(78, 205, 196, 0.2); color: #44a08d; border: 2px solid #4ecdc4; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">
-                                🔄
-                            </button>
-                        </div>
-                        <div style="display: grid; gap: 8px;">
-                            <div style="padding: 8px; background: #f5f5f7; border-radius: 6px;">
-                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                                    <span style="color: #666;">🥈 Silver (oz)</span>
-                                    <span style="font-weight: 600;" id="mobileSilverRate">-</span>
-                                </div>
-                            </div>
-                            <div style="padding: 8px; background: #f5f5f7; border-radius: 6px;">
-                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                                    <span style="color: #666;">🥇 Gold (oz)</span>
-                                    <span style="font-weight: 600;" id="mobileGoldRate">-</span>
-                                </div>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; padding: 8px; background: #f5f5f7; border-radius: 6px; font-size: 13px;">
-                                <span style="color: #666;">Ratio</span>
-                                <span style="font-weight: 600;" id="mobileRatio">-</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Simulation Button -->
-                    <button id="mobileSimToggle" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(78,205,196,0.25);">
-                        🧮 Simulation
-                    </button>
-                    
-                    <!-- Mobile Simulation Form -->
-                    <div id="mobileSimForm" style="display: none; background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px; margin-top: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                        <h3 style="font-size: 18px; margin-bottom: 16px; color: #1d1d1f;">Price Calculator</h3>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <label for="mobileSimMetal" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Metal Type:</label>
-                            <select id="mobileSimMetal" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; background: white;">
-                                <option value="AG">Silver (AG)</option>
-                                <option value="AU">Gold (AU)</option>
-                            </select>
-                        </div>
-
-                        <div style="background: rgba(78, 205, 196, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #4ecdc4; margin-bottom: 20px;">
-                            <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Current Rate</div>
-                            <div style="font-size: 22px; font-weight: 700; color: #1d1d1f;" id="mobileSimCurrentRate">-</div>
-                            <div style="font-size: 12px; color: #666; margin-top: 6px;">Per Gram: <span style="font-weight: 600; color: #1d1d1f;" id="mobileSimCurrentRatePerGram">-</span></div>
-                        </div>
-
-                        <div style="margin-bottom: 20px;">
-                            <label for="mobileSimPurity" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Purity (‰):</label>
-                            <input type="number" id="mobileSimPurity" placeholder="e.g., 925" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
-                            <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">900 = 90%, 925 = 92.5%</small>
-                        </div>
-
-                        <div style="margin-bottom: 20px;">
-                            <label for="mobileSimWeight" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Weight (grams):</label>
-                            <input type="number" step="0.01" id="mobileSimWeight" placeholder="e.g., 31.1" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
-                        </div>
-
-                        <button id="mobileCalculateSimBtn" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(78,205,196,0.3);">
-                            🧮 Calculate Value
-                        </button>
-
-                        <div id="mobileSimResult" style="display: none;">
-                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">Result</h4>
-                            
-                            <div style="background: rgba(155, 89, 182, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #9b59b6; margin-bottom: 12px;">
-                                <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Pure Metal</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #1d1d1f;" id="mobileSimPureWeight">-</div>
-                            </div>
-                            
-                            <div style="background: rgba(78, 205, 196, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #4ecdc4; margin-bottom: 12px;">
-                                <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Value USD</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #1d1d1f;" id="mobileSimValueUSD">-</div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 6px;">Value in PLN</div>
-                                <div style="font-size: 32px; font-weight: 700; color: white;" id="mobileSimValuePLN">-</div>
-                            </div>
-
-                            <button id="mobileTargetPriceBtn" style="width: 100%; padding: 14px; margin-top: 16px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(155,89,182,0.3);">
-                                🎯 Target Price
-                            </button>
-                        </div>
-
-                        <!-- Target Price Result -->
-                        <div id="mobileTargetPriceResult" style="display: none; margin-top: 16px;">
-                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">Target Allegro Prices</h4>
-                            
-                            <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">Base Price</div>
-                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice">-</div>
-                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (K + 11.49) ÷ 9631</div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">+10% Margin</div>
-                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice10">-</div>
-                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (1.1K + 11.49) ÷ 9631</div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">+20% Margin</div>
-                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice20">-</div>
-                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (1.2K + 11.49) ÷ 9631</div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #16a085 0%, #138f77 100%); padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">+30% Margin</div>
-                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice30">-</div>
-                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (1.3K + 11.49) ÷ 9631</div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #c0392b 0%, #a93226 100%); padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">+40% Margin</div>
-                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice40">-</div>
-                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (1.4K + 11.49) ÷ 9631</div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%); padding: 16px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">+50% Margin</div>
-                                <div style="font-size: 28px; font-weight: 700; color: white;" id="mobileTargetPrice50">-</div>
-                                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">X = 10000 × (1.5K + 11.49) ÷ 9631</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Go Up Button -->
-                        <button id="mobileGoUpBtn" style="width: 100%; padding: 12px; margin-top: 24px; background: #f5f5f7; color: #666; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ↑ Go to Top
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section" id="sold-coins-section" style="display: none;">
-                <h2>💰 Sold Coins</h2>
-                
-                <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 32px; overflow-x: auto;">
-                    <table id="soldCoinsTable" style="width: 100%; border-collapse: collapse; background: white;">
-                        <thead>
-                            <tr style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white;">
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Name</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Country</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Year</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Category</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Type</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Material</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Purchase Date</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Purchase Price</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Sale Date</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Sale Price</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Sale Currency</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Profit/Loss</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Sale Comment</th>
-                                <th style="padding: 12px; text-align: left; white-space: nowrap;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="soldCoinsBody">
-                            <tr>
-                                <td colspan="14" style="padding: 24px; text-align: center; color: #666;">No coins have been sold yet.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Sale Dialog Modal -->
-            <div id="saleDialogModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
-                <div style="background: white; border-radius: 16px; padding: 32px; max-width: 500px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-                    <h3 style="margin: 0 0 24px 0; font-size: 24px; color: #1d1d1f;">Mark Coin as Sold</h3>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Sale Date:</label>
-                        <input type="date" id="saleDate" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Sale Price:</label>
-                        <input type="number" step="0.01" id="salePrice" placeholder="e.g., 150.00" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Sale Currency:</label>
-                        <select id="saleCurrency" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
-                            <option value="PLN">PLN</option>
-                            <option value="USD">USD</option>
-                            <option value="EUR">EUR</option>
-                            <option value="GBP">GBP</option>
-                            <option value="CHF">CHF</option>
-                        </select>
-                    </div>
-                    
-                    <div style="margin-bottom: 24px;">
-                        <label style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Sale Comment (optional):</label>
-                        <textarea id="saleComment" rows="3" placeholder="Notes about the sale..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: inherit; resize: vertical;"></textarea>
-                    </div>
-                    
-                    <div style="display: flex; gap: 12px;">
-                        <button id="confirmSaleBtn" style="flex: 1; padding: 14px; background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer;">
-                            ✓ Confirm Sale
-                        </button>
-                        <button id="cancelSaleBtn" style="flex: 1; padding: 14px; background: #95a5a6; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer;">
-                            ✕ Cancel
-                        </button>
                     </div>
                 </div>
             </div>
@@ -977,14 +641,14 @@
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
 document.addEventListener('DOMContentLoaded',()=>{
-const STORAGE_KEY='aps_coins_v1';const NAMES_KEY='aps_coin_names_v1';const TYPES_KEY='aps_coin_types_v1';const KB_KEY='aps_coin_kb_v1';const SOLD_COINS_KEY='aps_sold_coins_v1';
+const STORAGE_KEY='aps_coins_v1';const NAMES_KEY='aps_coin_names_v1';const TYPES_KEY='aps_coin_types_v1';const KB_KEY='aps_coin_kb_v1';
 let coins=[];let metalRatesUSD={AU:null,AG:null};let exchangeRatesPLN=null;let editModeId=null;let currentSortBy='purchaseDate';let currentSortOrder='desc';
 let kbEntries=[];let currentKBId=null;let currentCoinImages=[];
 const $=s=>document.querySelector(s);const $$=s=>Array.from(document.querySelectorAll(s));const fmt=v=>isNaN(v)?'-':Number(v).toFixed(2);
 
 // GitHub API Storage Configuration
 const GITHUB_CONFIG={
-    owner:'AnnPasz',
+    owner:'annpasz',
     repo:'APSCoinTracker',
     branch:'main',
     dataPath:'data/'
@@ -1022,12 +686,9 @@ async function githubApiCall(endpoint,method='GET',body=null){
     }
     
     try{
-        console.log(`GitHub API ${method} ${url}`);
         const response=await fetch(url,options);
         if(!response.ok){
-            const errorText=await response.text();
-            console.error(`GitHub API error ${response.status}:`,errorText);
-            // For 404, return null (file doesn't exist), for other errors, also return null
+            console.error('GitHub API error:',response.status,await response.text());
             return null;
         }
         return await response.json();
@@ -1049,32 +710,18 @@ function base64ToUtf8(str){
 async function readGitHubFile(filename){
     const path=`${GITHUB_CONFIG.dataPath}${filename}`;
     const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
-    console.log(`Reading GitHub file: ${filename} from ${endpoint}`);
     const data=await githubApiCall(endpoint);
     
-    if(!data){
-        console.warn(`Could not read ${filename} - file may not exist or API call failed`);
-        return null;
-    }
-    
-    // If file exists but content is too large, we get the SHA but no content
-    if(!data.content && data.sha){
-        console.log(`File ${filename} exists (SHA: ${data.sha}) but content not returned (likely too large)`);
-        return {data:null, sha:data.sha};
-    }
-    
-    if(!data.content){
-        console.warn(`Could not read ${filename} - no content returned`);
+    if(!data||!data.content){
         return null;
     }
     
     try{
         // GitHub returns base64 encoded content
         const content=base64ToUtf8(data.content.replace(/\n/g,''));
-        console.log(`Successfully read ${filename}, SHA: ${data.sha}`);
         return {data:JSON.parse(content),sha:data.sha};
     }catch(err){
-        console.error(`Error parsing GitHub file ${filename}:`,err);
+        console.error('Error parsing GitHub file:',err);
         return null;
     }
 }
@@ -1082,8 +729,6 @@ async function readGitHubFile(filename){
 async function writeGitHubFile(filename,data,sha=null){
     const path=`${GITHUB_CONFIG.dataPath}${filename}`;
     const endpoint=`/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
-    
-    console.log(`writeGitHubFile: ${filename}, SHA provided: ${sha}`);
     
     // Convert data to base64 (UTF-8 safe)
     const content=utf8ToBase64(JSON.stringify(data,null,2));
@@ -1094,173 +739,16 @@ async function writeGitHubFile(filename,data,sha=null){
         branch:GITHUB_CONFIG.branch
     };
     
-    // Only include SHA if it's a valid string
-    if(sha&&typeof sha==='string'&&sha!=='undefined'){
+    if(sha){
         body.sha=sha;
-        console.log(`Including SHA in request: ${sha}`);
-    }else{
-        console.log(`No SHA provided - attempting to create new file`);
     }
     
-    let result=await githubApiCall(endpoint,'PUT',body);
-    
-    // If we got 422 error (file exists but no SHA), try to fetch the SHA and retry
-    if(!result&&!sha){
-        console.log(`Upload failed, possibly file exists. Fetching SHA and retrying...`);
-        const existingFile=await readGitHubFile(filename);
-        if(existingFile&&existingFile.sha){
-            console.log(`Fetched SHA: ${existingFile.sha}, retrying upload...`);
-            body.sha=existingFile.sha;
-            result=await githubApiCall(endpoint,'PUT',body);
-        }
-    }
-    
-    // If successful, return the new SHA from the response
-    if(result&&result.content&&result.content.sha){
-        console.log(`Upload successful! New SHA: ${result.content.sha}`);
-        return result.content.sha;
-    }
-    console.error(`Upload failed for ${filename}`);
-    return null;
+    const result=await githubApiCall(endpoint,'PUT',body);
+    return result!==null;
 }
 
 // Cache for file SHAs (needed for updates)
 let fileSHAs={};
-
-// Constants for splitting large files
-const COINS_PER_CHUNK = 25; // Split coins into chunks of 25 (without images/photoData, files stay well under 1MB)
-
-// Split coins into multiple chunks for upload
-async function uploadCoinsInChunks(coins){
-    console.log(`Splitting ${coins.length} coins into chunks of ${COINS_PER_CHUNK}...`);
-    
-    // Strip images and any large data from coins before uploading
-    const coinsWithoutImages = coins.map(coin => {
-        // Create a clean copy without images or photoData properties
-        const cleanCoin = {};
-        for(let key in coin){
-            if(key !== 'images' && key !== 'photoData'){
-                cleanCoin[key] = coin[key];
-            }
-        }
-        return cleanCoin;
-    });
-    console.log('Removed images and photoData from coins for upload (images saved separately in images_data.json)');
-    
-    const chunks = [];
-    for(let i = 0; i < coinsWithoutImages.length; i += COINS_PER_CHUNK){
-        chunks.push(coinsWithoutImages.slice(i, i + COINS_PER_CHUNK));
-    }
-    console.log(`Created ${chunks.length} chunks`);
-    
-    // Upload each chunk - don't pre-fetch SHA, let writeGitHubFile handle it
-    for(let i = 0; i < chunks.length; i++){
-        const filename = `coins_data_${i}.json`;
-        console.log(`Uploading ${filename} (${chunks[i].length} coins)...`);
-        
-        // Clear any stale SHA from cache
-        delete fileSHAs[filename];
-        
-        const success = await writeJSONFile(filename, chunks[i]);
-        if(!success){
-            console.error(`Failed to upload ${filename}`);
-            return false;
-        }
-        console.log(`Successfully uploaded ${filename}`);
-    }
-    
-    // Clean up old chunk files if we have fewer chunks now
-    let chunkIndex = chunks.length;
-    let maxAttempts = 20; // Don't try forever
-    while(maxAttempts > 0){
-        const filename = `coins_data_${chunkIndex}.json`;
-        const file = await readGitHubFile(filename);
-        if(!file){
-            console.log(`No more old chunks found at ${filename}`);
-            break; // No more chunks to delete
-        }
-        // File exists (we got SHA even if no data)
-        console.log(`Deleting old chunk ${filename}...`);
-        const deleted = await deleteGitHubFile(filename);
-        if(!deleted){
-            console.warn(`Failed to delete ${filename}, stopping cleanup`);
-            break;
-        }
-        chunkIndex++;
-        maxAttempts--;
-    }
-    
-    return true;
-}
-
-// Download and merge all coin chunks
-async function downloadCoinsFromChunks(){
-    console.log('Downloading coin chunks...');
-    let allCoins = [];
-    let chunkIndex = 0;
-    let skippedChunks = [];
-    
-    while(true){
-        const filename = `coins_data_${chunkIndex}.json`;
-        console.log(`Attempting to download ${filename}...`);
-        const file = await readGitHubFile(filename);
-        if(!file){
-            console.log(`No more chunks found at ${filename}`);
-            break;
-        }
-        
-        // Check if we got data or just SHA (file too large for Contents API)
-        if(!file.data){
-            console.error(`File ${filename} is too large (over 1MB) - cannot download via Contents API`);
-            skippedChunks.push(filename);
-            // Still count it as existing so we keep checking for more chunks
-            fileSHAs[filename] = file.sha;
-            chunkIndex++;
-            continue;
-        }
-        
-        console.log(`Downloaded ${filename}: ${file.data.length} coins`);
-        fileSHAs[filename] = file.sha;
-        
-        // Restore images from imagesCache (coins are uploaded without images)
-        const coinsWithImages = file.data.map(coin => {
-            if(imagesCache[coin.coinId]){
-                return {...coin, images: imagesCache[coin.coinId]};
-            }
-            return {...coin, images: []};
-        });
-        
-        allCoins = allCoins.concat(coinsWithImages);
-        chunkIndex++;
-    }
-    
-    if(skippedChunks.length > 0){
-        console.error(`Failed to download ${skippedChunks.length} chunk(s): ${skippedChunks.join(', ')}`);
-        console.error('These files are over 1MB. You need to reduce COINS_PER_CHUNK or optimize coin data (images).');
-        throw new Error(`Cannot download ${skippedChunks.length} chunk(s) - files too large: ${skippedChunks.join(', ')}`);
-    }
-    
-    console.log(`Total coins downloaded: ${allCoins.length} from ${chunkIndex} chunks`);
-    return allCoins.length > 0 ? allCoins : null;
-}
-
-// Delete a file from GitHub
-async function deleteGitHubFile(filename){
-    const file = await readGitHubFile(filename);
-    if(!file) return true; // Already deleted
-    
-    const path = `${GITHUB_CONFIG.dataPath}${filename}`;
-    const endpoint = `/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
-    
-    const body = {
-        message: `Delete ${filename}`,
-        sha: file.sha,
-        branch: GITHUB_CONFIG.branch
-    };
-    
-    const result = await githubApiCall(endpoint, 'DELETE', body);
-    return result !== null;
-}
 
 // Wrapper functions for backward compatibility
 async function writeJSONFile(filename,data){
@@ -1271,13 +759,15 @@ async function writeJSONFile(filename,data){
     }
     
     const sha=fileSHAs[filename];
-    const newSha=await writeGitHubFile(filename,data,sha);
-    if(newSha){
-        // Update SHA cache with the new SHA from the commit
-        fileSHAs[filename]=newSha;
-        return true;
+    const result=await writeGitHubFile(filename,data,sha);
+    if(result){
+        // Update SHA cache (need to read it back)
+        const file=await readGitHubFile(filename);
+        if(file){
+            fileSHAs[filename]=file.sha;
+        }
     }
-    return false;
+    return result;
 }
 
 async function readJSONFile(filename,defaultValue=[]){
@@ -1287,22 +777,6 @@ async function readJSONFile(filename,defaultValue=[]){
         return file.data;
     }
     return null;
-}
-
-// Helper to ensure SHA is fetched before upload
-async function ensureFileSHA(filename){
-    console.log('Ensuring SHA for',filename,'Current SHA:',fileSHAs[filename]);
-    const file=await readGitHubFile(filename);
-    if(file&&file.sha){
-        fileSHAs[filename]=file.sha;
-        console.log('Fetched SHA for',filename,':',file.sha);
-        return true;
-    }else{
-        console.warn('Could not fetch SHA for',filename,'- file may not exist yet or is inaccessible');
-        // Clear any stale undefined value
-        delete fileSHAs[filename];
-        return false;
-    }
 }
 
 // IndexedDB for images (fallback) + JSON file storage
@@ -1393,8 +867,12 @@ const loadJSON=(k,f=[])=>{try{return JSON.parse(localStorage.getItem(k)||JSON.st
 const saveJSON=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
 
 async function loadCoins(){
-    // Load from localStorage only
-    coins=loadJSON(STORAGE_KEY,[]);
+    const fileData=await readJSONFile('coins_data.json',[]);
+    if(fileData!==null){
+        coins=fileData;
+    }else{
+        coins=loadJSON(STORAGE_KEY,[]);
+    }
     return coins;
 }
 
@@ -1415,18 +893,7 @@ async function saveKBEntries(){
 
 async function saveCoins(){
     saveJSON(STORAGE_KEY,coins);
-}
-
-function loadSoldCoins(){
-    return loadJSON(SOLD_COINS_KEY,[]);
-}
-
-function saveSoldCoins(data){
-    if(data){
-        saveJSON(SOLD_COINS_KEY,data);
-    }else{
-        saveJSON(SOLD_COINS_KEY,window.soldCoins||[]);
-    }
+    await writeJSONFile('coins_data.json',coins);
 }
 
 async function loadNames(){
@@ -1547,114 +1014,7 @@ function computeCurrentValuePLN(c){
     console.log(`📌 ${c.coinName}: Using cost basis ${costBasisPLN(c).toFixed(2)} PLN`);
     return costBasisPLN(c);
 }
-function updateOverviewTotals(){
-    const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);
-    const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);
-    let sC=0,gC=0,sW=0,gW=0;
-    coins.forEach(c=>{
-        const m=(c.coinMaterial||'Other').toUpperCase();
-        if(m==='AG'){sC++;sW+=parseFloat(c.coinWeight)||0}
-        if(m==='AU'){gC++;gW+=parseFloat(c.coinWeight)||0}
-    });
-    $('#totalPurchased').textContent=fmt(p)+' PLN';
-    $('#totalCurrent').textContent=fmt(cur)+' PLN';
-    $('#silverCount').textContent=sC;
-    $('#goldCount').textContent=gC;
-    $('#silverWeight').textContent=fmt(sW)+' g';
-    $('#goldWeight').textContent=fmt(gW)+' g';
-    const gl=cur-p;
-    $('#gainLoss').textContent=fmt(gl)+' PLN';
-    $('#gainLoss').style.color=gl<0?'red':(gl>0?'green':'inherit');
-    
-    // Update current date
-    const dateEl=$('#currentDate');
-    if(dateEl){
-        const now=new Date();
-        const options={weekday:'long',year:'numeric',month:'long',day:'numeric'};
-        dateEl.textContent=now.toLocaleDateString('en-US',options);
-    }
-    
-    updateGoldSilverRatio();
-}
-
-function updateMobileOverview(){
-    const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);
-    const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);
-    let sW=0,gW=0;
-    coins.forEach(c=>{
-        const m=(c.coinMaterial||'Other').toUpperCase();
-        if(m==='AG')sW+=parseFloat(c.coinWeight)||0;
-        if(m==='AU')gW+=parseFloat(c.coinWeight)||0;
-    });
-    
-    // Update values
-    $('#mobileTotalValue').textContent=fmt(cur)+' PLN';
-    const gl=cur-p;
-    const glEl=$('#mobileGainLoss');
-    glEl.textContent=fmt(gl)+' PLN';
-    // Change tile color based on gain/loss
-    const glTile=glEl.parentElement;
-    if(gl<0){
-        glTile.style.background='linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
-    }else if(gl>0){
-        glTile.style.background='linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
-    }else{
-        glTile.style.background='linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)';
-    }
-    
-    // Metal weights
-    $('#mobileSilverWeight').textContent=fmt(sW)+' g';
-    $('#mobileGoldWeight').textContent=fmt(gW)+' g';
-    
-    // Metal rates in USD and PLN
-    const silverRate=metalRatesUSD.AG?'$'+metalRatesUSD.AG.toFixed(2):'-';
-    const goldRate=metalRatesUSD.AU?'$'+metalRatesUSD.AU.toFixed(2):'-';
-    const silverRateEl=$('#mobileSilverRate');
-    const goldRateEl=$('#mobileGoldRate');
-    if(silverRateEl)silverRateEl.textContent=silverRate;
-    if(goldRateEl)goldRateEl.textContent=goldRate;
-    
-    // Calculate PLN rates (only if elements exist)
-    const silverPLNEl=$('#mobileSilverRatePLN');
-    if(silverPLNEl){
-        if(metalRatesUSD.AG&&exchangeRatesPLN&&exchangeRatesPLN.USD){
-            const silverPLN=(metalRatesUSD.AG/exchangeRatesPLN.USD).toFixed(2);
-            silverPLNEl.textContent=silverPLN+' PLN/oz';
-        }else{
-            silverPLNEl.textContent='-';
-        }
-    }
-    
-    const goldPLNEl=$('#mobileGoldRatePLN');
-    if(goldPLNEl){
-        if(metalRatesUSD.AU&&exchangeRatesPLN&&exchangeRatesPLN.USD){
-            const goldPLN=(metalRatesUSD.AU/exchangeRatesPLN.USD).toFixed(2);
-            goldPLNEl.textContent=goldPLN+' PLN/oz';
-        }else{
-            goldPLNEl.textContent='-';
-        }
-    }
-    
-    // Ratio
-    const ratioEl=$('#mobileRatio');
-    if(ratioEl){
-        if(metalRatesUSD.AU&&metalRatesUSD.AG){
-            const ratio=(metalRatesUSD.AU/metalRatesUSD.AG).toFixed(2)+':1';
-            ratioEl.textContent=ratio;
-        }else{
-            ratioEl.textContent='-';
-        }
-    }
-    
-    // Current date
-    const dateEl=$('#mobileCurrentDate');
-    if(dateEl){
-        const now=new Date();
-        const options={weekday:'long',year:'numeric',month:'long',day:'numeric'};
-        dateEl.textContent=now.toLocaleDateString('en-US',options);
-    }
-}
-
+function updateOverviewTotals(){const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);let sC=0,gC=0,sW=0,gW=0;coins.forEach(c=>{const m=(c.coinMaterial||'Other').toUpperCase();if(m==='AG'){sC++;sW+=parseFloat(c.coinWeight)||0}if(m==='AU'){gC++;gW+=parseFloat(c.coinWeight)||0}});$('#totalPurchased').textContent=fmt(p)+' PLN';$('#totalCurrent').textContent=fmt(cur)+' PLN';$('#silverCount').textContent=sC;$('#goldCount').textContent=gC;$('#silverWeight').textContent=fmt(sW)+' g';$('#goldWeight').textContent=fmt(gW)+' g';const gl=cur-p;$('#gainLoss').textContent=fmt(gl)+' PLN';$('#gainLoss').style.color=gl<0?'red':(gl>0?'green':'inherit');updateGoldSilverRatio()}
 async function populateTypeDropdown(){const s=$('#coinType');if(!s)return;const cv=s.value;s.innerHTML='<option value="">-- Select Type --</option>';const types=await loadTypes();types.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;s.appendChild(o)});if(cv)s.value=cv}
 async function populateDatalist(){const d=$('#coinNameList');if(!d)return;d.innerHTML='';const names=await loadNames();names.forEach(n=>{const o=document.createElement('option');o.value=n;d.appendChild(o)})}
 async function addName(n){if(!n||typeof n!=='string')return;const v=n.trim();if(v.length<2)return;const l=await loadNames();if(!l.some(x=>x.toLowerCase()===v.toLowerCase())){l.unshift(v);await saveNames(l.slice(0,200));populateDatalist()}}
@@ -1678,252 +1038,14 @@ window.deleteType=async function(tn){const cu=coins.filter(c=>c.type===tn).lengt
 async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.innerHTML='';const ts=await loadTypes();if(!ts.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:#999">No types defined</td></tr>';return}ts.forEach((t,i)=>{const cu=coins.filter(c=>c.type===t).length;const tr=document.createElement('tr');tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td style="font-weight:600">${t}</td><td>${cu} coin${cu!==1?'s':''}</td><td><button class="delete-btn" onclick="deleteType('${t.replace(/'/g,"\\'")}')">Delete</button></td>`;tb.appendChild(tr)})}
 function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const hasPhotos=c.images&&Array.isArray(c.images)&&c.images.length>0;const photoIcon=hasPhotos?'<span style="color:green;font-size:18px">✓</span>':'<span style="color:red;font-size:18px">✗</span>';tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td><td style="text-align:center">${photoIcon}</td><td style="text-align:center" onclick="event.stopPropagation()"><input type="checkbox" class="coin-checkbox" data-id="${c.coinId}" ${c.checked?'checked':''}></td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)});$$('.coin-checkbox').forEach(cb=>cb.addEventListener('change',function(){const coin=coins.find(c=>c.coinId===this.dataset.id);if(coin){coin.checked=this.checked;saveCoins()}}))}
 function getFilteredAndSortedCoins(){const nf=($('#filterName')?.value||'').toLowerCase();const cf=($('#filterCountry')?.value||'').toLowerCase();const yf=$('#filterYear')?.value||'';const tf=($('#filterType')?.value||'').toLowerCase();const mf=$('#filterMaterial')?.value||'';const pf=$('#filterPurity')?.value||'';const df=$('#filterPurchaseDate')?.value||'';let fil=coins.filter(c=>{if(nf&&!(c.coinName||'').toLowerCase().includes(nf))return false;if(cf&&!(c.coinCountry||'').toLowerCase().includes(cf))return false;if(yf&&c.coinYear!=yf)return false;if(tf&&!(c.type||'').toLowerCase().includes(tf))return false;if(mf&&c.coinMaterial!==mf)return false;if(pf&&c.coinMetalContent!=pf)return false;if(df&&c.purchaseDate!==df)return false;return true});fil.sort((a,b)=>{let vA,vB;if(currentSortBy==='currentValue'){vA=computeCurrentValuePLN(a);vB=computeCurrentValuePLN(b)}else if(currentSortBy==='gain'){vA=computeCurrentValuePLN(a)-costBasisPLN(a);vB=computeCurrentValuePLN(b)-costBasisPLN(b)}else if(currentSortBy==='coinYear'||currentSortBy==='purchasePrice'){vA=parseFloat(a[currentSortBy])||0;vB=parseFloat(b[currentSortBy])||0}else if(currentSortBy==='purchaseDate'){vA=a.purchaseDate||'';vB=b.purchaseDate||''}else{vA=(a[currentSortBy]||'').toString().toLowerCase();vB=(b[currentSortBy]||'').toString().toLowerCase()}if(vA<vB)return currentSortOrder==='asc'?-1:1;if(vA>vB)return currentSortOrder==='asc'?1:-1;return 0});return fil}
-
-function renderSoldCoinsTable(){
-    const tbody=document.getElementById('soldCoinsBody');
-    if(!tbody)return;
-    tbody.innerHTML='';
-    const soldCoinsData=window.soldCoins||[];
-    if(!soldCoinsData.length){
-        tbody.innerHTML='<tr><td colspan="14" style="padding:24px;text-align:center;color:#666">No coins have been sold yet.</td></tr>';
-        return;
-    }
-    soldCoinsData.forEach(coin=>{
-        const tr=document.createElement('tr');
-        tr.style.borderBottom='1px solid #e0e0e0';
-        const push=(v)=>{const td=document.createElement('td');td.style.padding='12px';td.textContent=v||'-';tr.appendChild(td)};
-        push(coin.coinName);
-        push(coin.coinCountry);
-        push(coin.coinYear);
-        push(coin.category);
-        push(coin.type);
-        push(coin.coinMaterial);
-        push(coin.purchaseDate);
-        push(coin.purchasePrice+' '+(coin.purchaseCurrency||'PLN'));
-        push(coin.saleDate);
-        push(coin.salePrice);
-        push(coin.saleCurrency);
-        const purchasePLN=convertToPLN(parseFloat(coin.purchasePrice)||0,coin.purchaseCurrency||'PLN');
-        const salePLN=convertToPLN(parseFloat(coin.salePrice)||0,coin.saleCurrency||'PLN');
-        const profitLoss=salePLN-purchasePLN;
-        const tdProfitLoss=document.createElement('td');
-        tdProfitLoss.style.padding='12px';
-        tdProfitLoss.textContent=fmt(profitLoss)+' PLN';
-        tdProfitLoss.style.color=profitLoss<0?'red':(profitLoss>0?'green':'inherit');
-        tdProfitLoss.style.fontWeight='600';
-        tr.appendChild(tdProfitLoss);
-        push(coin.saleComment);
-        const tdAction=document.createElement('td');
-        tdAction.style.padding='12px';
-        tdAction.style.textAlign='center';
-        const editBtn=document.createElement('button');
-        editBtn.textContent='Edit';
-        editBtn.style.cssText='padding:6px 12px;background:#4ecdc4;color:white;border:none;border-radius:6px;cursor:pointer;margin-right:8px;font-weight:600';
-        editBtn.addEventListener('click',()=>editSoldCoin(coin.coinId));
-        const delBtn=document.createElement('button');
-        delBtn.textContent='Delete';
-        delBtn.style.cssText='padding:6px 12px;background:#e74c3c;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600';
-        delBtn.addEventListener('click',()=>deleteSoldCoin(coin.coinId));
-        tdAction.appendChild(editBtn);
-        tdAction.appendChild(delBtn);
-        tr.appendChild(tdAction);
-        tbody.appendChild(tr);
-    });
-}
-
-window.renderSoldCoinsTable=renderSoldCoinsTable;
-
-let currentEditingSoldCoinId = null;
-
-function editSoldCoin(coinId){
-    const coin = (window.soldCoins||[]).find(c=>c.coinId===coinId);
-    if(!coin){
-        alert('Coin not found');
-        return;
-    }
-    
-    currentEditingSoldCoinId = coinId;
-    
-    $('#editSaleDate').value = coin.saleDate||'';
-    $('#editSalePrice').value = coin.salePrice||'';
-    $('#editSaleCurrency').value = coin.saleCurrency||'PLN';
-    $('#editSaleComment').value = coin.saleComment||'';
-    
-    $('#editSoldCoinModal').style.display = 'block';
-}
-
-function deleteSoldCoin(coinId){
-    if(!confirm('Are you sure you want to delete this sold coin record?')){
-        return;
-    }
-    
-    const index = (window.soldCoins||[]).findIndex(c=>c.coinId===coinId);
-    if(index===-1){
-        alert('Coin not found');
-        return;
-    }
-    
-    window.soldCoins.splice(index,1);
-    saveSoldCoins(window.soldCoins);
-    renderSoldCoinsTable();
-}
-
 function setSortColumn(col){if(currentSortBy===col){currentSortOrder=currentSortOrder==='asc'?'desc':'asc'}else{currentSortBy=col;currentSortOrder='asc'}$$('th.sortable').forEach(th=>{th.classList.remove('sorted-asc','sorted-desc');if(th.dataset.sort===col){th.classList.add('sorted-'+currentSortOrder)}});renderCoinsTable()}
-function showSection(n){
-    const sec={'overview':$('#overview-section'),'mobile-overview':$('#mobile-overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section'),'sold-coins':$('#sold-coins-section')};
-    Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});
-    $$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));
-    
-    // Render sold coins when navigating to that section
-    if(n==='sold-coins'){
-        if(window.renderSoldCoinsTable) window.renderSoldCoinsTable();
-    }
-    
-    // Update URL for mobile mode
-    if(n==='mobile-overview'){
-        window.history.pushState({}, '', '?mode=mobile');
-    } else {
-        window.history.pushState({}, '', window.location.pathname);
-    }
-    
-    // Mobile mode: hide sidebar and toggle button
-    const sidebar = $('.sidebar');
-    const sidebarToggle = $('#sidebarToggle');
-    if(n==='mobile-overview'){
-        if(sidebar) sidebar.style.display='none';
-        if(sidebarToggle) sidebarToggle.style.display='none';
-    } else {
-        if(sidebar) sidebar.style.display='';
-        if(sidebarToggle) sidebarToggle.style.display='';
-    }
-    
-    if(n==='overview'){updateOverviewTotals()}else if(n==='mobile-overview'){updateMobileOverview()}else if(n==='all-coins'){renderCoinsTable()}else if(n==='manage-types'){renderTypesTable()}else if(n==='add-coin'){if(!editModeId){isViewMode=false;$('#coinForm').reset();$('#coinId').value=genId();currentCoinImages=[];renderCoinImagesPreview();setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#soldCoinBtn').style.display='none';$('#editCoinBtn').style.display='none'}}else if(n==='fx-chart'){initTradingViewChart()}else if(n==='price-simulation'){updateSimulationRates()}else if(n==='coin-verification'){renderKBList();showKBListView()}else if(n==='github-settings'){loadGithubSettings()}
-}
+function showSection(n){const sec={'overview':$('#overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section')};Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});$$('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===n));if(n==='overview'){updateOverviewTotals()}else if(n==='all-coins'){renderCoinsTable()}else if(n==='manage-types'){renderTypesTable()}else if(n==='add-coin'){if(!editModeId){isViewMode=false;$('#coinForm').reset();$('#coinId').value=genId();currentCoinImages=[];renderCoinImagesPreview();setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#editCoinBtn').style.display='none'}}else if(n==='fx-chart'){initTradingViewChart()}else if(n==='price-simulation'){updateSimulationRates()}else if(n==='coin-verification'){renderKBList();showKBListView()}else if(n==='github-settings'){loadGithubSettings()}}
 let tvWidget=null;
 function initTradingViewChart(){if(tvWidget)return;const pair=$('#currencyPair')?.value||'XAUUSD';tvWidget=new TradingView.widget({autosize:true,symbol:pair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'});$('#currencyPair')?.addEventListener('change',function(){const newPair=this.value;if(tvWidget){tvWidget.remove();tvWidget=null}tvWidget=new TradingView.widget({autosize:true,symbol:newPair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'})})}
 function updateSimulationRates(){const metal=$('#simMetal')?.value||'AG';const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(rate){const ratePerGram=rate/31.1034768;$('#simCurrentRate').textContent='$'+rate.toFixed(2)+' /oz';$('#simCurrentRatePerGram').textContent='$'+ratePerGram.toFixed(2)+' /g'}else{$('#simCurrentRate').textContent='Rate not available';$('#simCurrentRatePerGram').textContent='-'}}
 function calculateSimulation(){const metal=$('#simMetal')?.value||'AG';const purity=parseFloat($('#simPurity')?.value)||0;const weight=parseFloat($('#simWeight')?.value)||0;if(!purity||!weight){alert('⚠️ Please enter purity and weight');return}const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(!rate){alert('⚠️ Metal rate not available. Please refresh FX rates.');return}const purityDecimal=purity/1000;const pureWeight=weight*purityDecimal;const ratePerGram=rate/31.1034768;const valueUSD=pureWeight*ratePerGram;const valuePLN=convertUSDToPLN(valueUSD);$('#simPureWeight').textContent=pureWeight.toFixed(2)+' g';$('#simValueUSD').textContent='$'+valueUSD.toFixed(2);$('#simValuePLN').textContent=valuePLN.toFixed(2)+' PLN';$('#simResult').style.display='block'}
 $('#simMetal')?.addEventListener('change',updateSimulationRates);
 $('#calculateSimBtn')?.addEventListener('click',calculateSimulation);
-
-// Mobile Simulation Functions
-$('#mobileSimToggle')?.addEventListener('click',function(){
-    const form=$('#mobileSimForm');
-    if(form){
-        if(form.style.display==='none'){
-            form.style.display='block';
-            updateMobileSimulationRates();
-            // Scroll to the button first, then to the form
-            setTimeout(()=>{
-                this.scrollIntoView({behavior:'smooth',block:'end'});
-                setTimeout(()=>{
-                    form.scrollIntoView({behavior:'smooth',block:'nearest'});
-                },200);
-            },100);
-        }else{
-            form.style.display='none';
-        }
-    }
-});
-
-function updateMobileSimulationRates(){
-    const metal=$('#mobileSimMetal')?.value||'AG';
-    const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;
-    if(rate){
-        const ratePerGram=rate/31.1034768;
-        $('#mobileSimCurrentRate').textContent='$'+rate.toFixed(2)+' /oz';
-        $('#mobileSimCurrentRatePerGram').textContent='$'+ratePerGram.toFixed(2)+' /g';
-    }else{
-        $('#mobileSimCurrentRate').textContent='Rate not available';
-        $('#mobileSimCurrentRatePerGram').textContent='-';
-    }
-}
-
-let lastCalculatedValuePLN=0;
-
-function calculateMobileSimulation(){
-    const metal=$('#mobileSimMetal')?.value||'AG';
-    const purity=parseFloat($('#mobileSimPurity')?.value)||0;
-    const weight=parseFloat($('#mobileSimWeight')?.value)||0;
-    if(!purity||!weight){
-        alert('⚠️ Please enter purity and weight');
-        return;
-    }
-    const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;
-    if(!rate){
-        alert('⚠️ Metal rate not available. Please refresh FX rates.');
-        return;
-    }
-    const purityDecimal=purity/1000;
-    const pureWeight=weight*purityDecimal;
-    const ratePerGram=rate/31.1034768;
-    const valueUSD=pureWeight*ratePerGram;
-    const valuePLN=convertUSDToPLN(valueUSD);
-    lastCalculatedValuePLN=valuePLN;
-    $('#mobileSimPureWeight').textContent=pureWeight.toFixed(2)+' g';
-    $('#mobileSimValueUSD').textContent='$'+valueUSD.toFixed(2);
-    $('#mobileSimValuePLN').textContent=valuePLN.toFixed(2)+' PLN';
-    const resultDiv=$('#mobileSimResult');
-    resultDiv.style.display='block';
-    // Hide target price result when recalculating
-    $('#mobileTargetPriceResult').style.display='none';
-    // Scroll to results
-    setTimeout(()=>{
-        resultDiv.scrollIntoView({behavior:'smooth',block:'nearest'});
-    },100);
-}
-
-function calculateTargetPrice(){
-    if(!lastCalculatedValuePLN){
-        alert('⚠️ Please calculate coin value first');
-        return;
-    }
-    const K=lastCalculatedValuePLN; // Base coin value
-    const T=11.49; // Transport fee
-    
-    // Base price: X = 10000 * (K + T) / 9631
-    const targetPrice=(10000*(K+T))/9631;
-    
-    // +10% margin: X = 10000 * (1.1*K + T) / 9631
-    const targetPrice10=(10000*(1.1*K+T))/9631;
-    
-    // +20% margin: X = 10000 * (1.2*K + T) / 9631
-    const targetPrice20=(10000*(1.2*K+T))/9631;
-    
-    // +30% margin: X = 10000 * (1.3*K + T) / 9631
-    const targetPrice30=(10000*(1.3*K+T))/9631;
-    
-    // +40% margin: X = 10000 * (1.4*K + T) / 9631
-    const targetPrice40=(10000*(1.4*K+T))/9631;
-    
-    // +50% margin: X = 10000 * (1.5*K + T) / 9631
-    const targetPrice50=(10000*(1.5*K+T))/9631;
-    
-    $('#mobileTargetPrice').textContent=targetPrice.toFixed(2)+' PLN';
-    $('#mobileTargetPrice10').textContent=targetPrice10.toFixed(2)+' PLN';
-    $('#mobileTargetPrice20').textContent=targetPrice20.toFixed(2)+' PLN';
-    $('#mobileTargetPrice30').textContent=targetPrice30.toFixed(2)+' PLN';
-    $('#mobileTargetPrice40').textContent=targetPrice40.toFixed(2)+' PLN';
-    $('#mobileTargetPrice50').textContent=targetPrice50.toFixed(2)+' PLN';
-    
-    const targetDiv=$('#mobileTargetPriceResult');
-    targetDiv.style.display='block';
-    // Scroll to target price result
-    setTimeout(()=>{
-        targetDiv.scrollIntoView({behavior:'smooth',block:'nearest'});
-    },100);
-}
-
-$('#mobileSimMetal')?.addEventListener('change',updateMobileSimulationRates);
-$('#mobileCalculateSimBtn')?.addEventListener('click',calculateMobileSimulation);
-$('#mobileTargetPriceBtn')?.addEventListener('click',calculateTargetPrice);
-$('#mobileGoUpBtn')?.addEventListener('click',()=>{
-    const mobileSection=$('#mobile-overview-section');
-    if(mobileSection){
-        mobileSection.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-});
-
 
 // Coin Images Functions
 async function renderCoinImagesPreview(){
@@ -2378,7 +1500,6 @@ $('#filterPurchaseDate')?.addEventListener('change',()=>renderCoinsTable());
 $('#clearFilters')?.addEventListener('click',()=>{$('#filterName').value='';$('#filterCountry').value='';$('#filterYear').value='';$('#filterType').value='';$('#filterMaterial').value='';$('#filterPurity').value='';$('#filterPurchaseDate').value='';renderCoinsTable()});
 $('#sidebarToggle')?.addEventListener('click',function(){const sidebar=$('.sidebar');const body=document.body;const btn=this;sidebar.classList.toggle('collapsed');body.classList.toggle('sidebar-collapsed');btn.textContent=sidebar.classList.contains('collapsed')?'☰':'✕';localStorage.setItem('sidebarCollapsed',sidebar.classList.contains('collapsed'))});
 if(localStorage.getItem('sidebarCollapsed')==='true'){$('.sidebar')?.classList.add('collapsed');document.body.classList.add('sidebar-collapsed');$('#sidebarToggle').textContent='☰'}
-$('#backToDesktopBtn')?.addEventListener('click',()=>{showSection('overview')});
 $('#addTypeBtn')?.addEventListener('click',async()=>{
     const i=$('#newTypeName');
     if(!i){
@@ -2397,7 +1518,7 @@ $('#addTypeBtn')?.addEventListener('click',async()=>{
 $('#silverRate')?.addEventListener('input',()=>{metalRatesUSD.AG=parseFloat($('#silverRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#goldRate')?.addEventListener('input',()=>{metalRatesUSD.AU=parseFloat($('#goldRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#coinMaterial')?.addEventListener('change',function(){const v=this.value;const p=$('#coinMetalContent');if(p){if(v==='AG'||v==='AU'){p.disabled=false;p.required=true}else{p.disabled=true;p.required=false;p.value=''}}});
-$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,coinLink:$('#coinLink')?.value,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#soldCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
+$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,coinLink:$('#coinLink')?.value,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
 
 let isViewMode=false;
 
@@ -2412,9 +1533,7 @@ function viewCoin(coinId){
     $('#submitBtn').style.display='none';
     $('#cancelEdit').style.display='none';
     $('#deleteCoinBtn').style.display='none';
-    $('#soldCoinBtn').style.display='none';
     $('#editCoinBtn').style.display='inline-block';
-    document.getElementById('saleInfoSection').style.display='none';
     showSection('add-coin');
 }
 
@@ -2430,9 +1549,7 @@ function editCoin(coinId){
     $('#submitBtn').textContent='Save Changes';
     $('#cancelEdit').style.display='inline-block';
     $('#deleteCoinBtn').style.display='inline-block';
-    $('#soldCoinBtn').style.display='inline-block';
     $('#editCoinBtn').style.display='none';
-    document.getElementById('saleInfoSection').style.display='none';
     showSection('add-coin');
 }
 
@@ -2541,139 +1658,10 @@ $('#deleteCoinBtn')?.addEventListener('click',()=>{
         $('#submitBtn').textContent='Add Coin';
         $('#cancelEdit').style.display='none';
         $('#deleteCoinBtn').style.display='none';
-        $('#soldCoinBtn').style.display='none';
         showSection('all-coins');
         renderCoinsTable();
         updateOverviewTotals();
     }
-});
-
-$('#soldCoinBtn')?.addEventListener('click',()=>{
-    if(!editModeId)return;
-    const saleSection=document.getElementById('saleInfoSection');
-    if(saleSection){
-        saleSection.style.display='block';
-        // Pre-fill sale date with today
-        const today=new Date().toISOString().split('T')[0];
-        document.getElementById('saleDate').value=today;
-        document.getElementById('salePrice').value='';
-        document.getElementById('saleCurrency').value='PLN';
-        document.getElementById('saleComment').value='';
-        // Scroll to the sale section smoothly
-        setTimeout(()=>{
-            saleSection.scrollIntoView({behavior:'smooth',block:'center'});
-        },100);
-    }
-});
-
-$('#cancelSaleFormBtn')?.addEventListener('click',()=>{
-    const saleSection=document.getElementById('saleInfoSection');
-    if(saleSection){
-        saleSection.style.display='none';
-        document.getElementById('saleDate').value='';
-        document.getElementById('salePrice').value='';
-        document.getElementById('saleCurrency').value='PLN';
-        document.getElementById('saleComment').value='';
-    }
-});
-
-$('#cancelEditSoldBtn')?.addEventListener('click',()=>{
-    $('#editSoldCoinModal').style.display='none';
-    currentEditingSoldCoinId=null;
-});
-
-$('#saveEditSoldBtn')?.addEventListener('click',()=>{
-    if(!currentEditingSoldCoinId){
-        alert('No coin selected');
-        return;
-    }
-    
-    const saleDate=$('#editSaleDate').value;
-    const salePrice=parseFloat($('#editSalePrice').value);
-    const saleCurrency=$('#editSaleCurrency').value;
-    const saleComment=$('#editSaleComment').value;
-    
-    if(!saleDate||!salePrice||isNaN(salePrice)){
-        alert('⚠️ Please fill in sale date and price.');
-        return;
-    }
-    
-    const coin=(window.soldCoins||[]).find(c=>c.coinId===currentEditingSoldCoinId);
-    if(!coin){
-        alert('Coin not found');
-        return;
-    }
-    
-    coin.saleDate=saleDate;
-    coin.salePrice=salePrice;
-    coin.saleCurrency=saleCurrency;
-    coin.saleComment=saleComment;
-    
-    saveSoldCoins(window.soldCoins);
-    renderSoldCoinsTable();
-    $('#editSoldCoinModal').style.display='none';
-    currentEditingSoldCoinId=null;
-});
-
-$('#confirmSaleFormBtn')?.addEventListener('click',()=>{
-    if(!editModeId)return;
-    
-    const saleDate=document.getElementById('saleDate').value;
-    const salePrice=parseFloat(document.getElementById('salePrice').value);
-    const saleCurrency=document.getElementById('saleCurrency').value;
-    const saleComment=document.getElementById('saleComment').value;
-    
-    if(!saleDate||!salePrice||isNaN(salePrice)){
-        alert('⚠️ Please fill in sale date and price.');
-        return;
-    }
-    
-    const coinIndex=coins.findIndex(c=>c.coinId===editModeId);
-    if(coinIndex===-1){
-        alert('❌ Coin not found.');
-        return;
-    }
-    
-    const coin=coins[coinIndex];
-    const coinName=coin.coinName||'Unknown Coin';
-    
-    // Create sold coin record
-    const soldCoin={
-        ...coin,
-        saleDate,
-        salePrice,
-        saleCurrency,
-        saleComment,
-        soldAt:new Date().toISOString()
-    };
-    
-    // Move coin from coins to soldCoins
-    if(!window.soldCoins)window.soldCoins=[];
-    window.soldCoins.push(soldCoin);
-    coins.splice(coinIndex,1);
-    
-    // Save to localStorage
-    saveCoins();
-    saveSoldCoins(window.soldCoins);
-    
-    // Reset form
-    $('#coinForm').reset();
-    currentCoinImages=[];
-    renderCoinImagesPreview();
-    editModeId=null;
-    $('#submitBtn').textContent='Add Coin';
-    $('#cancelEdit').style.display='none';
-    $('#deleteCoinBtn').style.display='none';
-    $('#soldCoinBtn').style.display='none';
-    document.getElementById('saleInfoSection').style.display='none';
-    
-    // Update displays
-    renderCoinsTable();
-    if(window.renderSoldCoinsTable)window.renderSoldCoinsTable();
-    updateOverviewTotals();
-    
-    // Navigate to sold coins section to show the result
-    showSection('sold-coins');
 });
 $('#cancelEdit')?.addEventListener('click',()=>{
     isViewMode=false;
@@ -2690,9 +1678,7 @@ $('#cancelEdit')?.addEventListener('click',()=>{
     $('#submitBtn').textContent='Add Coin';
     $('#cancelEdit').style.display='none';
     $('#deleteCoinBtn').style.display='none';
-    $('#soldCoinBtn').style.display='none';
     $('#editCoinBtn').style.display='none';
-    document.getElementById('saleInfoSection').style.display='none';
     showSection('overview');
 });
 $('#editCoinBtn')?.addEventListener('click',()=>{
@@ -2704,7 +1690,6 @@ $('#backToCoinsBtn')?.addEventListener('click',()=>{
     showSection('all-coins');
 });
 $('#refreshRatesBtn')?.addEventListener('click',async function(){const btn=this;btn.disabled=true;btn.textContent='🔄 Refreshing...';try{await fetchRates();location.reload()}catch(err){alert('❌ Failed to refresh rates');btn.disabled=false;btn.textContent='🔄 Refresh FX Rates'}});
-$('#mobileRefreshRatesBtn')?.addEventListener('click',async function(){const btn=this;btn.disabled=true;btn.textContent='⏳';try{await fetchRates();updateMobileOverview();btn.textContent='✓';setTimeout(()=>{btn.textContent='🔄 Refresh';btn.disabled=false},1000)}catch(err){alert('❌ Failed to refresh rates');btn.disabled=false;btn.textContent='🔄 Refresh'}});
 
 // Export/Import Functions
 async function exportAllData(){
@@ -2746,7 +1731,6 @@ async function exportAllData(){
             version:'1.0',
             exportDate:new Date().toISOString(),
             coins:coins,
-            soldCoins:loadSoldCoins(),
             kbEntries:kbEntries,
             coinTypes:loadTypes(),
             coinNames:loadNames(),
@@ -2765,7 +1749,7 @@ async function exportAllData(){
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
-        alert('✅ Data exported successfully!\n\nFile includes:\n- '+coins.length+' coins\n- '+(loadSoldCoins().length)+' sold coins\n- '+kbEntries.length+' KB entries\n- '+imageIds.size+' images\n\nYou can import this file in any browser.');
+        alert('✅ Data exported successfully!\n\nFile includes:\n- '+coins.length+' coins\n- '+kbEntries.length+' KB entries\n- '+imageIds.size+' images\n\nYou can import this file in any browser.');
         
         if(btn){
             btn.disabled=false;
@@ -2802,7 +1786,6 @@ async function importAllData(file){
         // Confirm before overwriting
         const confirmMsg=`This will replace all current data with:\n\n`+
             `- ${importData.coins.length} coins\n`+
-            `- ${importData.soldCoins?.length||0} sold coins\n`+
             `- ${importData.kbEntries?.length||0} KB entries\n`+
             `- ${Object.keys(importData.images||{}).length} images\n\n`+
             `Current data will be LOST. Continue?`;
@@ -2826,10 +1809,6 @@ async function importAllData(file){
         coins=importData.coins||[];
         saveCoins();
         
-        if(importData.soldCoins){
-            saveSoldCoins(importData.soldCoins);
-        }
-        
         kbEntries=importData.kbEntries||[];
         saveKBEntries();
         
@@ -2841,7 +1820,7 @@ async function importAllData(file){
             saveNames(importData.coinNames);
         }
         
-        alert('✅ Import successful!\n\nImported:\n- '+coins.length+' coins\n- '+(importData.soldCoins?.length||0)+' sold coins\n- '+kbEntries.length+' KB entries\n- '+Object.keys(importData.images||{}).length+' images\n\nPage will reload now.');
+        alert('✅ Import successful!\n\nImported:\n- '+coins.length+' coins\n- '+kbEntries.length+' KB entries\n- '+Object.keys(importData.images||{}).length+' images\n\nPage will reload now.');
         
         location.reload();
     }catch(err){
@@ -2971,38 +1950,13 @@ $('#uploadToGithubBtn')?.addEventListener('click',async()=>{
     statusDiv.innerHTML='⏳ Uploading data to GitHub...';
     
     try{
-        console.log('Starting upload to GitHub...');
-        
-        // Ensure we have SHAs for all files before uploading
-        console.log('Fetching SHAs for existing files...');
-        await ensureFileSHA('kb_data.json');
-        await ensureFileSHA('images_data.json');
-        await ensureFileSHA('names_data.json');
-        await ensureFileSHA('types_data.json');
-        
-        console.log('All SHAs fetched. Starting uploads...');
-        console.log('Current SHA cache:',fileSHAs);
-        
-        // Upload coins in chunks (to handle large files)
-        console.log('Uploading coins in chunks...');
-        const coinsResult = await uploadCoinsInChunks(coins);
-        if(!coinsResult){
-            throw new Error('Failed to upload coins data');
-        }
-        
-        console.log('Uploading sold coins...');
-        await ensureFileSHA('sold_coins_data.json');
-        await writeJSONFile('sold_coins_data.json',window.soldCoins||[]);
-        
-        console.log('Uploading kb_data.json...');
+        // Upload all data files
+        await writeJSONFile('coins_data.json',coins);
         await writeJSONFile('kb_data.json',kbEntries);
-        console.log('Uploading images_data.json...');
         await writeJSONFile('images_data.json',imagesCache);
         const names=await loadNames();
-        console.log('Uploading names_data.json...');
         await writeJSONFile('names_data.json',names);
         const types=await loadTypes();
-        console.log('Uploading types_data.json...');
         await writeJSONFile('types_data.json',types);
         
         statusDiv.style.background='#d4edda';
@@ -3042,102 +1996,45 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
     statusDiv.innerHTML='⏳ Downloading data from GitHub...';
     
     try{
-        console.log('Starting download from GitHub...');
-        
-        // Clear fileSHAs cache before downloading
-        fileSHAs={};
-        
-        // Download coins from chunks
-        console.log('Downloading coins from chunks...');
-        const downloadedCoins = await downloadCoinsFromChunks();
-        if(downloadedCoins !== null){
-            coins = downloadedCoins;
-            saveJSON(STORAGE_KEY, coins);
-            console.log('Coins loaded:', coins.length, 'coins');
-        }else{
-            console.warn('No coins data found on GitHub');
-        }
-        
-        console.log('Downloading kb_data.json...');
-        const kbFileObj=await readGitHubFile('kb_data.json');
-        if(kbFileObj!==null){
-            kbEntries=kbFileObj.data;
-            fileSHAs['kb_data.json']=kbFileObj.sha;
-            saveJSON(KB_KEY,kbEntries);
-            console.log('KB entries loaded:',kbEntries.length,'entries');
-        }else{
-            console.warn('No KB data found on GitHub');
-        }
-        
-        console.log('Downloading images_data.json...');
-        const imagesFileObj=await readGitHubFile('images_data.json');
-        if(imagesFileObj!==null){
-            imagesCache=imagesFileObj.data;
-            fileSHAs['images_data.json']=imagesFileObj.sha;
-            
-            // Save images to IndexedDB
-            if(!db)await initDB();
-            const imageIds=Object.keys(imagesCache);
-            console.log('Loading',imageIds.length,'images to IndexedDB...');
-            for(const[imageId,imageData]of Object.entries(imagesCache)){
-                const transaction=db.transaction(['images'],'readwrite');
-                const store=transaction.objectStore('images');
-                store.put({id:imageId,data:imageData});
-            }
-            console.log('Images saved to IndexedDB');
-        }else{
-            console.warn('No images data found on GitHub');
-        }
+        // Download all data files
+        await loadCoins();
+        await loadKBEntries();
+        await loadImagesFromFile();
         
         // Reload names and types and save to localStorage
-        console.log('Downloading names_data.json...');
-        const namesFileObj=await readGitHubFile('names_data.json');
-        if(namesFileObj!==null){
-            fileSHAs['names_data.json']=namesFileObj.sha;
-            saveJSON(NAMES_KEY,namesFileObj.data);
-            console.log('Names loaded:',namesFileObj.data.length,'names');
-        }else{
-            console.warn('No names data found on GitHub');
+        const namesFile=await readJSONFile('names_data.json',[]);
+        if(namesFile!==null){
+            saveJSON(NAMES_KEY,namesFile);
         }
         
-        console.log('Downloading types_data.json...');
-        const typesFileObj=await readGitHubFile('types_data.json');
-        if(typesFileObj!==null){
-            fileSHAs['types_data.json']=typesFileObj.sha;
-            saveJSON(TYPES_KEY,typesFileObj.data);
-            console.log('Types loaded:',typesFileObj.data.length,'types');
-        }else{
-            console.warn('No types data found on GitHub');
-        }
-        
-        console.log('Downloading sold_coins_data.json...');
-        const soldCoinsFileObj=await readGitHubFile('sold_coins_data.json');
-        if(soldCoinsFileObj!==null){
-            fileSHAs['sold_coins_data.json']=soldCoinsFileObj.sha;
-            window.soldCoins=soldCoinsFileObj.data;
-            saveJSON(SOLD_COINS_KEY,soldCoinsFileObj.data);
-            console.log('Sold coins loaded:',soldCoinsFileObj.data.length,'sold coins');
-        }else{
-            console.warn('No sold coins data found on GitHub');
+        const typesFile=await readJSONFile('types_data.json',[]);
+        if(typesFile!==null){
+            saveJSON(TYPES_KEY,typesFile);
         }
         
         // Refresh UI dropdowns
-        console.log('Refreshing UI...');
         populateDatalist();
         populateTypeDropdown();
         
-        // Show success message
+        // Reload current view
+        if($('#overview-section').style.display!=='none'){
+            updateOverviewTotals();
+        }
+        if($('#all-coins-section').style.display!=='none'){
+            renderCoinsTable();
+        }
+        if($('#manage-types-section').style.display!=='none'){
+            renderTypesTable();
+        }
+        
         statusDiv.style.background='#d4edda';
         statusDiv.style.borderLeft='4px solid #28a745';
         statusDiv.style.color='#155724';
         statusDiv.innerHTML='<strong>✓ Download complete!</strong> Data loaded from GitHub.';
         
-        console.log('Download complete!');
-        
-        // Hide success message after a moment
         setTimeout(()=>{
             statusDiv.style.display='none';
-        },3000);
+        },5000);
     }catch(err){
         console.error('Download error:',err);
         statusDiv.style.background='#f8d7da';
@@ -3147,87 +2044,15 @@ $('#downloadFromGithubBtn')?.addEventListener('click',async()=>{
     }
 });
 
-$('#deleteAllChunksBtn')?.addEventListener('click',async()=>{
-    const token=getGitHubToken();
-    if(!token){
-        alert('⚠️ Please configure GitHub settings first');
-        showSection('github-settings');
-        return;
-    }
-    
-    if(!confirm('⚠️ This will DELETE all coins_data_*.json chunk files from GitHub. This is useful before re-uploading. Continue?')){
-        return;
-    }
-    
-    const statusDiv=$('#githubConnectionStatus');
-    statusDiv.style.display='block';
-    statusDiv.style.background='#fff3cd';
-    statusDiv.style.borderLeft='4px solid #ffc107';
-    statusDiv.style.color='#856404';
-    statusDiv.innerHTML='⏳ Deleting chunk files from GitHub...';
-    
-    try{
-        console.log('Deleting all coin chunk files...');
-        let chunkIndex = 0;
-        let deletedCount = 0;
-        let maxAttempts = 100; // Don't try forever
-        
-        while(maxAttempts > 0){
-            const filename = `coins_data_${chunkIndex}.json`;
-            const file = await readGitHubFile(filename);
-            if(!file){
-                console.log(`No more chunks found at ${filename}`);
-                break;
-            }
-            console.log(`Deleting ${filename}...`);
-            const deleted = await deleteGitHubFile(filename);
-            if(deleted){
-                deletedCount++;
-            }else{
-                console.warn(`Failed to delete ${filename}`);
-            }
-            chunkIndex++;
-            maxAttempts--;
-        }
-        
-        statusDiv.style.background='#d4edda';
-        statusDiv.style.borderLeft='4px solid #28a745';
-        statusDiv.style.color='#155724';
-        statusDiv.innerHTML=`<strong>✓ Deletion complete!</strong> Deleted ${deletedCount} chunk file(s).`;
-        
-        setTimeout(()=>{
-            statusDiv.style.display='none';
-        },5000);
-    }catch(err){
-        console.error('Deletion error:',err);
-        statusDiv.style.background='#f8d7da';
-        statusDiv.style.borderLeft='4px solid #dc3545';
-        statusDiv.style.color='#721c24';
-        statusDiv.innerHTML='<strong>✗ Deletion failed!</strong> '+err.message;
-    }
-});
-
 async function initializeApp(){
     await initDB();
     await loadImagesFromFile();
     await loadCoins();
     await loadKBEntries();
-    
-    // Load sold coins from localStorage
-    window.soldCoins = loadSoldCoins();
-    
     populateDatalist();
     populateTypeDropdown();
     fetchRates();
-    
-    // Check URL parameters for mobile mode
-    const urlParams = new URLSearchParams(window.location.search);
-    if(urlParams.get('mode') === 'mobile'){
-        showSection('mobile-overview');
-    } else {
-        showSection('overview');
-    }
-    
+    showSection('overview');
     updateOverviewTotals();
     renderCoinImagesPreview();
     updateGithubStatus();

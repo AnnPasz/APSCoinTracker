@@ -258,10 +258,6 @@
                             <label for="coinCountry">Country:</label>
                             <input type="text" id="coinCountry" required>
                         </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label for="coinLink">Link (URL):</label>
-                            <input type="url" id="coinLink" placeholder="https://example.com">
-                        </div>
                     </div>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
@@ -2533,7 +2529,7 @@ $('#addTypeBtn')?.addEventListener('click',async()=>{
 $('#silverRate')?.addEventListener('input',()=>{metalRatesUSD.AG=parseFloat($('#silverRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#goldRate')?.addEventListener('input',()=>{metalRatesUSD.AU=parseFloat($('#goldRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#coinMaterial')?.addEventListener('change',function(){const v=this.value;const p=$('#coinMetalContent');if(p){if(v==='AG'||v==='AU'){p.disabled=false;p.required=true}else{p.disabled=true;p.required=false;p.value=''}}});
-$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,coinLink:$('#coinLink')?.value,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#soldCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
+$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#soldCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
 
 let isViewMode=false;
 
@@ -2602,13 +2598,12 @@ function populateCoinForm(coin){
     $('#purchaseCurrency').value=coin.purchaseCurrency||'PLN';
     $('#purchaseDate').value=coin.purchaseDate||'';
     $('#comments').value=coin.comments||'';
-    $('#coinLink').value=coin.coinLink||'';
     currentCoinImages=coin.images||[];
     renderCoinImagesPreview();
 }
 
 function setFormReadOnly(readonly){
-    const formElements=['#coinName','#coinCountry','#coinYear','#coinWeight','#coinSize','#coinCategory','#coinType','#coinMaterial','#coinMetalContent','#purchasePrice','#purchaseCurrency','#purchaseDate','#comments','#coinLink'];
+    const formElements=['#coinName','#coinCountry','#coinYear','#coinWeight','#coinSize','#coinCategory','#coinType','#coinMaterial','#coinMetalContent','#purchasePrice','#purchaseCurrency','#purchaseDate','#comments'];
     formElements.forEach(selector=>{
         const el=$(selector);
         if(el){

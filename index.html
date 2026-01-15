@@ -554,13 +554,19 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                         <div>
                             <label for="simPurity" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Purity (‰):</label>
-                            <input type="number" id="simPurity" placeholder="e.g., 925" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
+                            <div style="position: relative;">
+                                <input type="number" id="simPurity" placeholder="e.g., 925" style="width: 100%; padding: 10px 35px 10px 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
+                                <button onclick="document.getElementById('simPurity').value=''; document.getElementById('simPurity').focus();" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 16px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                            </div>
                             <small style="color: #666; font-size: 11px; margin-top: 3px; display: block;">900 = 90%, 925 = 92.5%</small>
                         </div>
 
                         <div>
                             <label for="simWeight" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Weight (grams):</label>
-                            <input type="number" step="0.01" id="simWeight" placeholder="e.g., 31.1" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
+                            <div style="position: relative;">
+                                <input type="number" step="0.01" id="simWeight" placeholder="e.g., 31.1" style="width: 100%; padding: 10px 35px 10px 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
+                                <button onclick="document.getElementById('simWeight').value=''; document.getElementById('simWeight').focus();" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 16px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                            </div>
                         </div>
                     </div>
 
@@ -811,13 +817,19 @@
 
                         <div style="margin-bottom: 20px;">
                             <label for="mobileSimPurity" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Purity (‰):</label>
-                            <input type="number" id="mobileSimPurity" placeholder="e.g., 925" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                            <div style="position: relative;">
+                                <input type="number" id="mobileSimPurity" placeholder="e.g., 925" style="width: 100%; padding: 14px 40px 14px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                                <button onclick="document.getElementById('mobileSimPurity').value=''; document.getElementById('mobileSimPurity').focus();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                            </div>
                             <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">900 = 90%, 925 = 92.5%</small>
                         </div>
 
                         <div style="margin-bottom: 20px;">
                             <label for="mobileSimWeight" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Weight (grams):</label>
-                            <input type="number" step="0.01" id="mobileSimWeight" placeholder="e.g., 31.1" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                            <div style="position: relative;">
+                                <input type="number" step="0.01" id="mobileSimWeight" placeholder="e.g., 31.1" style="width: 100%; padding: 14px 40px 14px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                                <button onclick="document.getElementById('mobileSimWeight').value=''; document.getElementById('mobileSimWeight').focus();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                            </div>
                         </div>
 
                         <button id="mobileCalculateSimBtn" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(78,205,196,0.3);">

@@ -291,13 +291,19 @@
 
             <div class="form-group">
                 <label for="purity">Próba (‰):</label>
-                <input type="text" inputmode="numeric" pattern="[0-9]*" id="purity" placeholder="np. 925" min="0" max="1000">
+                <div style="position: relative;">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" id="purity" placeholder="np. 925" min="0" max="1000" style="padding-right: 40px;">
+                    <button onclick="document.getElementById('purity').value=''; document.getElementById('purity').focus();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                </div>
                 <small>900 = 90%, 925 = 92,5%</small>
             </div>
 
             <div class="form-group">
                 <label for="weight">Waga (gramy):</label>
-                <input type="text" inputmode="decimal" id="weight" placeholder="np. 31.1">
+                <div style="position: relative;">
+                    <input type="text" inputmode="decimal" id="weight" placeholder="np. 31.1" style="padding-right: 40px;">
+                    <button onclick="document.getElementById('weight').value=''; document.getElementById('weight').focus();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                </div>
             </div>
 
             <button class="btn btn-primary" id="calculateBtn">🧮 Oblicz wartość</button>

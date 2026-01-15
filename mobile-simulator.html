@@ -291,13 +291,13 @@
 
             <div class="form-group">
                 <label for="purity">Próba (‰):</label>
-                <input type="number" id="purity" placeholder="np. 925" min="0" max="1000" step="1">
+                <input type="number" inputmode="numeric" id="purity" placeholder="np. 925" min="0" max="1000" step="1">
                 <small>900 = 90%, 925 = 92,5%</small>
             </div>
 
             <div class="form-group">
                 <label for="weight">Waga (gramy):</label>
-                <input type="number" step="0.01" id="weight" placeholder="np. 31.1">
+                <input type="number" inputmode="decimal" step="0.01" id="weight" placeholder="np. 31.1">
             </div>
 
             <button class="btn btn-primary" id="calculateBtn">🧮 Oblicz wartość</button>

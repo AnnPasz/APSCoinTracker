@@ -493,8 +493,14 @@
 
         function calculateValue() {
             const metal = $('#metalType').value || 'AG';
-            const purity = parseFloat(($('#purity').value || '').replace(',', '.')) || 0;
+            let purity = parseFloat(($('#purity').value || '').replace(',', '.')) || 0;
             const weight = parseFloat(($('#weight').value || '').replace(',', '.')) || 0;
+            
+            // Validate purity range
+            if (purity > 1000) {
+                alert('⚠️ Próba nie może być większa niż 1000‰');
+                return;
+            }
             
             if (!purity || !weight) {
                 alert('⚠️ Proszę wprowadzić próbę i wagę');

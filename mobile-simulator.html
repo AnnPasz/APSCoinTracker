@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APS Price Simulator</title>
+    <title>APS Symulator Cen</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%239b59b6'/%3E%3C/svg%3E">
     <style>
         * {
@@ -267,101 +267,101 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧮 Price Simulator</h1>
-            <p>Calculate coin value based on metal prices</p>
+            <h1>🧮 Symulator Cen</h1>
+            <p>Oblicz wartość monety na podstawie cen metali</p>
         </div>
 
         <div class="card">
-            <h3>Calculator</h3>
+            <h3>Kalkulator</h3>
             
             <div class="form-group">
-                <label for="metalType">Metal Type:</label>
+                <label for="metalType">Rodzaj metalu:</label>
                 <select id="metalType">
-                    <option value="AG">Silver (AG)</option>
-                    <option value="AU">Gold (AU)</option>
+                    <option value="AG">Srebro (AG)</option>
+                    <option value="AU">Złoto (AU)</option>
                 </select>
             </div>
 
             <div class="rate-display">
-                <div class="label">Current Rate</div>
-                <div class="value" id="currentRate">Loading...</div>
-                <div class="subvalue">Per Gram: <span id="currentRatePerGram">-</span></div>
+                <div class="label">Obecny kurs</div>
+                <div class="value" id="currentRate">Ładowanie...</div>
+                <div class="subvalue">Za gram: <span id="currentRatePerGram">-</span></div>
             </div>
 
             <div class="form-group">
-                <label for="purity">Purity (‰):</label>
-                <input type="number" id="purity" placeholder="e.g., 925">
-                <small>900 = 90%, 925 = 92.5%</small>
+                <label for="purity">Próba (‰):</label>
+                <input type="number" id="purity" placeholder="np. 925">
+                <small>900 = 90%, 925 = 92,5%</small>
             </div>
 
             <div class="form-group">
-                <label for="weight">Weight (grams):</label>
-                <input type="number" step="0.01" id="weight" placeholder="e.g., 31.1">
+                <label for="weight">Waga (gramy):</label>
+                <input type="number" step="0.01" id="weight" placeholder="np. 31,1">
             </div>
 
-            <button class="btn btn-primary" id="calculateBtn">🧮 Calculate Value</button>
+            <button class="btn btn-primary" id="calculateBtn">🧮 Oblicz wartość</button>
             
-            <button class="btn btn-refresh" id="refreshRatesBtn">🔄 Refresh Rates</button>
+            <button class="btn btn-refresh" id="refreshRatesBtn">🔄 Odśwież kursy</button>
         </div>
 
         <div class="card hidden" id="resultCard">
-            <h4>Result</h4>
+            <h4>Wynik</h4>
             
             <div class="result-box">
-                <div class="label">Pure Metal</div>
+                <div class="label">Czysty metal</div>
                 <div class="value" id="pureWeight">-</div>
             </div>
             
             <div class="result-box green">
-                <div class="label">Value USD</div>
+                <div class="label">Wartość USD</div>
                 <div class="value" id="valueUSD">-</div>
             </div>
 
             <div class="result-box gradient">
-                <div class="label">Value in PLN</div>
+                <div class="label">Wartość w PLN</div>
                 <div class="value" id="valuePLN">-</div>
             </div>
 
-            <button class="btn btn-secondary" id="targetPriceBtn">🎯 Target Price</button>
+            <button class="btn btn-secondary" id="targetPriceBtn">🎯 Cena docelowa</button>
         </div>
 
         <div class="card hidden" id="targetPriceCard">
-            <h4>Target Allegro Prices</h4>
+            <h4>Ceny docelowe na Allegro</h4>
             
             <div class="target-price-box">
-                <div class="label">Base Price</div>
+                <div class="label">Cena bazowa</div>
                 <div class="value" id="targetPrice">-</div>
-                <div class="formula">X = 10000 × (K + 11.49) ÷ 9631</div>
+                <div class="formula">X = 10000 × (K + 11,49) ÷ 9631</div>
             </div>
 
             <div class="target-price-box blue">
-                <div class="label">+10% Margin</div>
+                <div class="label">+10% marża</div>
                 <div class="value" id="targetPrice10">-</div>
-                <div class="formula">X = 10000 × (1.1K + 11.49) ÷ 9631</div>
+                <div class="formula">X = 10000 × (1,1K + 11,49) ÷ 9631</div>
             </div>
 
             <div class="target-price-box orange">
-                <div class="label">+20% Margin</div>
+                <div class="label">+20% marża</div>
                 <div class="value" id="targetPrice20">-</div>
-                <div class="formula">X = 10000 × (1.2K + 11.49) ÷ 9631</div>
+                <div class="formula">X = 10000 × (1,2K + 11,49) ÷ 9631</div>
             </div>
 
             <div class="target-price-box teal">
-                <div class="label">+30% Margin</div>
+                <div class="label">+30% marża</div>
                 <div class="value" id="targetPrice30">-</div>
-                <div class="formula">X = 10000 × (1.3K + 11.49) ÷ 9631</div>
+                <div class="formula">X = 10000 × (1,3K + 11,49) ÷ 9631</div>
             </div>
 
             <div class="target-price-box red">
-                <div class="label">+40% Margin</div>
+                <div class="label">+40% marża</div>
                 <div class="value" id="targetPrice40">-</div>
-                <div class="formula">X = 10000 × (1.4K + 11.49) ÷ 9631</div>
+                <div class="formula">X = 10000 × (1,4K + 11,49) ÷ 9631</div>
             </div>
 
             <div class="target-price-box purple">
-                <div class="label">+50% Margin</div>
+                <div class="label">+50% marża</div>
                 <div class="value" id="targetPrice50">-</div>
-                <div class="formula">X = 10000 × (1.5K + 11.49) ÷ 9631</div>
+                <div class="formula">X = 10000 × (1,5K + 11,49) ÷ 9631</div>
             </div>
         </div>
     </div>
@@ -485,7 +485,7 @@
                 $('#currentRate').textContent = '$' + rate.toFixed(2) + ' /oz';
                 $('#currentRatePerGram').textContent = '$' + ratePerGram.toFixed(2) + ' /g';
             } else {
-                $('#currentRate').textContent = 'Rate not available';
+                $('#currentRate').textContent = 'Kurs niedostępny';
                 $('#currentRatePerGram').textContent = '-';
             }
         }
@@ -496,13 +496,13 @@
             const weight = parseFloat($('#weight').value) || 0;
             
             if (!purity || !weight) {
-                alert('⚠️ Please enter purity and weight');
+                alert('⚠️ Proszę wprowadzić próbę i wagę');
                 return;
             }
             
             const rate = metal === 'AU' ? metalRatesUSD.AU : metalRatesUSD.AG;
             if (!rate) {
-                alert('⚠️ Metal rate not available. Please refresh rates.');
+                alert('⚠️ Kurs metalu niedostępny. Proszę odświeżyć kursy.');
                 return;
             }
             
@@ -529,7 +529,7 @@
 
         function calculateTargetPrice() {
             if (!lastCalculatedValuePLN) {
-                alert('⚠️ Please calculate coin value first');
+                alert('⚠️ Proszę najpierw obliczyć wartość monety');
                 return;
             }
             
@@ -576,18 +576,18 @@
         $('#refreshRatesBtn').addEventListener('click', async function() {
             const btn = this;
             btn.disabled = true;
-            btn.textContent = '🔄 Refreshing...';
+            btn.textContent = '🔄 Odświeżanie...';
             try {
                 await fetchRates();
-                btn.textContent = '✓ Updated';
+                btn.textContent = '✓ Zaktualizowano';
                 setTimeout(() => {
-                    btn.textContent = '🔄 Refresh Rates';
+                    btn.textContent = '🔄 Odśwież kursy';
                     btn.disabled = false;
                 }, 1000);
             } catch (err) {
-                alert('❌ Failed to refresh rates');
+                alert('❌ Nie udało się odświeżyć kursów');
                 btn.disabled = false;
-                btn.textContent = '🔄 Refresh Rates';
+                btn.textContent = '🔄 Odśwież kursy';
             }
         });
 

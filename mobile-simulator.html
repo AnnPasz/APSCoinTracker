@@ -492,8 +492,8 @@
 
         function calculateValue() {
             const metal = $('#metalType').value || 'AG';
-            const purity = parseFloat($('#purity').value) || 0;
-            const weight = parseFloat($('#weight').value) || 0;
+            const purity = parseFloat(($('#purity').value || '').replace(',', '.')) || 0;
+            const weight = parseFloat(($('#weight').value || '').replace(',', '.')) || 0;
             
             if (!purity || !weight) {
                 alert('⚠️ Proszę wprowadzić próbę i wagę');

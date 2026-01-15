@@ -1887,7 +1887,7 @@ function showSection(n){
 let tvWidget=null;
 function initTradingViewChart(){if(tvWidget)return;const pair=$('#currencyPair')?.value||'XAUUSD';tvWidget=new TradingView.widget({autosize:true,symbol:pair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'});$('#currencyPair')?.addEventListener('change',function(){const newPair=this.value;if(tvWidget){tvWidget.remove();tvWidget=null}tvWidget=new TradingView.widget({autosize:true,symbol:newPair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'})})}
 function updateSimulationRates(){const metal=$('#simMetal')?.value||'AG';const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(rate){const ratePerGram=rate/31.1034768;$('#simCurrentRate').textContent='$'+rate.toFixed(2)+' /oz';$('#simCurrentRatePerGram').textContent='$'+ratePerGram.toFixed(2)+' /g'}else{$('#simCurrentRate').textContent='Rate not available';$('#simCurrentRatePerGram').textContent='-'}}
-function calculateSimulation(){const metal=$('#simMetal')?.value||'AG';const purity=parseFloat($('#simPurity')?.value)||0;const weight=parseFloat($('#simWeight')?.value)||0;if(!purity||!weight){alert('⚠️ Please enter purity and weight');return}const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(!rate){alert('⚠️ Metal rate not available. Please refresh FX rates.');return}const purityDecimal=purity/1000;const pureWeight=weight*purityDecimal;const ratePerGram=rate/31.1034768;const valueUSD=pureWeight*ratePerGram;const valuePLN=convertUSDToPLN(valueUSD);$('#simPureWeight').textContent=pureWeight.toFixed(2)+' g';$('#simValueUSD').textContent='$'+valueUSD.toFixed(2);$('#simValuePLN').textContent=valuePLN.toFixed(2)+' PLN';$('#simResult').style.display='block'}
+function calculateSimulation(){const metal=$('#simMetal')?.value||'AG';const purity=parseFloat(($('#simPurity')?.value||'').replace(',','.'))||0;const weight=parseFloat(($('#simWeight')?.value||'').replace(',','.'))||0;if(!purity||!weight){alert('⚠️ Please enter purity and weight');return}const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(!rate){alert('⚠️ Metal rate not available. Please refresh FX rates.');return}const purityDecimal=purity/1000;const pureWeight=weight*purityDecimal;const ratePerGram=rate/31.1034768;const valueUSD=pureWeight*ratePerGram;const valuePLN=convertUSDToPLN(valueUSD);$('#simPureWeight').textContent=pureWeight.toFixed(2)+' g';$('#simValueUSD').textContent='$'+valueUSD.toFixed(2);$('#simValuePLN').textContent=valuePLN.toFixed(2)+' PLN';$('#simResult').style.display='block'}
 $('#simMetal')?.addEventListener('change',updateSimulationRates);
 $('#calculateSimBtn')?.addEventListener('click',calculateSimulation);
 
@@ -1928,8 +1928,8 @@ let lastCalculatedValuePLN=0;
 
 function calculateMobileSimulation(){
     const metal=$('#mobileSimMetal')?.value||'AG';
-    const purity=parseFloat($('#mobileSimPurity')?.value)||0;
-    const weight=parseFloat($('#mobileSimWeight')?.value)||0;
+    const purity=parseFloat(($('#mobileSimPurity')?.value||'').replace(',','.'))||0;
+    const weight=parseFloat(($('#mobileSimWeight')?.value||'').replace(',','.'))||0;
     if(!purity||!weight){
         alert('⚠️ Please enter purity and weight');
         return;

@@ -359,14 +359,15 @@
     "coinSize": "1",
     "category": "Coin",
     "type": "Obiegowe USA",
-    "coinMaterial": "Other",
+    "coinMaterial": "AG",
     "coinMetalContent": "900",
     "purchasePrice": "0",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-09-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "coinLink": ""
   },
   {
     "coinId": "CMJSXW7TW196H",
@@ -443,7 +444,7 @@
   },
   {
     "coinId": "CMK3TFMC4PEJY",
-    "coinName": "Walking Liberty",
+    "coinName": "Walking Liberty - kolor w etui",
     "coinCountry": "USA",
     "coinYear": "2017",
     "coinWeight": "31.1",

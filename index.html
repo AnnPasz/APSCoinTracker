@@ -2847,7 +2847,7 @@ $('#backToCoinsBtn')?.addEventListener('click',()=>{
     showSection('all-coins');
 });
 $('#refreshRatesBtn')?.addEventListener('click',async function(){const btn=this;btn.disabled=true;btn.textContent='🔄 Refreshing...';try{await fetchRates();location.reload()}catch(err){alert('❌ Failed to refresh rates');btn.disabled=false;btn.textContent='🔄 Refresh FX Rates'}});
-$('#mobileRefreshRatesBtn')?.addEventListener('click',async function(){const btn=this;btn.disabled=true;btn.textContent='⏳';try{await fetchRates();updateMobileOverview();btn.textContent='✓';setTimeout(()=>{btn.textContent='🔄 Refresh';btn.disabled=false},1000)}catch(err){alert('❌ Failed to refresh rates');btn.disabled=false;btn.textContent='🔄 Refresh'}});
+$('#mobileRefreshRatesBtn')?.addEventListener('click',async function(){const btn=this;btn.disabled=true;btn.textContent='⏳';try{await fetchRates();updateMobileOverview();updateOverviewTotals();btn.textContent='✓';setTimeout(()=>{btn.textContent='🔄';btn.disabled=false},1000)}catch(err){alert('❌ Failed to refresh rates');btn.disabled=false;btn.textContent='🔄'}});
 
 // Export/Import Functions
 async function exportAllData(){

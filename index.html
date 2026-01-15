@@ -611,9 +611,9 @@
                                 <thead>
                                     <tr style="border-bottom: 2px solid #e0e0e0;">
                                         <th style="padding: 12px; text-align: left; font-weight: 600; color: #1d1d1f;">#</th>
-                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #1d1d1f;">Country</th>
-                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #1d1d1f;">Coin Name</th>
-                                        <th style="padding: 12px; text-align: center; font-weight: 600; color: #1d1d1f;">Security Features</th>
+                                        <th class="sortable" data-sort="country" style="padding: 12px; text-align: left; font-weight: 600; color: #1d1d1f; cursor: pointer; user-select: none;">Country</th>
+                                        <th class="sortable" data-sort="coinName" style="padding: 12px; text-align: left; font-weight: 600; color: #1d1d1f; cursor: pointer; user-select: none;">Coin Name</th>
+                                        <th class="sortable" data-sort="featureCount" style="padding: 12px; text-align: center; font-weight: 600; color: #1d1d1f; cursor: pointer; user-select: none;">Security Features</th>
                                         <th style="padding: 12px; text-align: center; font-weight: 600; color: #1d1d1f;">Actions</th>
                                     </tr>
                                 </thead>
@@ -1016,6 +1016,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 const STORAGE_KEY='aps_coins_v1';const NAMES_KEY='aps_coin_names_v1';const TYPES_KEY='aps_coin_types_v1';const KB_KEY='aps_coin_kb_v1';const SOLD_COINS_KEY='aps_sold_coins_v1';
 let coins=[];let metalRatesUSD={AU:null,AG:null};let exchangeRatesPLN=null;let editModeId=null;let currentSortBy='purchaseDate';let currentSortOrder='desc';
 let kbEntries=[];let currentKBId=null;let currentCoinImages=[];
+let currentKBSortBy='country';let currentKBSortOrder='asc';
 const $=s=>document.querySelector(s);const $$=s=>Array.from(document.querySelectorAll(s));const fmt=v=>isNaN(v)?'-':Number(v).toFixed(2);
 
 // GitHub API Storage Configuration
@@ -1840,6 +1841,9 @@ window.toggleChecked=async function(coinId){
 }
 
 function setSortColumn(col){if(currentSortBy===col){currentSortOrder=currentSortOrder==='asc'?'desc':'asc'}else{currentSortBy=col;currentSortOrder='asc'}$$('th.sortable').forEach(th=>{th.classList.remove('sorted-asc','sorted-desc');if(th.dataset.sort===col){th.classList.add('sorted-'+currentSortOrder)}});renderCoinsTable()}
+
+function setKBSortColumn(col){if(currentKBSortBy===col){currentKBSortOrder=currentKBSortOrder==='asc'?'desc':'asc'}else{currentKBSortBy=col;currentKBSortOrder='asc'}renderKBList()}
+
 function showSection(n){
     const sec={'overview':$('#overview-section'),'mobile-overview':$('#mobile-overview-section'),'add-coin':$('#add-coin-section'),'all-coins':$('#all-coins-section'),'manage-types':$('#manage-types-section'),'fx-chart':$('#fx-chart-section'),'price-simulation':$('#price-simulation-section'),'coin-verification':$('#coin-verification-section'),'github-settings':$('#github-settings-section'),'local-backup':$('#local-backup-section'),'sold-coins':$('#sold-coins-section')};
     Object.keys(sec).forEach(k=>{if(sec[k])sec[k].style.display=(k===n)?'block':'none'});
@@ -1853,6 +1857,15 @@ function showSection(n){
     // Render all coins table when navigating to that section
     if(n==='all-coins'){
         renderCoinsTable();
+    }
+    
+    // Add sort handlers for KB entries when navigating to coin verification
+    if(n==='coin-verification'){
+        setTimeout(()=>{
+            $('#verificationListView th.sortable').forEach(th=>{
+                th.addEventListener('click',()=>setKBSortColumn(th.dataset.sort));
+            });
+        },100);
     }
     
     // Update URL for mobile mode
@@ -2126,7 +2139,23 @@ function renderKBList(){
         tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:40px;color:#999">No entries yet. Click "Add New Coin" to create your first entry.</td></tr>';
         return;
     }
-    kbEntries.forEach((entry,i)=>{
+    
+    // Sort kbEntries
+    const sortedEntries = [...kbEntries].sort((a,b)=>{
+        let vA, vB;
+        if(currentKBSortBy==='featureCount'){
+            vA=(a.securityFeatures||[]).length;
+            vB=(b.securityFeatures||[]).length;
+        }else{
+            vA=(a[currentKBSortBy]||'').toString().toLowerCase();
+            vB=(b[currentKBSortBy]||'').toString().toLowerCase();
+        }
+        if(vA<vB)return currentKBSortOrder==='asc'?-1:1;
+        if(vA>vB)return currentKBSortOrder==='asc'?1:-1;
+        return 0;
+    });
+    
+    sortedEntries.forEach((entry,i)=>{
         const featureCount=(entry.securityFeatures||[]).length;
         const tr=document.createElement('tr');
         tr.style.borderBottom='1px solid #e0e0e0';
@@ -2146,6 +2175,14 @@ function renderKBList(){
     $$('.view-kb-btn').forEach(btn=>btn.addEventListener('click',function(){
         showKBDetail(this.dataset.id);
     }));
+    
+    // Update sort indicators
+    $('#verificationListView th.sortable').forEach(th=>{
+        th.classList.remove('sorted-asc','sorted-desc');
+        if(th.dataset.sort===currentKBSortBy){
+            th.classList.add('sorted-'+currentKBSortOrder);
+        }
+    });
 }
 
 function showKBListView(){

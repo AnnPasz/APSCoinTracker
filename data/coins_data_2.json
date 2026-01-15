@@ -494,6 +494,7 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-09",
     "comments": "AUKRO",
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   }
 ]

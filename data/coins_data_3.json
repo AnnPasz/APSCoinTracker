@@ -172,6 +172,7 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-14",
     "comments": "apart",
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   }
 ]

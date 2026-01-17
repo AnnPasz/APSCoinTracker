@@ -732,12 +732,6 @@
             }
         });
         
-        // Clear button for auction fee
-        $('#clearAuctionFee').addEventListener('click', function() {
-            $('#auctionFee').value = '';
-            $('#auctionFee').focus();
-        });
-        
         $('#refreshRatesBtn').addEventListener('click', async function() {
             const btn = this;
             btn.disabled = true;

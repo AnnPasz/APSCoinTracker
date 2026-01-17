@@ -174,5 +174,37 @@
     "comments": "apart",
     "coinLink": "",
     "isChecked": true
+  },
+  {
+    "coinId": "CMKHL9QRYLXV7",
+    "coinName": "Walking Liberty",
+    "coinCountry": "USA",
+    "coinYear": "2020",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "350",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-15",
+    "comments": "Wcn"
+  },
+  {
+    "coinId": "CMKHLC159MEU0",
+    "coinName": "Walking Liberty",
+    "coinCountry": "USA",
+    "coinYear": "2000",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "380",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-15",
+    "comments": "Wcn"
   }
 ]

@@ -529,12 +529,16 @@
                 }
             }
             
+            console.log('Metal rates:', metalRatesUSD);
+            console.log('Exchange rates:', exchangeRatesPLN);
             updateRateDisplay();
         }
 
         function updateRateDisplay() {
             const metal = $('#metalType').value || 'AG';
             const rate = metal === 'AU' ? metalRatesUSD.AU : metalRatesUSD.AG;
+            
+            console.log('Updating rate display - metal:', metal, 'rate:', rate);
             
             if (rate) {
                 const ratePerGram = rate / 31.1034768;

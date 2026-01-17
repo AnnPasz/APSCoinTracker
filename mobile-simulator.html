@@ -270,10 +270,24 @@
             <div style="font-size: 14px; margin-bottom: 8px; opacity: 0.9;">Halko Mio ❤️</div>
             <h1>🧮 Symulator Cen</h1>
             <p>Oblicz wartość monety na podstawie cen metali</p>
+            
+            <button id="oneBidModeToggle" class="btn" style="margin-top: 16px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; padding: 12px 24px; box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);">
+                🔨 Tryb OneBid
+            </button>
         </div>
 
         <div class="card">
-            <h3>Kalkulator</h3>
+            <h3 id="calculatorTitle">Kalkulator</h3>
+            
+            <!-- OneBid Fee Input (hidden by default) -->
+            <div id="oneBidFeeSection" class="form-group hidden">
+                <label for="auctionFee">Opłata aukcyjna (%):</label>
+                <div style="position: relative;">
+                    <input type="text" inputmode="decimal" id="auctionFee" placeholder="np. 12 lub 20" style="padding-right: 40px;" value="12">
+                    <button onclick="document.getElementById('auctionFee').value=''; document.getElementById('auctionFee').focus();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                </div>
+                <small>Standardowa opłata OneBid: 12% lub 20%</small>
+            </div>
             
             <div class="form-group">
                 <label for="metalType">Rodzaj metalu:</label>
@@ -331,6 +345,30 @@
 
             <button class="btn btn-secondary" id="targetPriceBtn">🎯 Cena docelowa</button>
         </div>
+        
+        <!-- OneBid Result Card -->
+        <div class="card hidden" id="oneBidResultCard">
+            <h4>Wynik OneBid</h4>
+            
+            <div class="result-box">
+                <div class="label">Czysty metal</div>
+                <div class="value" id="oneBidPureWeight">-</div>
+            </div>
+            
+            <div style="background: rgba(155, 89, 182, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #9b59b6; margin-bottom: 12px;">
+                <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Wartość metalu</div>
+                <div style="font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 4px;">PLN: <span id="oneBidValuePLN">-</span></div>
+                <div style="font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 4px;">EUR: <span id="oneBidValueEUR">-</span></div>
+                <div style="font-size: 16px; font-weight: 600; color: #1d1d1f;">USD: <span id="oneBidValueUSD">-</span></div>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 20px; border-radius: 10px; text-align: center;">
+                <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 6px;">🎯 Maksymalna stawka (po opłacie <span id="feePercentDisplay">-</span>%)</div>
+                <div style="font-size: 14px; font-weight: 600; color: white; margin-top: 12px;">PLN: <span id="oneBidTargetPLN" style="font-size: 24px; display: block; margin-top: 4px;">-</span></div>
+                <div style="font-size: 14px; font-weight: 600; color: white; margin-top: 8px;">EUR: <span id="oneBidTargetEUR" style="font-size: 24px; display: block; margin-top: 4px;">-</span></div>
+                <div style="font-size: 14px; font-weight: 600; color: white; margin-top: 8px;">USD: <span id="oneBidTargetUSD" style="font-size: 24px; display: block; margin-top: 4px;">-</span></div>
+            </div>
+        </div>
 
         <div class="card hidden" id="targetPriceCard">
             <h4>Ceny docelowe na Allegro</h4>
@@ -378,6 +416,7 @@
         let metalRatesUSD = { AU: null, AG: null };
         let exchangeRatesPLN = null;
         let lastCalculatedValuePLN = 0;
+        let isOneBidMode = false; // OneBid mode toggle state
 
         // Helper functions
         const $ = (s) => document.querySelector(s);
@@ -385,6 +424,16 @@
         function convertUSDToPLN(amount) {
             if (!exchangeRatesPLN || !exchangeRatesPLN.USD) return amount;
             return amount / exchangeRatesPLN.USD;
+        }
+        
+        function convertPLNToEUR(amountPLN) {
+            if (!exchangeRatesPLN || !exchangeRatesPLN.EUR) return 0;
+            return amountPLN / exchangeRatesPLN.EUR;
+        }
+        
+        function convertPLNToUSD(amountPLN) {
+            if (!exchangeRatesPLN || !exchangeRatesPLN.USD) return 0;
+            return amountPLN / exchangeRatesPLN.USD;
         }
 
         // Fetch rates from APIs
@@ -498,6 +547,11 @@
         }
 
         function calculateValue() {
+            if (isOneBidMode) {
+                calculateOneBid();
+                return;
+            }
+            
             const metal = $('#metalType').value || 'AG';
             let purity = parseFloat(($('#purity').value || '').replace(',', '.')) || 0;
             const weight = parseFloat(($('#weight').value || '').replace(',', '.')) || 0;
@@ -532,11 +586,70 @@
             $('#valuePLN').textContent = valuePLN.toFixed(2) + ' PLN';
             
             $('#resultCard').classList.remove('hidden');
+            $('#oneBidResultCard').classList.add('hidden');
             $('#targetPriceCard').classList.add('hidden');
             
             // Scroll to result
             setTimeout(() => {
                 $('#resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+        
+        function calculateOneBid() {
+            const metal = $('#metalType').value || 'AG';
+            let purity = parseFloat(($('#purity').value || '').replace(',', '.')) || 0;
+            const weight = parseFloat(($('#weight').value || '').replace(',', '.')) || 0;
+            const auctionFee = parseFloat(($('#auctionFee').value || '').replace(',', '.')) || 0;
+            
+            // Validate purity range
+            if (purity > 1000) {
+                alert('⚠️ Próba nie może być większa niż 1000‰');
+                return;
+            }
+            
+            if (!purity || !weight || !auctionFee) {
+                alert('⚠️ Proszę wprowadzić próbę, wagę i opłatę aukcyjną');
+                return;
+            }
+            
+            const rate = metal === 'AU' ? metalRatesUSD.AU : metalRatesUSD.AG;
+            if (!rate) {
+                alert('⚠️ Kurs metalu niedostępny. Proszę odświeżyć kursy.');
+                return;
+            }
+            
+            // Calculate metal value
+            const purityDecimal = purity / 1000;
+            const pureWeight = weight * purityDecimal;
+            const ratePerGram = rate / 31.1034768;
+            const valueUSD = pureWeight * ratePerGram;
+            const valuePLN = convertUSDToPLN(valueUSD);
+            const valueEUR = convertPLNToEUR(valuePLN);
+            
+            // Calculate target bid (metal value - auction fee)
+            const feeMultiplier = 1 - (auctionFee / 100);
+            const targetBidPLN = valuePLN * feeMultiplier;
+            const targetBidEUR = valueEUR * feeMultiplier;
+            const targetBidUSD = valueUSD * feeMultiplier;
+            
+            // Update display
+            $('#oneBidPureWeight').textContent = pureWeight.toFixed(2) + ' g';
+            $('#oneBidValuePLN').textContent = valuePLN.toFixed(2);
+            $('#oneBidValueEUR').textContent = valueEUR.toFixed(2);
+            $('#oneBidValueUSD').textContent = '$' + valueUSD.toFixed(2);
+            
+            $('#feePercentDisplay').textContent = auctionFee.toFixed(0);
+            $('#oneBidTargetPLN').textContent = targetBidPLN.toFixed(2) + ' PLN';
+            $('#oneBidTargetEUR').textContent = targetBidEUR.toFixed(2) + ' €';
+            $('#oneBidTargetUSD').textContent = '$' + targetBidUSD.toFixed(2);
+            
+            $('#oneBidResultCard').classList.remove('hidden');
+            $('#resultCard').classList.add('hidden');
+            $('#targetPriceCard').classList.add('hidden');
+            
+            // Scroll to result
+            setTimeout(() => {
+                $('#oneBidResultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
         }
 
@@ -586,6 +699,41 @@
         $('#metalType').addEventListener('change', updateRateDisplay);
         $('#calculateBtn').addEventListener('click', calculateValue);
         $('#targetPriceBtn').addEventListener('click', calculateTargetPrice);
+        
+        // OneBid mode toggle
+        $('#oneBidModeToggle').addEventListener('click', function() {
+            isOneBidMode = !isOneBidMode;
+            
+            if (isOneBidMode) {
+                // Switch to OneBid mode
+                this.textContent = '🔨 Tryb OneBid: WŁĄCZONY';
+                this.style.background = 'linear-gradient(135deg, #27ae60 0%, #229954 100%)';
+                $('#calculatorTitle').textContent = 'Kalkulator OneBid';
+                $('#oneBidFeeSection').classList.remove('hidden');
+                $('#targetPriceBtn').style.display = 'none';
+                
+                // Hide normal result card if visible
+                $('#resultCard').classList.add('hidden');
+                $('#targetPriceCard').classList.add('hidden');
+            } else {
+                // Switch to normal mode
+                this.textContent = '🔨 Tryb OneBid';
+                this.style.background = 'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)';
+                $('#calculatorTitle').textContent = 'Symulator ceny';
+                $('#oneBidFeeSection').classList.add('hidden');
+                $('#targetPriceBtn').style.display = '';
+                
+                // Hide OneBid result card if visible
+                $('#oneBidResultCard').classList.add('hidden');
+            }
+        });
+        
+        // Clear button for auction fee
+        $('#clearAuctionFee').addEventListener('click', function() {
+            $('#auctionFee').value = '';
+            $('#auctionFee').focus();
+        });
+        
         $('#refreshRatesBtn').addEventListener('click', async function() {
             const btn = this;
             btn.disabled = true;

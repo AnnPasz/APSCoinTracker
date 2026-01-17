@@ -428,12 +428,14 @@
         
         function convertPLNToEUR(amountPLN) {
             if (!exchangeRatesPLN || !exchangeRatesPLN.EUR) return 0;
-            return amountPLN / exchangeRatesPLN.EUR;
+            // exchangeRatesPLN.EUR is the rate from PLN to EUR (1 PLN = X EUR)
+            // So to convert PLN to EUR, we multiply
+            return amountPLN * exchangeRatesPLN.EUR;
         }
         
         function convertPLNToUSD(amountPLN) {
             if (!exchangeRatesPLN || !exchangeRatesPLN.USD) return 0;
-            return amountPLN / exchangeRatesPLN.USD;
+            return amountPLN * exchangeRatesPLN.USD;
         }
 
         // Fetch rates from APIs

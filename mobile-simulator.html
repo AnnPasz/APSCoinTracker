@@ -630,11 +630,13 @@
             const valuePLN = convertUSDToPLN(valueUSD);
             const valueEUR = convertPLNToEUR(valuePLN);
             
-            // Calculate target bid (metal value - auction fee)
-            const feeMultiplier = 1 - (auctionFee / 100);
-            const targetBidPLN = valuePLN * feeMultiplier;
-            const targetBidEUR = valueEUR * feeMultiplier;
-            const targetBidUSD = valueUSD * feeMultiplier;
+            // Calculate target bid: divide by (1 + fee%) to get the amount to bid
+            // Example: if metal value is 100 PLN and fee is 12%, bid = 100 / 1.12 = 89.29
+            // Then: 89.29 + (89.29 * 0.12) = 100 PLN total
+            const feeDivisor = 1 + (auctionFee / 100);
+            const targetBidPLN = valuePLN / feeDivisor;
+            const targetBidEUR = valueEUR / feeDivisor;
+            const targetBidUSD = valueUSD / feeDivisor;
             
             // Update display
             $('#oneBidPureWeight').textContent = pureWeight.toFixed(2) + ' g';

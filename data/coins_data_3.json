@@ -206,5 +206,21 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-16",
     "comments": "WCN"
+  },
+  {
+    "coinId": "CMKJTUEQTB291",
+    "coinName": "Walking Liberty",
+    "coinCountry": "Usa",
+    "coinYear": "2026",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "429",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-18",
+    "comments": "Metal market eu"
   }
 ]

@@ -1538,21 +1538,21 @@ async function fetchRates(){
                     if(!it)continue;
                     if(it.metal&&it.price){
                         const m=(it.metal||'').toLowerCase();
-                        if(m.includes('gold'))metalRatesUSD.AU=parseFloat(it.price)||metalRatesUSD.AU;
-                        if(m.includes('silver'))metalRatesUSD.AG=parseFloat(it.price)||metalRatesUSD.AG;
+                        if(m.includes('gold'))metalRatesUSD.AU=parseFloat(it.price);
+                        if(m.includes('silver'))metalRatesUSD.AG=parseFloat(it.price);
                     }else{
-                        if(it.gold)metalRatesUSD.AU=metalRatesUSD.AU||parseFloat(it.gold);
-                        if(it.silver)metalRatesUSD.AG=metalRatesUSD.AG||parseFloat(it.silver);
+                        if(it.gold)metalRatesUSD.AU=parseFloat(it.gold);
+                        if(it.silver)metalRatesUSD.AG=parseFloat(it.silver);
                     }
                 }
             }else if(typeof data==='object'){
                 if(data.items&&Array.isArray(data.items)&&data.items.length){
                     const item=data.items[0];
-                    if(item.xauPrice)metalRatesUSD.AU=metalRatesUSD.AU||parseFloat(item.xauPrice);
-                    if(item.xagPrice)metalRatesUSD.AG=metalRatesUSD.AG||parseFloat(item.xagPrice);
+                    if(item.xauPrice)metalRatesUSD.AU=parseFloat(item.xauPrice);
+                    if(item.xagPrice)metalRatesUSD.AG=parseFloat(item.xagPrice);
                 }else{
-                    if(data.gold)metalRatesUSD.AU=metalRatesUSD.AU||parseFloat(data.gold);
-                    if(data.silver)metalRatesUSD.AG=metalRatesUSD.AG||parseFloat(data.silver);
+                    if(data.gold)metalRatesUSD.AU=parseFloat(data.gold);
+                    if(data.silver)metalRatesUSD.AG=parseFloat(data.silver);
                 }
             }
             if(metalRatesUSD.AU&&metalRatesUSD.AG)break;

@@ -535,6 +535,22 @@
                 <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 20px;">
                     <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Calculate the value of a coin based on current metal prices.</p>
                     
+                    <button id="oneBidModeToggleDesktop" style="width: 100%; padding: 12px 24px; margin-bottom: 20px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(155,89,182,0.3);">
+                        🔨 OneBid Mode
+                    </button>
+                    
+                    <h3 id="calculatorTitleDesktop" style="font-size: 18px; margin-bottom: 16px; color: #1d1d1f;">Calculator</h3>
+                    
+                    <!-- OneBid Fee Input (hidden by default) -->
+                    <div id="oneBidFeeSectionDesktop" style="display: none; margin-bottom: 20px;">
+                        <label for="auctionFeeDesktop" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Auction Fee (%):</label>
+                        <div style="position: relative;">
+                            <input type="text" inputmode="decimal" id="auctionFeeDesktop" placeholder="e.g., 12 or 20" style="width: 100%; padding: 10px 35px 10px 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;" value="12">
+                            <button onclick="document.getElementById('auctionFeeDesktop').value=''; document.getElementById('auctionFeeDesktop').focus();" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 16px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                        </div>
+                        <small style="color: #666; font-size: 11px; margin-top: 3px; display: block;">Standard OneBid fee: 12% or 20%</small>
+                    </div>
+                    
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                         <div>
                             <label for="simMetal" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">Metal Type:</label>
@@ -592,6 +608,52 @@
                         <div style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); padding: 16px; border-radius: 8px; text-align: center; margin-top: 10px;">
                             <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 4px;">Value in PLN</div>
                             <div style="font-size: 28px; font-weight: 700; color: white;" id="simValuePLN">-</div>
+                        </div>
+                    </div>
+                    
+                    <!-- OneBid Result Card -->
+                    <div id="oneBidResultCardDesktop" style="display: none;">
+                        <h3 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">OneBid Result</h3>
+                        
+                        <div style="background: rgba(155, 89, 182, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #9b59b6; margin-bottom: 12px;">
+                            <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Pure Metal</div>
+                            <div style="font-size: 18px; font-weight: 700; color: #1d1d1f;" id="oneBidPureWeightDesktop">-</div>
+                        </div>
+                        
+                        <div style="background: rgba(155, 89, 182, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #9b59b6; margin-bottom: 12px;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Metal Value</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <div style="font-size: 10px; color: #666;">PLN</div>
+                                    <div style="font-size: 16px; font-weight: 600; color: #1d1d1f;" id="oneBidValuePLNDesktop">-</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #666;">EUR</div>
+                                    <div style="font-size: 16px; font-weight: 600; color: #1d1d1f;" id="oneBidValueEURDesktop">-</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #666;">USD</div>
+                                    <div style="font-size: 16px; font-weight: 600; color: #1d1d1f;" id="oneBidValueUSDDesktop">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 20px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 6px;">🎯 Maximum Bid (after <span id="feePercentDisplayDesktop">-</span>% fee)</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 12px;">
+                                <div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.8);">PLN</div>
+                                    <div style="font-size: 24px; font-weight: 700; color: white;" id="oneBidTargetPLNDesktop">-</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.8);">EUR</div>
+                                    <div style="font-size: 24px; font-weight: 700; color: white;" id="oneBidTargetEURDesktop">-</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.8);">USD</div>
+                                    <div style="font-size: 24px; font-weight: 700; color: white;" id="oneBidTargetUSDDesktop">-</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -801,6 +863,22 @@
                     <div id="mobileSimForm" style="display: none; background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px; margin-top: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                         <h3 style="font-size: 18px; margin-bottom: 16px; color: #1d1d1f;">Price Calculator</h3>
                         
+                        <button id="oneBidModeToggleMobile" style="width: 100%; padding: 12px 24px; margin-bottom: 20px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(155,89,182,0.3);">
+                            🔨 OneBid Mode
+                        </button>
+                        
+                        <h4 id="calculatorTitleMobile" style="font-size: 16px; margin-bottom: 16px; color: #1d1d1f;">Calculator</h4>
+                        
+                        <!-- OneBid Fee Input (hidden by default) -->
+                        <div id="oneBidFeeSectionMobile" style="display: none; margin-bottom: 20px;">
+                            <label for="auctionFeeMobile" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Auction Fee (%):</label>
+                            <div style="position: relative;">
+                                <input type="text" inputmode="decimal" id="auctionFeeMobile" placeholder="e.g., 12 or 20" style="width: 100%; padding: 14px 40px 14px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;" value="12">
+                                <button onclick="document.getElementById('auctionFeeMobile').value=''; document.getElementById('auctionFeeMobile').focus();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                            </div>
+                            <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">Standard OneBid fee: 12% or 20%</small>
+                        </div>
+                        
                         <div style="margin-bottom: 20px;">
                             <label for="mobileSimMetal" style="display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f;">Metal Type:</label>
                             <select id="mobileSimMetal" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; background: white;">
@@ -857,6 +935,30 @@
                             <button id="mobileTargetPriceBtn" style="width: 100%; padding: 14px; margin-top: 16px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(155,89,182,0.3);">
                                 🎯 Target Price
                             </button>
+                        </div>
+                        
+                        <!-- OneBid Result Card -->
+                        <div id="oneBidResultCardMobile" style="display: none;">
+                            <h4 style="font-size: 16px; margin-bottom: 12px; color: #1d1d1f;">OneBid Result</h4>
+                            
+                            <div style="background: rgba(155, 89, 182, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #9b59b6; margin-bottom: 12px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Pure Metal</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #1d1d1f;" id="oneBidPureWeightMobile">-</div>
+                            </div>
+                            
+                            <div style="background: rgba(155, 89, 182, 0.1); padding: 16px; border-radius: 10px; border-left: 3px solid #9b59b6; margin-bottom: 12px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Metal Value</div>
+                                <div style="font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 4px;">PLN: <span id="oneBidValuePLNMobile">-</span></div>
+                                <div style="font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 4px;">EUR: <span id="oneBidValueEURMobile">-</span></div>
+                                <div style="font-size: 16px; font-weight: 600; color: #1d1d1f;">USD: <span id="oneBidValueUSDMobile">-</span></div>
+                            </div>
+                            
+                            <div style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 6px;">🎯 Maximum Bid (after <span id="feePercentDisplayMobile">-</span>% fee)</div>
+                                <div style="font-size: 14px; font-weight: 600; color: white; margin-top: 12px;">PLN: <span id="oneBidTargetPLNMobile" style="font-size: 24px; display: block; margin-top: 4px;">-</span></div>
+                                <div style="font-size: 14px; font-weight: 600; color: white; margin-top: 8px;">EUR: <span id="oneBidTargetEURMobile" style="font-size: 24px; display: block; margin-top: 4px;">-</span></div>
+                                <div style="font-size: 14px; font-weight: 600; color: white; margin-top: 8px;">USD: <span id="oneBidTargetUSDMobile" style="font-size: 24px; display: block; margin-top: 4px;">-</span></div>
+                            </div>
                         </div>
 
                         <!-- Target Price Result -->
@@ -1900,8 +2002,26 @@ let tvWidget=null;
 function initTradingViewChart(){if(tvWidget)return;const pair=$('#currencyPair')?.value||'XAUUSD';tvWidget=new TradingView.widget({autosize:true,symbol:pair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'});$('#currencyPair')?.addEventListener('change',function(){const newPair=this.value;if(tvWidget){tvWidget.remove();tvWidget=null}tvWidget=new TradingView.widget({autosize:true,symbol:newPair,interval:'D',timezone:'Etc/UTC',theme:'light',style:'1',locale:'en',toolbar_bg:'#f1f3f6',enable_publishing:false,hide_side_toolbar:false,allow_symbol_change:true,container_id:'tradingview_chart'})})}
 function updateSimulationRates(){const metal=$('#simMetal')?.value||'AG';const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(rate){const ratePerGram=rate/31.1034768;$('#simCurrentRate').textContent='$'+rate.toFixed(2)+' /oz';$('#simCurrentRatePerGram').textContent='$'+ratePerGram.toFixed(2)+' /g'}else{$('#simCurrentRate').textContent='Rate not available';$('#simCurrentRatePerGram').textContent='-'}}
 function calculateSimulation(){const metal=$('#simMetal')?.value||'AG';const purity=parseFloat(($('#simPurity')?.value||'').replace(',','.'))||0;const weight=parseFloat(($('#simWeight')?.value||'').replace(',','.'))||0;if(!purity||!weight){alert('⚠️ Please enter purity and weight');return}const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(!rate){alert('⚠️ Metal rate not available. Please refresh FX rates.');return}const purityDecimal=purity/1000;const pureWeight=weight*purityDecimal;const ratePerGram=rate/31.1034768;const valueUSD=pureWeight*ratePerGram;const valuePLN=convertUSDToPLN(valueUSD);$('#simPureWeight').textContent=pureWeight.toFixed(2)+' g';$('#simValueUSD').textContent='$'+valueUSD.toFixed(2);$('#simValuePLN').textContent=valuePLN.toFixed(2)+' PLN';$('#simResult').style.display='block'}
+
+// OneBid mode state
+let isOneBidModeDesktop = false;
+let isOneBidModeMobile = false;
+
+// Currency conversion helpers
+function convertPLNToEUR(amountPLN){if(!exchangeRatesPLN||!exchangeRatesPLN.EUR)return 0;return amountPLN*exchangeRatesPLN.EUR}
+function convertPLNToUSD(amountPLN){if(!exchangeRatesPLN||!exchangeRatesPLN.USD)return 0;return amountPLN*exchangeRatesPLN.USD}
+
+// OneBid calculation for desktop
+function calculateOneBidDesktop(){const metal=$('#simMetal')?.value||'AG';let purity=parseFloat(($('#simPurity')?.value||'').replace(',','.'))||0;const weight=parseFloat(($('#simWeight')?.value||'').replace(',','.'))||0;const auctionFee=parseFloat(($('#auctionFeeDesktop')?.value||'').replace(',','.'))||0;if(purity>1000){alert('⚠️ Purity cannot be greater than 1000‰');return}if(!purity||!weight||!auctionFee){alert('⚠️ Please enter purity, weight and auction fee');return}const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(!rate){alert('⚠️ Metal rate not available. Please refresh FX rates.');return}const purityDecimal=purity/1000;const pureWeight=weight*purityDecimal;const ratePerGram=rate/31.1034768;const valueUSD=pureWeight*ratePerGram;const valuePLN=convertUSDToPLN(valueUSD);const valueEUR=convertPLNToEUR(valuePLN);const feeDivisor=1+(auctionFee/100);const targetBidPLN=valuePLN/feeDivisor;const targetBidEUR=valueEUR/feeDivisor;const targetBidUSD=valueUSD/feeDivisor;$('#oneBidPureWeightDesktop').textContent=pureWeight.toFixed(2)+' g';$('#oneBidValuePLNDesktop').textContent=valuePLN.toFixed(2);$('#oneBidValueEURDesktop').textContent=valueEUR.toFixed(2);$('#oneBidValueUSDDesktop').textContent='$'+valueUSD.toFixed(2);$('#feePercentDisplayDesktop').textContent=auctionFee.toFixed(0);$('#oneBidTargetPLNDesktop').textContent=targetBidPLN.toFixed(2)+' PLN';$('#oneBidTargetEURDesktop').textContent=targetBidEUR.toFixed(2)+' €';$('#oneBidTargetUSDDesktop').textContent='$'+targetBidUSD.toFixed(2);$('#oneBidResultCardDesktop').style.display='block';$('#simResult').style.display='none'}
+
+// OneBid calculation for mobile
+function calculateOneBidMobile(){const metal=$('#mobileSimMetal')?.value||'AG';let purity=parseFloat(($('#mobileSimPurity')?.value||'').replace(',','.'))||0;const weight=parseFloat(($('#mobileSimWeight')?.value||'').replace(',','.'))||0;const auctionFee=parseFloat(($('#auctionFeeMobile')?.value||'').replace(',','.'))||0;if(purity>1000){alert('⚠️ Purity cannot be greater than 1000‰');return}if(!purity||!weight||!auctionFee){alert('⚠️ Please enter purity, weight and auction fee');return}const rate=metal==='AU'?metalRatesUSD.AU:metalRatesUSD.AG;if(!rate){alert('⚠️ Metal rate not available. Please refresh FX rates.');return}const purityDecimal=purity/1000;const pureWeight=weight*purityDecimal;const ratePerGram=rate/31.1034768;const valueUSD=pureWeight*ratePerGram;const valuePLN=convertUSDToPLN(valueUSD);const valueEUR=convertPLNToEUR(valuePLN);const feeDivisor=1+(auctionFee/100);const targetBidPLN=valuePLN/feeDivisor;const targetBidEUR=valueEUR/feeDivisor;const targetBidUSD=valueUSD/feeDivisor;$('#oneBidPureWeightMobile').textContent=pureWeight.toFixed(2)+' g';$('#oneBidValuePLNMobile').textContent=valuePLN.toFixed(2);$('#oneBidValueEURMobile').textContent=valueEUR.toFixed(2);$('#oneBidValueUSDMobile').textContent='$'+valueUSD.toFixed(2);$('#feePercentDisplayMobile').textContent=auctionFee.toFixed(0);$('#oneBidTargetPLNMobile').textContent=targetBidPLN.toFixed(2)+' PLN';$('#oneBidTargetEURMobile').textContent=targetBidEUR.toFixed(2)+' €';$('#oneBidTargetUSDMobile').textContent='$'+targetBidUSD.toFixed(2);$('#oneBidResultCardMobile').style.display='block';$('#mobileSimResult').style.display='none';$('#mobileTargetPriceResult').style.display='none'}
+
 $('#simMetal')?.addEventListener('change',updateSimulationRates);
-$('#calculateSimBtn')?.addEventListener('click',calculateSimulation);
+$('#calculateSimBtn')?.addEventListener('click',function(){if(isOneBidModeDesktop){calculateOneBidDesktop()}else{calculateSimulation()}});
+
+// OneBid mode toggle for desktop
+$('#oneBidModeToggleDesktop')?.addEventListener('click',function(){isOneBidModeDesktop=!isOneBidModeDesktop;if(isOneBidModeDesktop){this.textContent='🔨 OneBid Mode: ON';this.style.background='linear-gradient(135deg, #27ae60 0%, #229954 100%)';$('#calculatorTitleDesktop').textContent='OneBid Calculator';$('#oneBidFeeSectionDesktop').style.display='block';$('#simResult').style.display='none'}else{this.textContent='🔨 OneBid Mode';this.style.background='linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)';$('#calculatorTitleDesktop').textContent='Calculator';$('#oneBidFeeSectionDesktop').style.display='none';$('#oneBidResultCardDesktop').style.display='none'}});
 
 // Mobile Simulation Functions
 $('#mobileSimToggle')?.addEventListener('click',function(){
@@ -2012,7 +2132,11 @@ function calculateTargetPrice(){
 }
 
 $('#mobileSimMetal')?.addEventListener('change',updateMobileSimulationRates);
-$('#mobileCalculateSimBtn')?.addEventListener('click',calculateMobileSimulation);
+$('#mobileCalculateSimBtn')?.addEventListener('click',function(){if(isOneBidModeMobile){calculateOneBidMobile()}else{calculateMobileSimulation()}});
+
+// OneBid mode toggle for mobile
+$('#oneBidModeToggleMobile')?.addEventListener('click',function(){isOneBidModeMobile=!isOneBidModeMobile;if(isOneBidModeMobile){this.textContent='🔨 OneBid Mode: ON';this.style.background='linear-gradient(135deg, #27ae60 0%, #229954 100%)';$('#calculatorTitleMobile').textContent='OneBid Calculator';$('#oneBidFeeSectionMobile').style.display='block';$('#mobileTargetPriceBtn').style.display='none';$('#mobileSimResult').style.display='none';$('#mobileTargetPriceResult').style.display='none'}else{this.textContent='🔨 OneBid Mode';this.style.background='linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)';$('#calculatorTitleMobile').textContent='Calculator';$('#oneBidFeeSectionMobile').style.display='none';$('#mobileTargetPriceBtn').style.display='';$('#oneBidResultCardMobile').style.display='none'}});
+
 $('#mobileTargetPriceBtn')?.addEventListener('click',calculateTargetPrice);
 $('#mobileGoUpBtn')?.addEventListener('click',()=>{
     const mobileSection=$('#mobile-overview-section');

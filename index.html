@@ -326,6 +326,15 @@
                             <label for="purchaseDate">Purchase Date:</label>
                             <input type="date" id="purchaseDate" required>
                         </div>
+                        <div class="form-group" style="margin-bottom: 0; display: flex; align-items: center; padding-top: 25px;">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none;">
+                                <input type="checkbox" id="isNumismatic" style="width: 20px; height: 20px; cursor: pointer;">
+                                <span style="font-weight: 600; color: #9b59b6;">🎨 Numismatic (exclude from totals)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px;">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="comments">Comments:</label>
                             <textarea id="comments" rows="2" placeholder="Any notes about this coin..."></textarea>
@@ -1708,10 +1717,12 @@ function computeCurrentValuePLN(c){
     return costBasisPLN(c);
 }
 function updateOverviewTotals(){
-    const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);
-    const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);
+    // Filter out numismatic coins
+    const activeCoins=coins.filter(c=>!c.isNumismatic);
+    const p=activeCoins.reduce((s,c)=>s+costBasisPLN(c),0);
+    const cur=activeCoins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);
     let sC=0,gC=0,sW=0,gW=0;
-    coins.forEach(c=>{
+    activeCoins.forEach(c=>{
         const m=(c.coinMaterial||'Other').toUpperCase();
         if(m==='AG'){sC++;sW+=parseFloat(c.coinWeight)||0}
         if(m==='AU'){gC++;gW+=parseFloat(c.coinWeight)||0}
@@ -1738,10 +1749,12 @@ function updateOverviewTotals(){
 }
 
 function updateMobileOverview(){
-    const p=coins.reduce((s,c)=>s+costBasisPLN(c),0);
-    const cur=coins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);
+    // Filter out numismatic coins
+    const activeCoins=coins.filter(c=>!c.isNumismatic);
+    const p=activeCoins.reduce((s,c)=>s+costBasisPLN(c),0);
+    const cur=activeCoins.reduce((s,c)=>s+(computeCurrentValuePLN(c)||0),0);
     let sW=0,gW=0;
-    coins.forEach(c=>{
+    activeCoins.forEach(c=>{
         const m=(c.coinMaterial||'Other').toUpperCase();
         if(m==='AG')sW+=parseFloat(c.coinWeight)||0;
         if(m==='AU')gW+=parseFloat(c.coinWeight)||0;
@@ -1836,7 +1849,7 @@ async function addType(t){
 }
 window.deleteType=async function(tn){const cu=coins.filter(c=>c.type===tn).length;if(cu>0){if(!confirm(`${cu} coin(s) use this type. Delete anyway?`))return;coins.forEach(c=>{if(c.type===tn)c.type=''});await saveCoins()}const l=(await loadTypes()).filter(t=>t!==tn);await saveTypes(l);populateTypeDropdown();renderTypesTable();renderCoinsTable()};
 async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.innerHTML='';const ts=await loadTypes();if(!ts.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:#999">No types defined</td></tr>';return}ts.forEach((t,i)=>{const cu=coins.filter(c=>c.type===t).length;const tr=document.createElement('tr');tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td style="font-weight:600">${t}</td><td>${cu} coin${cu!==1?'s':''}</td><td><button class="delete-btn" onclick="deleteType('${t.replace(/'/g,"\\'")}')">Delete</button></td>`;tb.appendChild(tr)})}
-function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="12" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td><input type="checkbox" ${c.isChecked?'checked':''} onclick="event.stopPropagation();toggleChecked('${c.coinId}')"></td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)})}
+function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="12" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const numBadge=c.isNumismatic?'<span style="display:inline-block;background:#9b59b6;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:4px;">🎨 NUM</span>':'';tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}${numBadge}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td><input type="checkbox" ${c.isChecked?'checked':''} onclick="event.stopPropagation();toggleChecked('${c.coinId}')"></td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)})}
 function getFilteredAndSortedCoins(){const nf=($('#filterName')?.value||'').toLowerCase();const cf=($('#filterCountry')?.value||'').toLowerCase();const yf=$('#filterYear')?.value||'';const tf=($('#filterType')?.value||'').toLowerCase();const mf=$('#filterMaterial')?.value||'';const pf=$('#filterPurity')?.value||'';const df=$('#filterPurchaseDate')?.value||'';let fil=coins.filter(c=>{if(nf&&!(c.coinName||'').toLowerCase().includes(nf))return false;if(cf&&!(c.coinCountry||'').toLowerCase().includes(cf))return false;if(yf&&c.coinYear!=yf)return false;if(tf&&!(c.type||'').toLowerCase().includes(tf))return false;if(mf&&c.coinMaterial!==mf)return false;if(pf&&c.coinMetalContent!=pf)return false;if(df&&c.purchaseDate!==df)return false;return true});fil.sort((a,b)=>{let vA,vB;if(currentSortBy==='currentValue'){vA=computeCurrentValuePLN(a);vB=computeCurrentValuePLN(b)}else if(currentSortBy==='gain'){vA=computeCurrentValuePLN(a)-costBasisPLN(a);vB=computeCurrentValuePLN(b)-costBasisPLN(b)}else if(currentSortBy==='coinYear'||currentSortBy==='purchasePrice'){vA=parseFloat(a[currentSortBy])||0;vB=parseFloat(b[currentSortBy])||0}else if(currentSortBy==='purchaseDate'){vA=a.purchaseDate||'';vB=b.purchaseDate||''}else{vA=(a[currentSortBy]||'').toString().toLowerCase();vB=(b[currentSortBy]||'').toString().toLowerCase()}if(vA<vB)return currentSortOrder==='asc'?-1:1;if(vA>vB)return currentSortOrder==='asc'?1:-1;return 0});return fil}
 
 function renderSoldCoinsTable(){
@@ -2665,7 +2678,7 @@ $('#addTypeBtn')?.addEventListener('click',async()=>{
 $('#silverRate')?.addEventListener('input',()=>{metalRatesUSD.AG=parseFloat($('#silverRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#goldRate')?.addEventListener('input',()=>{metalRatesUSD.AU=parseFloat($('#goldRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#coinMaterial')?.addEventListener('change',function(){const v=this.value;const p=$('#coinMetalContent');if(p){if(v==='AG'||v==='AU'){p.disabled=false;p.required=true}else{p.disabled=true;p.required=false;p.value=''}}});
-$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#soldCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
+$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,isNumismatic:$('#isNumismatic')?.checked||false,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#soldCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
 
 let isViewMode=false;
 
@@ -2734,6 +2747,7 @@ function populateCoinForm(coin){
     $('#purchaseCurrency').value=coin.purchaseCurrency||'PLN';
     $('#purchaseDate').value=coin.purchaseDate||'';
     $('#comments').value=coin.comments||'';
+    $('#isNumismatic').checked=coin.isNumismatic||false;
     currentCoinImages=coin.images||[];
     renderCoinImagesPreview();
 }

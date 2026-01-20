@@ -2776,6 +2776,21 @@ function setFormReadOnly(readonly){
             }
         }
     });
+    
+    // Handle numismatic checkbox
+    const numCheckbox=$('#isNumismatic');
+    if(numCheckbox){
+        if(readonly){
+            numCheckbox.disabled=true;
+            numCheckbox.style.cursor='not-allowed';
+            numCheckbox.style.opacity='0.6';
+        }else{
+            numCheckbox.disabled=false;
+            numCheckbox.style.cursor='pointer';
+            numCheckbox.style.opacity='1';
+        }
+    }
+    
     const imageButtons=['#addCoinImageBtn','#pasteCoinImageBtn'];
     imageButtons.forEach(selector=>{
         const btn=$(selector);

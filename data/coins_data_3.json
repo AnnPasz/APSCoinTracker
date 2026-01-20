@@ -222,5 +222,37 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-18",
     "comments": "Metal market eu"
+  },
+  {
+    "coinId": "CMKMASIC9R7XS",
+    "coinName": "Half Dollar Texas",
+    "coinCountry": "USA",
+    "coinYear": "1926",
+    "coinWeight": "12.5",
+    "coinSize": "1",
+    "category": "Coin",
+    "type": "Kolekcjonerskie USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "595",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-18",
+    "comments": "OneBid estonia"
+  },
+  {
+    "coinId": "CMKMAYIBYU2DK",
+    "coinName": "Half Dolar Oregon Trail",
+    "coinCountry": "USA",
+    "coinYear": "1926",
+    "coinWeight": "12.5",
+    "coinSize": "1",
+    "category": "Coin",
+    "type": "Kolekcjonerskie USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "467",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-18",
+    "comments": "OneBid estoniA"
   }
 ]

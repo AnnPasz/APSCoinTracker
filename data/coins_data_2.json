@@ -431,7 +431,7 @@
     "coinWeight": "31.1",
     "coinSize": "1",
     "category": "Bulion",
-    "type": "",
+    "type": "Bulion Meksyk",
     "coinMaterial": "AG",
     "coinMetalContent": "1000",
     "purchasePrice": "390",
@@ -440,7 +440,8 @@
     "comments": "Numimarket Poznan przez allegro",
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isNumismatic": false
   },
   {
     "coinId": "CMK3TFMC4PEJY",

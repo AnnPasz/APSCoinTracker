@@ -87,7 +87,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-13",
     "comments": "numiaja",
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMKD1DODJ0WRY",
@@ -104,7 +105,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-13",
     "comments": "numiajan",
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMKD1IVRGZDPG",
@@ -121,24 +123,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-13",
     "comments": "numijana",
-    "coinLink": ""
-  },
-  {
-    "coinId": "CMKD1LFAFEBEW",
-    "coinName": "1$ Kanada, Królewska Policja Konna",
-    "coinCountry": "Canada",
-    "coinYear": "1998",
-    "coinWeight": "25.17",
-    "coinSize": "1",
-    "category": "Coin",
-    "type": "Kolekcjonerskie Kanada",
-    "coinMaterial": "AG",
-    "coinMetalContent": "925",
-    "purchasePrice": "195",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2026-01-13",
-    "comments": "numiajan",
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMKD1MTC7OMLO",
@@ -155,7 +141,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-13",
     "comments": "numiajan",
-    "coinLink": ""
+    "coinLink": "",
+    "isChecked": true
   },
   {
     "coinId": "CMKDXD3V8YALC",
@@ -256,5 +243,23 @@
     "purchaseDate": "2026-01-18",
     "comments": "OneBid estoniA",
     "isNumismatic": true
+  },
+  {
+    "coinId": "CMKN6I9OOY293",
+    "coinName": "Libertad",
+    "coinCountry": "Mexico",
+    "coinYear": "2020",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion Meksyk",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "425",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-15",
+    "comments": "Numimarket licutacja",
+    "isNumismatic": false,
+    "isChecked": true
   }
 ]

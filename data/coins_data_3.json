@@ -231,13 +231,14 @@
     "coinWeight": "12.5",
     "coinSize": "1",
     "category": "Coin",
-    "type": "Kolekcjonerskie USA",
+    "type": "Numizmat - USA",
     "coinMaterial": "AG",
     "coinMetalContent": "900",
     "purchasePrice": "595",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-18",
-    "comments": "OneBid estonia"
+    "comments": "OneBid estonia",
+    "isNumismatic": true
   },
   {
     "coinId": "CMKMAYIBYU2DK",
@@ -247,12 +248,13 @@
     "coinWeight": "12.5",
     "coinSize": "1",
     "category": "Coin",
-    "type": "Kolekcjonerskie USA",
+    "type": "Numizmat - USA",
     "coinMaterial": "AG",
     "coinMetalContent": "900",
     "purchasePrice": "467",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-18",
-    "comments": "OneBid estoniA"
+    "comments": "OneBid estoniA",
+    "isNumismatic": true
   }
 ]

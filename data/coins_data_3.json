@@ -176,13 +176,14 @@
     "purchasePrice": "350",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-16",
-    "comments": "WCN"
+    "comments": "WCN",
+    "isChecked": true
   },
   {
     "coinId": "CMKI64N6ECOY3",
     "coinName": "Walking Liberty - kolor",
     "coinCountry": "USA",
-    "coinYear": "2018",
+    "coinYear": "2019",
     "coinWeight": "31.1",
     "coinSize": "1",
     "category": "Bulion",
@@ -192,7 +193,9 @@
     "purchasePrice": "390",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-16",
-    "comments": "WCN"
+    "comments": "WCN",
+    "isNumismatic": false,
+    "isChecked": true
   },
   {
     "coinId": "CMKJTUEQTB291",

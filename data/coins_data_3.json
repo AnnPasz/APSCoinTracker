@@ -266,5 +266,22 @@
     "comments": "Numimarket licutacja",
     "isNumismatic": false,
     "isChecked": true
+  },
+  {
+    "coinId": "CMKR8AXUBIQOR",
+    "coinName": "American Eagle 1/4oz Gold",
+    "coinCountry": "UsA",
+    "coinYear": "2024",
+    "coinWeight": "8.52",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AU",
+    "coinMetalContent": "917",
+    "purchasePrice": "4981",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-23",
+    "comments": "Szlaxhetne inwestycje ",
+    "isNumismatic": false
   }
 ]

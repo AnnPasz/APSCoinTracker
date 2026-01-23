@@ -228,7 +228,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-18",
     "comments": "OneBid estonia",
-    "isNumismatic": true
+    "isNumismatic": true,
+    "isChecked": true
   },
   {
     "coinId": "CMKMAYIBYU2DK",
@@ -245,7 +246,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-18",
     "comments": "OneBid estoniA",
-    "isNumismatic": true
+    "isNumismatic": true,
+    "isChecked": true
   },
   {
     "coinId": "CMKN6I9OOY293",

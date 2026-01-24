@@ -200,7 +200,7 @@
   {
     "coinId": "CMKJTUEQTB291",
     "coinName": "Walking Liberty",
-    "coinCountry": "Usa",
+    "coinCountry": "USA",
     "coinYear": "2026",
     "coinWeight": "31.1",
     "coinSize": "1",
@@ -211,7 +211,8 @@
     "purchasePrice": "429",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-18",
-    "comments": "Metal market eu"
+    "comments": "Metal market eu",
+    "isNumismatic": false
   },
   {
     "coinId": "CMKMASIC9R7XS",
@@ -270,7 +271,7 @@
   {
     "coinId": "CMKR8AXUBIQOR",
     "coinName": "American Eagle 1/4oz Gold",
-    "coinCountry": "UsA",
+    "coinCountry": "USA",
     "coinYear": "2024",
     "coinWeight": "8.52",
     "coinSize": "1",

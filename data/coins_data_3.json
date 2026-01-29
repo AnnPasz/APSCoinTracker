@@ -1,23 +1,5 @@
 [
   {
-    "coinId": "CMK9MM3BUZ49B",
-    "coinName": "10$ Niedźwiedź Kanda",
-    "coinCountry": "Canada",
-    "coinYear": "2013",
-    "coinWeight": "15.87",
-    "coinSize": "1",
-    "category": "Bulion",
-    "type": "Kolekcjonerskie Kanada",
-    "coinMaterial": "AG",
-    "coinMetalContent": "999",
-    "purchasePrice": "297",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2026-01-10",
-    "comments": "allegro",
-    "coinLink": "",
-    "isChecked": true
-  },
-  {
     "coinId": "CMKAXUVIEX3VH",
     "coinName": "Texas State Round",
     "coinCountry": "USA",

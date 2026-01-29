@@ -326,10 +326,14 @@
                             <label for="purchaseDate">Purchase Date:</label>
                             <input type="date" id="purchaseDate" required>
                         </div>
-                        <div class="form-group" style="margin-bottom: 0; display: flex; align-items: center; padding-top: 25px;">
+                        <div class="form-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 20px; padding-top: 25px;">
                             <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none;">
                                 <input type="checkbox" id="isNumismatic" style="width: 20px; height: 20px; cursor: pointer;">
                                 <span style="font-weight: 600; color: #9b59b6;">🎨 Numismatic (exclude from totals)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none;">
+                                <input type="checkbox" id="withJJU" style="width: 20px; height: 20px; cursor: pointer;">
+                                <span style="font-weight: 600; color: #3498db;">📜 With JJU</span>
                             </label>
                         </div>
                     </div>
@@ -2678,7 +2682,7 @@ $('#addTypeBtn')?.addEventListener('click',async()=>{
 $('#silverRate')?.addEventListener('input',()=>{metalRatesUSD.AG=parseFloat($('#silverRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#goldRate')?.addEventListener('input',()=>{metalRatesUSD.AU=parseFloat($('#goldRate').value);updateGoldSilverRatio();updateOverviewTotals()});
 $('#coinMaterial')?.addEventListener('change',function(){const v=this.value;const p=$('#coinMetalContent');if(p){if(v==='AG'||v==='AU'){p.disabled=false;p.required=true}else{p.disabled=true;p.required=false;p.value=''}}});
-$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,isNumismatic:$('#isNumismatic')?.checked||false,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#soldCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
+$('#coinForm')?.addEventListener('submit',e=>{e.preventDefault();const f={coinId:$('#coinId')?.value||genId(),coinName:$('#coinName')?.value,coinCountry:$('#coinCountry')?.value,coinYear:$('#coinYear')?.value,coinWeight:$('#coinWeight')?.value,coinSize:$('#coinSize')?.value,category:$('#coinCategory')?.value,type:$('#coinType')?.value,coinMaterial:$('#coinMaterial')?.value,coinMetalContent:$('#coinMetalContent')?.value,purchasePrice:$('#purchasePrice')?.value,purchaseCurrency:$('#purchaseCurrency')?.value,purchaseDate:$('#purchaseDate')?.value,comments:$('#comments')?.value,isNumismatic:$('#isNumismatic')?.checked||false,withJJU:$('#withJJU')?.checked||false,images:currentCoinImages||[]};console.log('Saving coin with',f.images.length,'images');if(editModeId){const i=coins.findIndex(c=>c.coinId===editModeId);if(i!==-1)coins[i]=Object.assign({},coins[i],f)}else{coins.push(f);addName(f.coinName)}saveCoins();$('#coinForm').reset();currentCoinImages=[];renderCoinImagesPreview();isViewMode=false;editModeId=null;setFormReadOnly(false);$('#coinFormHeader').textContent='Add New Coin';$('#submitBtn').style.display='inline-block';$('#submitBtn').textContent='Add Coin';$('#cancelEdit').style.display='none';$('#deleteCoinBtn').style.display='none';$('#soldCoinBtn').style.display='none';$('#editCoinBtn').style.display='none';showSection('all-coins');renderCoinsTable();updateOverviewTotals()});
 
 let isViewMode=false;
 
@@ -2748,6 +2752,7 @@ function populateCoinForm(coin){
     $('#purchaseDate').value=coin.purchaseDate||'';
     $('#comments').value=coin.comments||'';
     $('#isNumismatic').checked=coin.isNumismatic||false;
+    $('#withJJU').checked=coin.withJJU||false;
     currentCoinImages=coin.images||[];
     renderCoinImagesPreview();
 }
@@ -2788,6 +2793,20 @@ function setFormReadOnly(readonly){
             numCheckbox.disabled=false;
             numCheckbox.style.cursor='pointer';
             numCheckbox.style.opacity='1';
+        }
+    }
+    
+    // Handle withJJU checkbox
+    const jjuCheckbox=$('#withJJU');
+    if(jjuCheckbox){
+        if(readonly){
+            jjuCheckbox.disabled=true;
+            jjuCheckbox.style.cursor='not-allowed';
+            jjuCheckbox.style.opacity='0.6';
+        }else{
+            jjuCheckbox.disabled=false;
+            jjuCheckbox.style.cursor='pointer';
+            jjuCheckbox.style.opacity='1';
         }
     }
     

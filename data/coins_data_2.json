@@ -1,28 +1,5 @@
 [
   {
-    "coinId": "CMJJUDKG6FVIB",
-    "coinName": "Sztabka Lunar",
-    "coinCountry": "Australia",
-    "coinYear": "2026",
-    "coinWeight": "31.1",
-    "coinSize": "1",
-    "category": "Other",
-    "type": "Bar",
-    "coinMaterial": "AG",
-    "coinMetalContent": "1000",
-    "purchasePrice": "309",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2025-12-24",
-    "comments": "numimarket zlota uncja",
-    "photos": [],
-    "metalValuePLN": 309,
-    "metalRateOnPurchaseUSD": 72.1763,
-    "fxRatesOnPurchase": null,
-    "checked": true,
-    "coinLink": "",
-    "isChecked": true
-  },
-  {
     "coinId": "CMJLDL495VWY4",
     "coinName": "Kookaburra",
     "coinCountry": "Australia",
@@ -495,6 +472,24 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-09",
     "comments": "AUKRO",
+    "coinLink": "",
+    "isChecked": true
+  },
+  {
+    "coinId": "CMK9MM3BUZ49B",
+    "coinName": "10$ Niedźwiedź Kanda",
+    "coinCountry": "Canada",
+    "coinYear": "2013",
+    "coinWeight": "15.87",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Kolekcjonerskie Kanada",
+    "coinMaterial": "AG",
+    "coinMetalContent": "999",
+    "purchasePrice": "297",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-10",
+    "comments": "allegro",
     "coinLink": "",
     "isChecked": true
   }

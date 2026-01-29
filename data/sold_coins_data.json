@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "coinId": "CMJ5ZSHBGSZD5",
+    "coinName": "Slovenska Koruna ",
+    "coinCountry": "Slovakia",
+    "coinYear": "2008",
+    "coinWeight": "62.21",
+    "coinSize": "50",
+    "category": "Bulion",
+    "type": "Bulion Słowacja",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "476",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-12-01",
+    "comments": "one bid",
+    "photos": [],
+    "metalValuePLN": 499,
+    "metalRateOnPurchaseUSD": 61.962,
+    "fxRatesOnPurchase": null,
+    "checked": true,
+    "coinLink": "",
+    "isChecked": true,
+    "images": [],
+    "saleDate": "2026-01-27",
+    "salePrice": 799,
+    "saleCurrency": "PLN",
+    "saleComment": "allegro",
+    "soldAt": "2026-01-27T16:12:27.365Z"
+  }
+]

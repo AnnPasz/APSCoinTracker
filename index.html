@@ -1675,15 +1675,25 @@ async function fetchRates(){
     }
     
     let fxOk=false;
-    try{const r=await fetch('https://api.exchangerate.host/latest?base=PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (base=PLN) failed',e)}
+    // Try primary API - exchangerate-api.com
+    try{const r=await fetch('https://open.er-api.com/v6/latest/PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (open.er-api) failed',e)}
+    // Fallback to frankfurter.app (European Central Bank data)
     if(!fxOk){
         try{
-            const r=await fetch('https://api.exchangerate.host/latest');
-            if(r.ok){const j=await r.json();if(j&&j.rates&&j.rates.PLN){exchangeRatesPLN={};Object.keys(j.rates).forEach(c=>exchangeRatesPLN[c]=j.rates[c]/j.rates.PLN);fxOk=true}}
-        }catch(e){console.warn('FX fetch (convert) failed',e)}
+            const r=await fetch('https://api.frankfurter.app/latest?from=PLN');
+            if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}
+        }catch(e){console.warn('FX fetch (frankfurter) failed',e)}
     }
+    // Fallback to exchangerate.host
     if(!fxOk){
-        try{const r=await fetch('https://open.er-api.com/v6/latest/PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (open.er-api) failed',e)}
+        try{const r=await fetch('https://api.exchangerate.host/latest?base=PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (exchangerate.host) failed',e)}
+    }
+    // Last resort: convert from USD base
+    if(!fxOk){
+        try{
+            const r=await fetch('https://api.frankfurter.app/latest?from=USD');
+            if(r.ok){const j=await r.json();if(j&&j.rates&&j.rates.PLN){exchangeRatesPLN={};Object.keys(j.rates).forEach(c=>exchangeRatesPLN[c]=j.rates[c]/j.rates.PLN);fxOk=true}}
+        }catch(e){console.warn('FX fetch (USD convert) failed',e)}
     }
     updateMetalInputs();
     updateGoldSilverRatio();
@@ -1720,6 +1730,21 @@ function computeCurrentValuePLN(c){
     console.log(`📌 ${c.coinName}: Using cost basis ${costBasisPLN(c).toFixed(2)} PLN`);
     return costBasisPLN(c);
 }
+function calculateSoldCoinsProfitLoss(){
+    if(!window.soldCoins||window.soldCoins.length===0)return 0;
+    let totalProfitLoss=0;
+    window.soldCoins.forEach(coin=>{
+        // Get purchase price in PLN
+        const purchasePricePLN=convertToPLN(parseFloat(coin.purchasePrice)||0,coin.purchaseCurrency||'PLN');
+        // Get sale price in PLN
+        const salePricePLN=convertToPLN(parseFloat(coin.salePrice)||0,coin.saleCurrency||'PLN');
+        // Calculate profit/loss
+        const profitLoss=salePricePLN-purchasePricePLN;
+        totalProfitLoss+=profitLoss;
+        console.log(`💸 Sold: ${coin.coinName}: Bought ${purchasePricePLN.toFixed(2)} PLN, Sold ${salePricePLN.toFixed(2)} PLN = ${profitLoss.toFixed(2)} PLN`);
+    });
+    return totalProfitLoss;
+}
 function updateOverviewTotals(){
     // Filter out numismatic coins
     const activeCoins=coins.filter(c=>!c.isNumismatic);
@@ -1738,8 +1763,11 @@ function updateOverviewTotals(){
     $('#silverWeight').textContent=fmt(sW)+' g';
     $('#goldWeight').textContent=fmt(gW)+' g';
     const gl=cur-p;
-    $('#gainLoss').textContent=fmt(gl)+' PLN';
-    $('#gainLoss').style.color=gl<0?'red':(gl>0?'green':'inherit');
+    // Add sold coins profit/loss to total gain/loss
+    const soldCoinsGL=calculateSoldCoinsProfitLoss();
+    const totalGL=gl+soldCoinsGL;
+    $('#gainLoss').textContent=fmt(totalGL)+' PLN';
+    $('#gainLoss').style.color=totalGL<0?'red':(totalGL>0?'green':'inherit');
     
     // Update current date
     const dateEl=$('#currentDate');
@@ -1767,13 +1795,16 @@ function updateMobileOverview(){
     // Update values
     $('#mobileTotalValue').textContent=fmt(cur)+' PLN';
     const gl=cur-p;
+    // Add sold coins profit/loss to total gain/loss
+    const soldCoinsGL=calculateSoldCoinsProfitLoss();
+    const totalGL=gl+soldCoinsGL;
     const glEl=$('#mobileGainLoss');
-    glEl.textContent=fmt(gl)+' PLN';
+    glEl.textContent=fmt(totalGL)+' PLN';
     // Change tile color based on gain/loss
     const glTile=glEl.parentElement;
-    if(gl<0){
+    if(totalGL<0){
         glTile.style.background='linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
-    }else if(gl>0){
+    }else if(totalGL>0){
         glTile.style.background='linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
     }else{
         glTile.style.background='linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)';

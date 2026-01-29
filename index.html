@@ -1641,37 +1641,70 @@ function updateMetalInputs(){
     }catch(e){console.warn('updateMetalInputs error',e)}
 }
 async function fetchRates(){
-    const attempts=[
-        async()=>{const r=await fetch('https://api.metals.live/v1/spot');return r.ok?await r.json():null},
-        async()=>{const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD');return r.ok?await r.json():null}
-    ];
-    for(const fn of attempts){
-        try{
-            const data=await fn();if(!data)continue;
+    // Fetch metal prices with multiple fallbacks
+    const metalAttempts=[
+        async()=>{
+            // Try metals.live API
+            const r=await fetch('https://api.metals.live/v1/spot');
+            if(!r.ok)return null;
+            const data=await r.json();
             if(Array.isArray(data)){
-                for(const it of data){
-                    if(!it)continue;
-                    if(it.metal&&it.price){
-                        const m=(it.metal||'').toLowerCase();
-                        if(m.includes('gold'))metalRatesUSD.AU=parseFloat(it.price);
-                        if(m.includes('silver'))metalRatesUSD.AG=parseFloat(it.price);
-                    }else{
-                        if(it.gold)metalRatesUSD.AU=parseFloat(it.gold);
-                        if(it.silver)metalRatesUSD.AG=parseFloat(it.silver);
-                    }
-                }
-            }else if(typeof data==='object'){
-                if(data.items&&Array.isArray(data.items)&&data.items.length){
-                    const item=data.items[0];
-                    if(item.xauPrice)metalRatesUSD.AU=parseFloat(item.xauPrice);
-                    if(item.xagPrice)metalRatesUSD.AG=parseFloat(item.xagPrice);
-                }else{
-                    if(data.gold)metalRatesUSD.AU=parseFloat(data.gold);
-                    if(data.silver)metalRatesUSD.AG=parseFloat(data.silver);
-                }
+                const gold=data.find(it=>it.metal&&it.metal.toLowerCase().includes('gold'));
+                const silver=data.find(it=>it.metal&&it.metal.toLowerCase().includes('silver'));
+                if(gold&&gold.price)metalRatesUSD.AU=parseFloat(gold.price);
+                if(silver&&silver.price)metalRatesUSD.AG=parseFloat(silver.price);
+                return metalRatesUSD.AU&&metalRatesUSD.AG;
             }
-            if(metalRatesUSD.AU&&metalRatesUSD.AG)break;
-        }catch(err){console.warn('metal attempt failed',err)}
+            return null;
+        },
+        async()=>{
+            // Try goldprice.org API
+            const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD');
+            if(!r.ok)return null;
+            const data=await r.json();
+            if(data.items&&Array.isArray(data.items)&&data.items.length){
+                const item=data.items[0];
+                if(item.xauPrice)metalRatesUSD.AU=parseFloat(item.xauPrice);
+                if(item.xagPrice)metalRatesUSD.AG=parseFloat(item.xagPrice);
+                return metalRatesUSD.AU&&metalRatesUSD.AG;
+            }
+            return null;
+        },
+        async()=>{
+            // Try alternative metals API
+            const r=await fetch('https://www.goldapi.io/api/XAU/USD');
+            if(!r.ok)return null;
+            const data=await r.json();
+            if(data.price)metalRatesUSD.AU=parseFloat(data.price);
+            // Fetch silver separately
+            const r2=await fetch('https://www.goldapi.io/api/XAG/USD');
+            if(r2.ok){
+                const data2=await r2.json();
+                if(data2.price)metalRatesUSD.AG=parseFloat(data2.price);
+            }
+            return metalRatesUSD.AU&&metalRatesUSD.AG;
+        }
+    ];
+    
+    for(const fn of metalAttempts){
+        try{
+            const success=await fn();
+            if(success)break;
+        }catch(err){console.warn('metal API attempt failed:',err.message)}
+    }
+    
+    // If still no metal rates, use fallback values
+    if(!metalRatesUSD.AU||!metalRatesUSD.AG){
+        console.warn('⚠️ All metal APIs failed, using last known or manual input values');
+        // Keep existing values if available, otherwise try to get from inputs
+        if(!metalRatesUSD.AU){
+            const goldInput=$('#goldRate');
+            if(goldInput&&goldInput.value)metalRatesUSD.AU=parseFloat(goldInput.value);
+        }
+        if(!metalRatesUSD.AG){
+            const silverInput=$('#silverRate');
+            if(silverInput&&silverInput.value)metalRatesUSD.AG=parseFloat(silverInput.value);
+        }
     }
     
     let fxOk=false;

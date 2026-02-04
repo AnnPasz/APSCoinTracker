@@ -1,28 +1,5 @@
 [
   {
-    "coinId": "CMJLDL495VWY4",
-    "coinName": "Kookaburra",
-    "coinCountry": "Australia",
-    "coinYear": "2023",
-    "coinWeight": "31.1",
-    "coinSize": "1",
-    "category": "Bulion",
-    "type": "Bulion Australia",
-    "coinMaterial": "AG",
-    "coinMetalContent": "1000",
-    "purchasePrice": "320",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2025-12-25",
-    "comments": "numijana numimarket",
-    "photos": [],
-    "metalValuePLN": 330,
-    "metalRateOnPurchaseUSD": 71.913,
-    "fxRatesOnPurchase": null,
-    "checked": true,
-    "coinLink": "",
-    "isChecked": true
-  },
-  {
     "coinId": "CMJLDQ0N4OX05",
     "coinName": "Koala Bulion",
     "coinCountry": "Australia",
@@ -491,6 +468,25 @@
     "purchaseDate": "2026-01-10",
     "comments": "allegro",
     "coinLink": "",
+    "isChecked": true
+  },
+  {
+    "coinId": "CMKAXUVIEX3VH",
+    "coinName": "Texas State Round",
+    "coinCountry": "USA",
+    "coinYear": "1986",
+    "coinWeight": "31.1",
+    "coinSize": "39",
+    "category": "Bulion",
+    "type": "Rounds",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "370",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-11",
+    "comments": "allegro",
+    "coinLink": "",
+    "checked": false,
     "isChecked": true
   }
 ]

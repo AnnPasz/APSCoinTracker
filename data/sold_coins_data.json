@@ -27,5 +27,33 @@
     "saleCurrency": "PLN",
     "saleComment": "allegro",
     "soldAt": "2026-01-27T16:12:27.365Z"
+  },
+  {
+    "coinId": "CMIM6XDP0UF4U",
+    "coinName": "Flaga Birma",
+    "coinCountry": "Birma",
+    "coinYear": "1980",
+    "coinWeight": "36",
+    "coinSize": "1",
+    "category": "Other",
+    "type": "Flaga",
+    "coinMaterial": "AG",
+    "coinMetalContent": "925",
+    "purchasePrice": "286",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-11-01",
+    "comments": "17 Auctions",
+    "metalValuePLN": 286,
+    "metalRateOnPurchaseUSD": 56.7249,
+    "fxRatesOnPurchase": null,
+    "checked": true,
+    "isChecked": true,
+    "isNumismatic": false,
+    "images": [],
+    "saleDate": "2026-02-01",
+    "salePrice": 449,
+    "saleCurrency": "PLN",
+    "saleComment": "Allegro",
+    "soldAt": "2026-02-01T15:35:31.363Z"
   }
 ]

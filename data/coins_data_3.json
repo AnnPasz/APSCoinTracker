@@ -175,7 +175,8 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-18",
     "comments": "Metal market eu",
-    "isNumismatic": false
+    "isNumismatic": false,
+    "isChecked": true
   },
   {
     "coinId": "CMKMASIC9R7XS",

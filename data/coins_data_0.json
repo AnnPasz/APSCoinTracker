@@ -20,7 +20,8 @@
     "photos": [],
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM3LP14LP87",
@@ -42,7 +43,8 @@
     "type": "Bulion USA",
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM3OEE71A5R",
@@ -64,7 +66,8 @@
     "type": "Bulion USA",
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM3P5J10YXI",
@@ -85,7 +88,8 @@
     "category": "Bulion",
     "type": "Bulion USA",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM3QONQNNZW",
@@ -106,7 +110,8 @@
     "category": "Bulion",
     "type": "Bulion USA",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM3T3V3D3GJ",
@@ -127,7 +132,8 @@
     "category": "Bulion",
     "type": "Bulion RPA",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM3VDG3N7J3",
@@ -170,7 +176,8 @@
     "category": "Bulion",
     "type": "Bulion USA",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM5UJSFKRTF",
@@ -193,7 +200,8 @@
     "photos": [],
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM5VYUB77XU",
@@ -215,7 +223,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM5XECF3DM0",
@@ -259,7 +268,8 @@
     "fxRatesOnPurchase": null,
     "photos": [],
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM619FP1MO4",
@@ -280,7 +290,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM62KGQGURF",
@@ -344,7 +355,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM6AO2TCPZC",
@@ -365,7 +377,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM6DBS6VJ8B",
@@ -386,7 +399,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM6GM57W6H3",
@@ -407,7 +421,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM6I25VK48R",
@@ -428,7 +443,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM6K3O5D1L8",
@@ -449,7 +465,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM6L6ZV57AM",
@@ -470,7 +487,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM6OM0IZ2WC",
@@ -513,7 +531,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM6WDBWLGF1",
@@ -534,6 +553,7 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   }
 ]

@@ -1,27 +1,5 @@
 [
   {
-    "coinId": "CMIM6YLAFULDY",
-    "coinName": "Flaga Bahamy",
-    "coinCountry": "Bahamas",
-    "coinYear": "1980",
-    "coinWeight": "40",
-    "coinSize": "1",
-    "category": "Other",
-    "type": "Flaga",
-    "coinMaterial": "AG",
-    "coinMetalContent": "925",
-    "purchasePrice": "262",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2025-11-01",
-    "comments": "17 Auctions",
-    "metalValuePLN": 262,
-    "metalRateOnPurchaseUSD": 56.7249,
-    "fxRatesOnPurchase": null,
-    "checked": true,
-    "isChecked": true,
-    "isNumismatic": false
-  },
-  {
     "coinId": "CMIM6ZP550ER3",
     "coinName": "10Euro Dirdl",
     "coinCountry": "Austria",
@@ -41,7 +19,8 @@
     "fxRatesOnPurchase": null,
     "photos": [],
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM72IKJSSH6",
@@ -116,7 +95,8 @@
     "photos": [],
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM7A8O1HCGP",
@@ -138,7 +118,8 @@
     "fxRatesOnPurchase": null,
     "photos": [],
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM7D5BLAZTY",
@@ -159,7 +140,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM7HCB71TBB",
@@ -180,7 +162,8 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMIM7MKUTC3KU",
@@ -193,7 +176,7 @@
     "type": "Bulion USA",
     "coinMaterial": "AG",
     "coinMetalContent": "999",
-    "purchasePrice": "0",
+    "purchasePrice": "199",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-11-01",
     "comments": "//",
@@ -201,7 +184,10 @@
     "metalRateOnPurchaseUSD": 56.7249,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isNumismatic": false,
+    "withJJU": false,
+    "isSettled": true
   },
   {
     "coinId": "CMJ5Z07WEKAPR",
@@ -223,7 +209,8 @@
     "metalRateOnPurchaseUSD": 79.2521,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ5Z7942UQL6",
@@ -245,7 +232,8 @@
     "metalRateOnPurchaseUSD": 61.962,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ5ZEQ3VGAE6",
@@ -267,7 +255,8 @@
     "metalRateOnPurchaseUSD": 61.962,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ5ZKJR0BXCT",
@@ -289,7 +278,8 @@
     "metalRateOnPurchaseUSD": 61.962,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ60AOGP4A4C",
@@ -333,7 +323,8 @@
     "metalRateOnPurchaseUSD": 61.962,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ60H1HGF7Q3",
@@ -355,7 +346,8 @@
     "metalRateOnPurchaseUSD": 61.962,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ7JJUI8FSZ7",
@@ -377,7 +369,8 @@
     "metalRateOnPurchaseUSD": 63.7015,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ7JM4L2LOTL",
@@ -399,7 +392,8 @@
     "metalRateOnPurchaseUSD": 63.7015,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ92W9BO64Z0",
@@ -422,7 +416,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ92ZUE3IBVY",
@@ -445,7 +440,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ93289DC21V",
@@ -468,7 +464,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJ934HMBYAY6",
@@ -491,7 +488,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJC1IY5VK60Y",
@@ -514,7 +512,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJJUACC5RN02",
@@ -537,7 +536,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJJUDKG6FVIB",
@@ -560,7 +560,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJLDL495VWY4",
@@ -579,6 +580,29 @@
     "comments": "numijana numimarket",
     "photos": [],
     "metalValuePLN": 330,
+    "metalRateOnPurchaseUSD": 71.913,
+    "fxRatesOnPurchase": null,
+    "checked": true,
+    "coinLink": "",
+    "isChecked": true
+  },
+  {
+    "coinId": "CMJLDQ0N4OX05",
+    "coinName": "Koala Bulion",
+    "coinCountry": "Australia",
+    "coinYear": "2023",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion Australia",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "320",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-12-25",
+    "comments": "numijana numiarket",
+    "photos": [],
+    "metalValuePLN": 320,
     "metalRateOnPurchaseUSD": 71.913,
     "fxRatesOnPurchase": null,
     "checked": true,

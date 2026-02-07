@@ -1,28 +1,5 @@
 [
   {
-    "coinId": "CMJLDQ0N4OX05",
-    "coinName": "Koala Bulion",
-    "coinCountry": "Australia",
-    "coinYear": "2023",
-    "coinWeight": "31.1",
-    "coinSize": "1",
-    "category": "Bulion",
-    "type": "Bulion Australia",
-    "coinMaterial": "AG",
-    "coinMetalContent": "1000",
-    "purchasePrice": "320",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2025-12-25",
-    "comments": "numijana numiarket",
-    "photos": [],
-    "metalValuePLN": 320,
-    "metalRateOnPurchaseUSD": 71.913,
-    "fxRatesOnPurchase": null,
-    "checked": true,
-    "coinLink": "",
-    "isChecked": true
-  },
-  {
     "coinId": "CMJLMJETMXM3T",
     "coinName": "Makowski",
     "coinCountry": "Poland",
@@ -43,7 +20,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJNCSOOTLWZ0",
@@ -66,7 +44,8 @@
     "fxRatesOnPurchase": null,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJNCU5SU1E2S",
@@ -111,7 +90,8 @@
     "metalRateOnPurchaseUSD": 79.2521,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJOD36OOYFVA",
@@ -133,7 +113,8 @@
     "metalRateOnPurchaseUSD": 79.2521,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJODH70PUG17",
@@ -155,7 +136,8 @@
     "metalRateOnPurchaseUSD": 79.2521,
     "fxRatesOnPurchase": null,
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": false
   },
   {
     "coinId": "CMJSHVJLYYYJP",
@@ -176,7 +158,8 @@
     "metalValuePLN": 4437,
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJSX9ZZ7N29P",
@@ -194,7 +177,8 @@
     "purchaseDate": "2025-09-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJSXDUI62T3P",
@@ -230,7 +214,8 @@
     "purchaseDate": "2025-09-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJSXGXVBVYAW",
@@ -248,7 +233,8 @@
     "purchaseDate": "2025-08-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJSXKRKXF58K",
@@ -266,7 +252,8 @@
     "purchaseDate": "2025-08-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJSXMJ59CYAW",
@@ -284,7 +271,8 @@
     "purchaseDate": "2025-09-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJSXPBW3V1QR",
@@ -302,7 +290,8 @@
     "purchaseDate": "2025-09-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJSXRMFTFBVV",
@@ -321,7 +310,8 @@
     "comments": "",
     "checked": true,
     "isChecked": true,
-    "coinLink": ""
+    "coinLink": "",
+    "isSettled": true
   },
   {
     "coinId": "CMJSXW7TW196H",
@@ -339,7 +329,8 @@
     "purchaseDate": "2025-09-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMJSXXL835RM5",
@@ -357,7 +348,8 @@
     "purchaseDate": "2025-08-01",
     "comments": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMK2TPBYTW1LW",
@@ -414,7 +406,8 @@
     "comments": "gnjerzykowski przez Allegro",
     "checked": true,
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMK4A2GG4FZYA",
@@ -432,7 +425,8 @@
     "purchaseDate": "2025-12-26",
     "comments": "numijana numimarket",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMK9MJGH3EIV0",
@@ -450,7 +444,8 @@
     "purchaseDate": "2026-01-09",
     "comments": "AUKRO",
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMK9MM3BUZ49B",
@@ -468,7 +463,8 @@
     "purchaseDate": "2026-01-10",
     "comments": "allegro",
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMKAXUVIEX3VH",
@@ -487,6 +483,25 @@
     "comments": "allegro",
     "coinLink": "",
     "checked": false,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
+  },
+  {
+    "coinId": "CMKAXVU2JA61P",
+    "coinName": "Freedom Bell Round",
+    "coinCountry": "USA",
+    "coinYear": "1972",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Rounds",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "369",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-01-11",
+    "comments": "allegro",
+    "isChecked": true,
+    "isSettled": true
   }
 ]

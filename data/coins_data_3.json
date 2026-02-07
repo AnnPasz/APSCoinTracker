@@ -1,22 +1,5 @@
 [
   {
-    "coinId": "CMKAXVU2JA61P",
-    "coinName": "Freedom Bell Round",
-    "coinCountry": "USA",
-    "coinYear": "1972",
-    "coinWeight": "31.1",
-    "coinSize": "1",
-    "category": "Bulion",
-    "type": "Rounds",
-    "coinMaterial": "AG",
-    "coinMetalContent": "1000",
-    "purchasePrice": "369",
-    "purchaseCurrency": "PLN",
-    "purchaseDate": "2026-01-11",
-    "comments": "allegro",
-    "isChecked": true
-  },
-  {
     "coinId": "CMKB25OE9XLON",
     "coinName": "Hercules 50 FR - wisior",
     "coinCountry": "France",
@@ -33,7 +16,8 @@
     "comments": "prezent :)",
     "coinLink": "",
     "checked": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMKD1A1GMHUN3",
@@ -67,9 +51,12 @@
     "purchasePrice": "250",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-13",
-    "comments": "numiajan",
+    "comments": "numiajan - podmiana za flage Birma",
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isNumismatic": false,
+    "withJJU": false,
+    "isSettled": true
   },
   {
     "coinId": "CMKD1IVRGZDPG",
@@ -123,7 +110,8 @@
     "purchaseDate": "2026-01-14",
     "comments": "apart",
     "coinLink": "",
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMKI63JZY23BH",
@@ -176,7 +164,8 @@
     "purchaseDate": "2026-01-18",
     "comments": "Metal market eu",
     "isNumismatic": false,
-    "isChecked": true
+    "isChecked": true,
+    "withJJU": true
   },
   {
     "coinId": "CMKMASIC9R7XS",
@@ -194,7 +183,8 @@
     "purchaseDate": "2026-01-18",
     "comments": "OneBid estonia",
     "isNumismatic": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMKMAYIBYU2DK",
@@ -212,7 +202,8 @@
     "purchaseDate": "2026-01-18",
     "comments": "OneBid estoniA",
     "isNumismatic": true,
-    "isChecked": true
+    "isChecked": true,
+    "isSettled": true
   },
   {
     "coinId": "CMKN6I9OOY293",
@@ -247,6 +238,27 @@
     "purchaseCurrency": "PLN",
     "purchaseDate": "2026-01-23",
     "comments": "Szlaxhetne inwestycje ",
-    "isNumismatic": false
+    "isNumismatic": false,
+    "isSettled": true
+  },
+  {
+    "coinId": "CMLCF0EJH2CB2",
+    "coinName": "1$ USA White House",
+    "coinCountry": "USA",
+    "coinYear": "1992",
+    "coinWeight": "26.27",
+    "coinSize": "1",
+    "category": "Coin",
+    "type": "Kolekcjonerskie USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "284",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2025-11-21",
+    "comments": "za flage Bahamy",
+    "isNumismatic": false,
+    "withJJU": false,
+    "isSettled": true,
+    "isChecked": true
   }
 ]

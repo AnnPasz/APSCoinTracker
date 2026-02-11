@@ -320,7 +320,18 @@
                 </div>
             </div>
 
+            <div class="form-group" id="purchasePriceSection">
+                <label for="purchasePrice">Cena zakupu (PLN):</label>
+                <div style="position: relative;">
+                    <input type="text" inputmode="decimal" id="purchasePrice" placeholder="np. 150.00" style="padding-right: 40px;">
+                    <button onclick="document.getElementById('purchasePrice').value=''; document.getElementById('purchasePrice').focus();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #e0e0e0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                </div>
+                <small>Używane do obliczeń ceny docelowej z ceny zakupu</small>
+            </div>
+
             <button class="btn btn-primary" id="calculateBtn">🧮 Oblicz wartość</button>
+
+            <button class="btn btn-secondary" id="purchasePriceBtn">💰 Cena zakupu</button>
             
             <button class="btn btn-refresh" id="refreshRatesBtn">🔄 Odśwież kursy</button>
         </div>
@@ -703,10 +714,21 @@
             }, 100);
         }
 
+        function calculateTargetPriceFromPurchase() {
+            const purchasePrice = parseFloat(($('#purchasePrice').value || '').replace(',', '.')) || 0;
+            if (!purchasePrice) {
+                alert('⚠️ Proszę wprowadzić cenę zakupu');
+                return;
+            }
+            lastCalculatedValuePLN = purchasePrice;
+            calculateTargetPrice();
+        }
+
         // Event listeners
         $('#metalType').addEventListener('change', updateRateDisplay);
         $('#calculateBtn').addEventListener('click', calculateValue);
         $('#targetPriceBtn').addEventListener('click', calculateTargetPrice);
+        $('#purchasePriceBtn').addEventListener('click', calculateTargetPriceFromPurchase);
         
         // OneBid mode toggle
         $('#oneBidModeToggle').addEventListener('click', function() {
@@ -719,6 +741,8 @@
                 $('#calculatorTitle').textContent = 'Kalkulator OneBid';
                 $('#oneBidFeeSection').classList.remove('hidden');
                 $('#targetPriceBtn').style.display = 'none';
+                $('#purchasePriceBtn').style.display = 'none';
+                $('#purchasePriceSection').style.display = 'none';
                 
                 // Hide normal result card if visible
                 $('#resultCard').classList.add('hidden');
@@ -730,6 +754,8 @@
                 $('#calculatorTitle').textContent = 'Symulator ceny';
                 $('#oneBidFeeSection').classList.add('hidden');
                 $('#targetPriceBtn').style.display = '';
+                $('#purchasePriceBtn').style.display = '';
+                $('#purchasePriceSection').style.display = '';
                 
                 // Hide OneBid result card if visible
                 $('#oneBidResultCard').classList.add('hidden');

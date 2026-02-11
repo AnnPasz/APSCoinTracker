@@ -1720,8 +1720,35 @@ async function fetchRates(){
     }
     
     let fxOk=false;
+    // Try CORS-friendly CDN-based rates
+    try{
+        const r=await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/pln.json');
+        if(r.ok){
+            const j=await r.json();
+            if(j&&j.pln){
+                exchangeRatesPLN={};
+                Object.keys(j.pln).forEach(k=>exchangeRatesPLN[k.toUpperCase()]=j.pln[k]);
+                fxOk=true;
+            }
+        }
+    }catch(e){console.warn('FX fetch (currency-api jsdelivr) failed',e)}
+    if(!fxOk){
+        try{
+            const r=await fetch('https://latest.currency-api.pages.dev/v1/currencies/pln.json');
+            if(r.ok){
+                const j=await r.json();
+                if(j&&j.pln){
+                    exchangeRatesPLN={};
+                    Object.keys(j.pln).forEach(k=>exchangeRatesPLN[k.toUpperCase()]=j.pln[k]);
+                    fxOk=true;
+                }
+            }
+        }catch(e){console.warn('FX fetch (currency-api pages) failed',e)}
+    }
     // Try primary API - exchangerate-api.com
-    try{const r=await fetch('https://open.er-api.com/v6/latest/PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (open.er-api) failed',e)}
+    if(!fxOk){
+        try{const r=await fetch('https://open.er-api.com/v6/latest/PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (open.er-api) failed',e)}
+    }
     // Fallback to frankfurter.app (European Central Bank data)
     if(!fxOk){
         try{

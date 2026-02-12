@@ -461,12 +461,10 @@
         async function fetchRates() {
             const attempts = [
                 async () => {
-                    const r = await fetch('https://api.metals.live/v1/spot');
-                    return r.ok ? await r.json() : null;
+                    return await fetchJsonViaCors('https://api.metals.live/v1/spot');
                 },
                 async () => {
-                    const r = await fetch('https://data-asg.goldprice.org/dbXRates/USD');
-                    return r.ok ? await r.json() : null;
+                    return await fetchJsonViaCors('https://data-asg.goldprice.org/dbXRates/USD');
                 }
             ];
             

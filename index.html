@@ -1652,27 +1652,6 @@ function updateMetalInputs(){
         if(gIn){if(metalRatesUSD.AU){gIn.value=Number(metalRatesUSD.AU).toFixed(2);gIn.disabled=true}else{gIn.disabled=false}}
     }catch(e){console.warn('updateMetalInputs error',e)}
 }
-const RATES_CACHE_KEY='aps_rates_cache_main_v1';
-const RATES_CACHE_TTL_MS=1000*60*30; // 30 minutes
-function loadRatesCache(){
-    try{
-        const raw=localStorage.getItem(RATES_CACHE_KEY);
-        if(!raw)return null;
-        const data=JSON.parse(raw);
-        if(!data||!data.timestamp)return null;
-        if(Date.now()-data.timestamp>RATES_CACHE_TTL_MS)return null;
-        return data;
-    }catch{return null}
-}
-function saveRatesCache(payload){
-    try{
-        localStorage.setItem(RATES_CACHE_KEY,JSON.stringify({
-            timestamp:Date.now(),
-            metalRatesUSD:payload.metalRatesUSD||null,
-            exchangeRatesPLN:payload.exchangeRatesPLN||null
-        }));
-    }catch{}
-}
 async function fetchWithTimeout(promise,ms){
     return await Promise.race([
         promise,
@@ -1686,15 +1665,6 @@ async function fetchJsonViaCors(url){
     return r.json();
 }
 async function fetchRates(){
-    const cached=loadRatesCache();
-    if(cached){
-        if(cached.metalRatesUSD)metalRatesUSD=cached.metalRatesUSD;
-        if(cached.exchangeRatesPLN)exchangeRatesPLN=cached.exchangeRatesPLN;
-        updateMetalInputs();
-        updateGoldSilverRatio();
-        updateOverviewTotals();
-    }
-
     // Fetch metal prices with multiple fallbacks
     const metalAttempts=[
         async()=>{
@@ -1807,9 +1777,6 @@ async function fetchRates(){
         }
     }
 
-    if(metalRatesUSD&&exchangeRatesPLN){
-        saveRatesCache({metalRatesUSD,exchangeRatesPLN});
-    }
     updateMetalInputs();
     updateGoldSilverRatio();
     updateOverviewTotals();

@@ -174,6 +174,8 @@
                     <button id="refreshRatesBtn" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
                         🔄 Refresh FX Rates
                     </button>
+                    <div id="fxStatus" style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 8px;">FX: idle</div>
+                    <div id="buildStamp" style="text-align: center; font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 6px;">Build: 2026-02-17</div>
                 </div>
             </nav>
         </aside>
@@ -859,6 +861,7 @@
                                 🔄
                             </button>
                         </div>
+                        <div id="mobileFxStatus" style="text-align: center; font-size: 11px; color: #666; margin-bottom: 8px;">FX: idle</div>
                         <div style="display: grid; gap: 8px;">
                             <div style="padding: 8px; background: #f5f5f7; border-radius: 6px;">
                                 <div style="display: flex; justify-content: space-between; font-size: 13px;">
@@ -1652,116 +1655,70 @@ function updateMetalInputs(){
         if(gIn){if(metalRatesUSD.AU){gIn.value=Number(metalRatesUSD.AU).toFixed(2);gIn.disabled=true}else{gIn.disabled=false}}
     }catch(e){console.warn('updateMetalInputs error',e)}
 }
-async function fetchWithTimeout(promise,ms){
-    return await Promise.race([
-        promise,
-        new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms))
-    ]);
-}
-async function fetchJsonViaCors(url){
-    const proxyUrl='https://api.allorigins.win/raw?url='+encodeURIComponent(url);
-    const r=await fetchWithTimeout(fetch(proxyUrl),6000);
-    if(!r.ok)throw new Error('CORS proxy failed');
-    return r.json();
+function setFxStatus(message,isError=false){
+    const el=document.getElementById('fxStatus');
+    if(el){el.textContent=message;el.style.color=isError?'#ffb3b3':'rgba(255,255,255,0.7)'}
+    const mobileEl=document.getElementById('mobileFxStatus');
+    if(mobileEl){mobileEl.textContent=message;mobileEl.style.color=isError?'#c0392b':'#27ae60'}
 }
 async function fetchRates(){
+    setFxStatus('FX: fetching...');
+    let metalSource='';
+    let metalOk=false;
     // Fetch metal prices with multiple fallbacks
     const metalAttempts=[
         async()=>{
             // Try metals.live API
-            const data=await fetchJsonViaCors('https://api.metals.live/v1/spot');
+            const r=await fetch('https://api.metals.live/v1/spot');
+            if(!r.ok)return null;
+            const data=await r.json();
             if(Array.isArray(data)){
                 const gold=data.find(it=>it.metal&&it.metal.toLowerCase().includes('gold'));
                 const silver=data.find(it=>it.metal&&it.metal.toLowerCase().includes('silver'));
                 if(gold&&gold.price)metalRatesUSD.AU=parseFloat(gold.price);
                 if(silver&&silver.price)metalRatesUSD.AG=parseFloat(silver.price);
+                if(metalRatesUSD.AU&&metalRatesUSD.AG){metalSource='metals.live';metalOk=true}
                 return metalRatesUSD.AU&&metalRatesUSD.AG;
             }
             return null;
         },
         async()=>{
             // Try goldprice.org API
-            const data=await fetchJsonViaCors('https://data-asg.goldprice.org/dbXRates/USD');
+            const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD');
+            if(!r.ok)return null;
+            const data=await r.json();
             if(data.items&&Array.isArray(data.items)&&data.items.length){
                 const item=data.items[0];
                 if(item.xauPrice)metalRatesUSD.AU=parseFloat(item.xauPrice);
                 if(item.xagPrice)metalRatesUSD.AG=parseFloat(item.xagPrice);
+                if(metalRatesUSD.AU&&metalRatesUSD.AG){metalSource='goldprice.org';metalOk=true}
                 return metalRatesUSD.AU&&metalRatesUSD.AG;
             }
             return null;
         },
         async()=>{
             // Try alternative metals API
-            const data=await fetchJsonViaCors('https://www.goldapi.io/api/XAU/USD');
+            const r=await fetch('https://www.goldapi.io/api/XAU/USD');
+            if(!r.ok)return null;
+            const data=await r.json();
             if(data.price)metalRatesUSD.AU=parseFloat(data.price);
             // Fetch silver separately
-            const data2=await fetchJsonViaCors('https://www.goldapi.io/api/XAG/USD');
-            if(data2&&data2.price)metalRatesUSD.AG=parseFloat(data2.price);
+            const r2=await fetch('https://www.goldapi.io/api/XAG/USD');
+            if(r2.ok){
+                const data2=await r2.json();
+                if(data2.price)metalRatesUSD.AG=parseFloat(data2.price);
+            }
+            if(metalRatesUSD.AU&&metalRatesUSD.AG){metalSource='goldapi.io';metalOk=true}
             return metalRatesUSD.AU&&metalRatesUSD.AG;
         }
     ];
 
-    const fetchMetalRates=async()=>{
-        for(const fn of metalAttempts){
-            try{
-                const success=await fn();
-                if(success)break;
-            }catch(err){console.warn('metal API attempt failed:',err.message)}
-        }
-    };
-
-    const fetchFxRates=async()=>{
-        let fxOk=false;
-        // Try CORS-friendly CDN-based rates
+    for(const fn of metalAttempts){
         try{
-            const r=await fetchWithTimeout(fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/pln.json'),6000);
-            if(r.ok){
-                const j=await r.json();
-                if(j&&j.pln){
-                    exchangeRatesPLN={};
-                    Object.keys(j.pln).forEach(k=>exchangeRatesPLN[k.toUpperCase()]=j.pln[k]);
-                    fxOk=true;
-                }
-            }
-        }catch(e){console.warn('FX fetch (currency-api jsdelivr) failed',e)}
-        if(!fxOk){
-            try{
-                const r=await fetchWithTimeout(fetch('https://latest.currency-api.pages.dev/v1/currencies/pln.json'),6000);
-                if(r.ok){
-                    const j=await r.json();
-                    if(j&&j.pln){
-                        exchangeRatesPLN={};
-                        Object.keys(j.pln).forEach(k=>exchangeRatesPLN[k.toUpperCase()]=j.pln[k]);
-                        fxOk=true;
-                    }
-                }
-            }catch(e){console.warn('FX fetch (currency-api pages) failed',e)}
-        }
-        // Try primary API - exchangerate-api.com
-        if(!fxOk){
-            try{const r=await fetchWithTimeout(fetch('https://open.er-api.com/v6/latest/PLN'),6000);if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (open.er-api) failed',e)}
-        }
-        // Fallback to frankfurter.app (European Central Bank data)
-        if(!fxOk){
-            try{
-                const r=await fetchWithTimeout(fetch('https://api.frankfurter.app/latest?from=PLN'),6000);
-                if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}
-            }catch(e){console.warn('FX fetch (frankfurter) failed',e)}
-        }
-        // Fallback to exchangerate.host
-        if(!fxOk){
-            try{const r=await fetchWithTimeout(fetch('https://api.exchangerate.host/latest?base=PLN'),6000);if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true}}}catch(e){console.warn('FX fetch (exchangerate.host) failed',e)}
-        }
-        // Last resort: convert from USD base
-        if(!fxOk){
-            try{
-                const r=await fetchWithTimeout(fetch('https://api.frankfurter.app/latest?from=USD'),6000);
-                if(r.ok){const j=await r.json();if(j&&j.rates&&j.rates.PLN){exchangeRatesPLN={};Object.keys(j.rates).forEach(c=>exchangeRatesPLN[c]=j.rates[c]/j.rates.PLN);fxOk=true}}
-            }catch(e){console.warn('FX fetch (USD convert) failed',e)}
-        }
-    };
-
-    await Promise.all([fetchMetalRates(),fetchFxRates()]);
+            const success=await fn();
+            if(success)break;
+        }catch(err){console.warn('metal API attempt failed:',err.message)}
+    }
 
     // If still no metal rates, use fallback values
     if(!metalRatesUSD.AU||!metalRatesUSD.AG){
@@ -1777,6 +1734,32 @@ async function fetchRates(){
         }
     }
 
+
+    let fxOk=false;
+    let fxSource='';
+    // Try primary API - exchangerate-api.com
+    try{const r=await fetch('https://open.er-api.com/v6/latest/PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true;fxSource='open.er-api'}}}catch(e){console.warn('FX fetch (open.er-api) failed',e)}
+    // Fallback to frankfurter.app (European Central Bank data)
+    if(!fxOk){
+        try{
+            const r=await fetch('https://api.frankfurter.app/latest?from=PLN');
+            if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true;fxSource='frankfurter'}}
+        }catch(e){console.warn('FX fetch (frankfurter) failed',e)}
+    }
+    // Fallback to exchangerate.host
+    if(!fxOk){
+        try{const r=await fetch('https://api.exchangerate.host/latest?base=PLN');if(r.ok){const j=await r.json();if(j&&j.rates){exchangeRatesPLN=j.rates;fxOk=true;fxSource='exchangerate.host'}}}catch(e){console.warn('FX fetch (exchangerate.host) failed',e)}
+    }
+    // Last resort: convert from USD base
+    if(!fxOk){
+        try{
+            const r=await fetch('https://api.frankfurter.app/latest?from=USD');
+            if(r.ok){const j=await r.json();if(j&&j.rates&&j.rates.PLN){exchangeRatesPLN={};Object.keys(j.rates).forEach(c=>exchangeRatesPLN[c]=j.rates[c]/j.rates.PLN);fxOk=true;fxSource='frankfurter-usd'}}
+        }catch(e){console.warn('FX fetch (USD convert) failed',e)}
+    }
+    const metalStatus=metalOk?`metals ok${metalSource?` (${metalSource})`:''}`:'metals failed';
+    const fxStatus=fxOk?`FX ok${fxSource?` (${fxSource})`:''}`:'FX failed';
+    setFxStatus(`${fxStatus}, ${metalStatus}`,!fxOk);
     updateMetalInputs();
     updateGoldSilverRatio();
     updateOverviewTotals();

@@ -335,6 +335,8 @@
             </div>
             
             <button class="btn btn-refresh" id="refreshRatesBtn">🔄 Odśwież kursy</button>
+            <div id="fxStatus" style="text-align: center; font-size: 12px; color: #666; margin-top: 6px;">FX: idle</div>
+            <div id="buildStamp" style="text-align: center; font-size: 11px; color: #888; margin-top: 4px;">Build: 2026-02-17</div>
         </div>
 
         <div class="card hidden" id="resultCard">
@@ -432,22 +434,6 @@
 
         // Helper functions
         const $ = (s) => document.querySelector(s);
-        
-
-        async function fetchWithTimeout(promise, ms) {
-            return await Promise.race([
-                promise,
-                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
-            ]);
-        }
-
-        async function fetchJsonViaCors(url) {
-            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-            const r = await fetchWithTimeout(fetch(proxyUrl), 6000);
-            if (!r.ok) throw new Error('CORS proxy failed');
-            return r.json();
-        }
-
         function convertUSDToPLN(amount) {
             if (!exchangeRatesPLN || !exchangeRatesPLN.USD) return amount;
             return amount / exchangeRatesPLN.USD;
@@ -465,139 +451,124 @@
             return amountPLN * exchangeRatesPLN.USD;
         }
 
+        function setFxStatus(message, isError = false) {
+            const el = document.getElementById('fxStatus');
+            if (el) {
+                el.textContent = message;
+                el.style.color = isError ? '#c0392b' : '#27ae60';
+            }
+        }
+
         // Fetch rates from APIs
         async function fetchRates() {
+            setFxStatus('FX: fetching...');
+            let metalSource = '';
+            let metalOk = false;
+            let fxSource = '';
             const attempts = [
                 async () => {
-                    return await fetchJsonViaCors('https://api.metals.live/v1/spot');
+                    const r = await fetch('https://api.metals.live/v1/spot');
+                    if (r.ok) {
+                        metalSource = 'metals.live';
+                        return await r.json();
+                    }
+                    return null;
                 },
                 async () => {
-                    return await fetchJsonViaCors('https://data-asg.goldprice.org/dbXRates/USD');
+                    const r = await fetch('https://data-asg.goldprice.org/dbXRates/USD');
+                    if (r.ok) {
+                        metalSource = 'goldprice.org';
+                        return await r.json();
+                    }
+                    return null;
                 }
             ];
-
-            const fetchMetalRates = async () => {
-                for (const fn of attempts) {
-                    try {
-                        const data = await fn();
-                        if (!data) continue;
-                        
-                        if (Array.isArray(data)) {
-                            for (const it of data) {
-                                if (!it) continue;
-                                if (it.metal && it.price) {
-                                    const m = (it.metal || '').toLowerCase();
-                                    if (m.includes('gold')) metalRatesUSD.AU = parseFloat(it.price) || metalRatesUSD.AU;
-                                    if (m.includes('silver')) metalRatesUSD.AG = parseFloat(it.price) || metalRatesUSD.AG;
-                                } else {
-                                    if (it.gold) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(it.gold);
-                                    if (it.silver) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(it.silver);
-                                }
-                            }
-                        } else if (typeof data === 'object') {
-                            if (data.items && Array.isArray(data.items) && data.items.length) {
-                                const item = data.items[0];
-                                if (item.xauPrice) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(item.xauPrice);
-                                if (item.xagPrice) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(item.xagPrice);
+            
+            for (const fn of attempts) {
+                try {
+                    const data = await fn();
+                    if (!data) continue;
+                    
+                    if (Array.isArray(data)) {
+                        for (const it of data) {
+                            if (!it) continue;
+                            if (it.metal && it.price) {
+                                const m = (it.metal || '').toLowerCase();
+                                if (m.includes('gold')) metalRatesUSD.AU = parseFloat(it.price) || metalRatesUSD.AU;
+                                if (m.includes('silver')) metalRatesUSD.AG = parseFloat(it.price) || metalRatesUSD.AG;
                             } else {
-                                if (data.gold) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(data.gold);
-                                if (data.silver) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(data.silver);
+                                if (it.gold) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(it.gold);
+                                if (it.silver) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(it.silver);
                             }
                         }
-                        
-                        if (metalRatesUSD.AU && metalRatesUSD.AG) break;
-                    } catch (err) {
-                        console.warn('Metal rate fetch failed', err);
+                    } else if (typeof data === 'object') {
+                        if (data.items && Array.isArray(data.items) && data.items.length) {
+                            const item = data.items[0];
+                            if (item.xauPrice) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(item.xauPrice);
+                            if (item.xagPrice) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(item.xagPrice);
+                        } else {
+                            if (data.gold) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(data.gold);
+                            if (data.silver) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(data.silver);
+                        }
+                    }
+                    if (metalRatesUSD.AU && metalRatesUSD.AG) metalOk = true;
+                    if (metalRatesUSD.AU && metalRatesUSD.AG) break;
+                } catch (err) {
+                    console.warn('Metal rate fetch failed', err);
+                }
+            }
+            
+            // Fetch exchange rates
+            let fxOk = false;
+            try {
+                const r = await fetch('https://api.exchangerate.host/latest?base=PLN');
+                if (r.ok) {
+                    const j = await r.json();
+                    if (j && j.rates) {
+                        exchangeRatesPLN = j.rates;
+                        fxOk = true;
+                        fxSource = 'exchangerate.host';
                     }
                 }
-            };
-
-            const fetchFxRates = async () => {
-                let fxOk = false;
+            } catch (e) {
+                console.warn('FX fetch (base=PLN) failed', e);
+            }
+            
+            if (!fxOk) {
                 try {
-                    const j = await fetchJsonViaCors('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/pln.json');
-                    if (j && j.pln) {
-                        exchangeRatesPLN = {};
-                        Object.keys(j.pln).forEach(k => exchangeRatesPLN[k.toUpperCase()] = j.pln[k]);
-                        fxOk = true;
+                    const r = await fetch('https://api.exchangerate.host/latest');
+                    if (r.ok) {
+                        const j = await r.json();
+                        if (j && j.rates && j.rates.PLN) {
+                            exchangeRatesPLN = {};
+                            Object.keys(j.rates).forEach(c => exchangeRatesPLN[c] = j.rates[c] / j.rates.PLN);
+                            fxOk = true;
+                            fxSource = 'exchangerate.host (convert)';
+                        }
                     }
                 } catch (e) {
-                    console.warn('FX fetch (currency-api jsdelivr) failed', e);
+                    console.warn('FX fetch (convert) failed', e);
                 }
-                if (!fxOk) {
-                    try {
-                        const j = await fetchJsonViaCors('https://latest.currency-api.pages.dev/v1/currencies/pln.json');
-                        if (j && j.pln) {
-                            exchangeRatesPLN = {};
-                            Object.keys(j.pln).forEach(k => exchangeRatesPLN[k.toUpperCase()] = j.pln[k]);
-                            fxOk = true;
-                        }
-                    } catch (e) {
-                        console.warn('FX fetch (currency-api pages) failed', e);
-                    }
-                }
-                if (!fxOk) {
-                    try {
-                        const j = await fetchJsonViaCors('https://open.er-api.com/v6/latest/PLN');
-                        if (j && j.rates) {
-                            exchangeRatesPLN = j.rates;
-                            fxOk = true;
-                        }
-                    } catch (e) {
-                        console.warn('FX fetch (open.er-api) failed', e);
-                    }
-                }
-                if (!fxOk) {
-                    try {
-                        const j = await fetchJsonViaCors('https://api.frankfurter.app/latest?from=PLN');
-                        if (j && j.rates) {
-                            exchangeRatesPLN = j.rates;
-                            fxOk = true;
-                        }
-                    } catch (e) {
-                        console.warn('FX fetch (frankfurter) failed', e);
-                    }
-                }
-                if (!fxOk) {
-                    try {
-                        const j = await fetchJsonViaCors('https://api.exchangerate.host/latest?base=PLN');
-                        if (j && j.rates) {
-                            exchangeRatesPLN = j.rates;
-                            fxOk = true;
-                        }
-                    } catch (e) {
-                        console.warn('FX fetch (base=PLN) failed', e);
-                    }
-                }
-                if (!fxOk) {
-                    try {
-                        const j = await fetchJsonViaCors('https://api.exchangerate.host/latest');
-                        if (j && j.rates && j.rates.PLN) {
-                            exchangeRatesPLN = {};
-                            Object.keys(j.rates).forEach(c => exchangeRatesPLN[c] = j.rates[c] / j.rates.PLN);
-                            fxOk = true;
-                        }
-                    } catch (e) {
-                        console.warn('FX fetch (convert) failed', e);
-                    }
-                }
-                if (!fxOk) {
-                    try {
-                        const j = await fetchJsonViaCors('https://api.frankfurter.app/latest?from=USD');
-                        if (j && j.rates && j.rates.PLN) {
-                            exchangeRatesPLN = {};
-                            Object.keys(j.rates).forEach(c => exchangeRatesPLN[c] = j.rates[c] / j.rates.PLN);
-                            fxOk = true;
-                        }
-                    } catch (e) {
-                        console.warn('FX fetch (USD convert) failed', e);
-                    }
-                }
-            };
-
-            await Promise.all([fetchMetalRates(), fetchFxRates()]);
-
+            }
             
+            if (!fxOk) {
+                try {
+                    const r = await fetch('https://open.er-api.com/v6/latest/PLN');
+                    if (r.ok) {
+                        const j = await r.json();
+                        if (j && j.rates) {
+                            exchangeRatesPLN = j.rates;
+                            fxOk = true;
+                            fxSource = 'open.er-api';
+                        }
+                    }
+                } catch (e) {
+                    console.warn('FX fetch (open.er-api) failed', e);
+                }
+            }
+            const metalStatus = metalOk ? `metals ok${metalSource ? ` (${metalSource})` : ''}` : 'metals failed';
+            const fxStatus = fxOk ? `FX ok${fxSource ? ` (${fxSource})` : ''}` : 'FX failed';
+            setFxStatus(`${fxStatus}, ${metalStatus}`, !fxOk);
             console.log('Metal rates:', metalRatesUSD);
             console.log('Exchange rates:', exchangeRatesPLN);
             updateRateDisplay();
@@ -665,6 +636,108 @@
             // Scroll to result
             setTimeout(() => {
                 $('#resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+        
+        function calculateOneBid() {
+            const metal = $('#metalType').value || 'AG';
+            let purity = parseFloat(($('#purity').value || '').replace(',', '.')) || 0;
+            const weight = parseFloat(($('#weight').value || '').replace(',', '.')) || 0;
+            const auctionFee = parseFloat(($('#auctionFee').value || '').replace(',', '.')) || 0;
+            
+            // Validate purity range
+            if (purity > 1000) {
+                alert('⚠️ Próba nie może być większa niż 1000‰');
+                return;
+            }
+            
+            if (!purity || !weight || !auctionFee) {
+                alert('⚠️ Proszę wprowadzić próbę, wagę i opłatę aukcyjną');
+                return;
+            }
+            
+            const rate = metal === 'AU' ? metalRatesUSD.AU : metalRatesUSD.AG;
+            if (!rate) {
+                alert('⚠️ Kurs metalu niedostępny. Proszę odświeżyć kursy.');
+                return;
+            }
+            
+            // Calculate metal value
+            const purityDecimal = purity / 1000;
+            const pureWeight = weight * purityDecimal;
+            const ratePerGram = rate / 31.1034768;
+            const valueUSD = pureWeight * ratePerGram;
+            const valuePLN = convertUSDToPLN(valueUSD);
+            const valueEUR = convertPLNToEUR(valuePLN);
+            
+            // Calculate target bid: divide by (1 + fee%) to get the amount to bid
+            // Example: if metal value is 100 PLN and fee is 12%, bid = 100 / 1.12 = 89.29
+            // Then: 89.29 + (89.29 * 0.12) = 100 PLN total
+            const feeDivisor = 1 + (auctionFee / 100);
+            const targetBidPLN = valuePLN / feeDivisor;
+            const targetBidEUR = valueEUR / feeDivisor;
+            const targetBidUSD = valueUSD / feeDivisor;
+            
+            // Update display
+            $('#oneBidPureWeight').textContent = pureWeight.toFixed(2) + ' g';
+            $('#oneBidValuePLN').textContent = valuePLN.toFixed(2);
+            $('#oneBidValueEUR').textContent = valueEUR.toFixed(2);
+            $('#oneBidValueUSD').textContent = '$' + valueUSD.toFixed(2);
+            
+            $('#feePercentDisplay').textContent = auctionFee.toFixed(0);
+            $('#oneBidTargetPLN').textContent = targetBidPLN.toFixed(2) + ' PLN';
+            $('#oneBidTargetEUR').textContent = targetBidEUR.toFixed(2) + ' €';
+            $('#oneBidTargetUSD').textContent = '$' + targetBidUSD.toFixed(2);
+            
+            $('#oneBidResultCard').classList.remove('hidden');
+            $('#resultCard').classList.add('hidden');
+            $('#targetPriceCard').classList.add('hidden');
+            
+            // Scroll to result
+            setTimeout(() => {
+                $('#oneBidResultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        function calculateTargetPrice() {
+            if (!lastCalculatedValuePLN) {
+                alert('⚠️ Proszę najpierw obliczyć wartość monety');
+                return;
+            }
+            
+            const K = lastCalculatedValuePLN; // Base coin value
+            const T = 11.49; // Transport fee
+            
+            // Base price: X = 10000 * (K + T) / 9631
+            const targetPrice = (10000 * (K + T)) / 9631;
+            
+            // +10% margin: X = 10000 * (1.1*K + T) / 9631
+            const targetPrice10 = (10000 * (1.1 * K + T)) / 9631;
+            
+            // +20% margin: X = 10000 * (1.2*K + T) / 9631
+            const targetPrice20 = (10000 * (1.2 * K + T)) / 9631;
+            
+            // +30% margin: X = 10000 * (1.3*K + T) / 9631
+            const targetPrice30 = (10000 * (1.3 * K + T)) / 9631;
+            
+            // +40% margin: X = 10000 * (1.4*K + T) / 9631
+            const targetPrice40 = (10000 * (1.4 * K + T)) / 9631;
+            
+            // +50% margin: X = 10000 * (1.5*K + T) / 9631
+            const targetPrice50 = (10000 * (1.5 * K + T)) / 9631;
+            
+            $('#targetPrice').textContent = targetPrice.toFixed(2) + ' PLN';
+            $('#targetPrice10').textContent = targetPrice10.toFixed(2) + ' PLN';
+            $('#targetPrice20').textContent = targetPrice20.toFixed(2) + ' PLN';
+            $('#targetPrice30').textContent = targetPrice30.toFixed(2) + ' PLN';
+            $('#targetPrice40').textContent = targetPrice40.toFixed(2) + ' PLN';
+            $('#targetPrice50').textContent = targetPrice50.toFixed(2) + ' PLN';
+            
+            $('#targetPriceCard').classList.remove('hidden');
+            
+            // Scroll to target price result
+            setTimeout(() => {
+                $('#targetPriceCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
         }
         

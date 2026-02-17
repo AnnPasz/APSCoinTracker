@@ -1710,6 +1710,18 @@ async function fetchRates(){
             }
             if(metalRatesUSD.AU&&metalRatesUSD.AG){metalSource='goldapi.io';metalOk=true}
             return metalRatesUSD.AU&&metalRatesUSD.AG;
+        },
+        async()=>{
+            // Try CoinGecko token-backed metals (CORS-friendly)
+            const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold,kinesis-silver&vs_currencies=usd');
+            if(!r.ok)return null;
+            const data=await r.json();
+            const gold=data?.['pax-gold']?.usd;
+            const silver=data?.['kinesis-silver']?.usd;
+            if(gold)metalRatesUSD.AU=parseFloat(gold);
+            if(silver)metalRatesUSD.AG=parseFloat(silver);
+            if(metalRatesUSD.AU&&metalRatesUSD.AG){metalSource='coingecko (pax-gold/kinesis-silver)';metalOk=true}
+            return metalRatesUSD.AU&&metalRatesUSD.AG;
         }
     ];
 

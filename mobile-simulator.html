@@ -481,6 +481,12 @@
                         return await r.json();
                     }
                     return null;
+                },
+                async () => {
+                    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold,kinesis-silver&vs_currencies=usd');
+                    if (!r.ok) return null;
+                    metalSource = 'coingecko (pax-gold/kinesis-silver)';
+                    return await r.json();
                 }
             ];
             
@@ -509,6 +515,12 @@
                         } else {
                             if (data.gold) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(data.gold);
                             if (data.silver) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(data.silver);
+                            if (data['pax-gold'] && data['pax-gold'].usd) {
+                                metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(data['pax-gold'].usd);
+                            }
+                            if (data['kinesis-silver'] && data['kinesis-silver'].usd) {
+                                metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(data['kinesis-silver'].usd);
+                            }
                         }
                     }
                     if (metalRatesUSD.AU && metalRatesUSD.AG) metalOk = true;

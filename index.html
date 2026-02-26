@@ -44,21 +44,31 @@
             content: '↓';
             opacity: 1;
         }
-        #coinsTableMobile { width: 100%; border-collapse: collapse; }
-        #coinsTableMobile th {
-            background: #6c7ae0;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 10px 8px;
-            text-align: left;
+        .mobile-coin-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        #coinsTableMobile td {
-            padding: 10px 8px;
-            font-size: 12px;
-            border-bottom: 1px solid #eaeaea;
-            vertical-align: top;
+        .mobile-coin-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 6px;
         }
+        .mobile-coin-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .mobile-coin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 12px;
+        }
+        .mobile-coin-label { color: #777; font-weight: 600; }
+        .mobile-coin-value { color: #1d1d1f; font-weight: 600; }
         .filter-row th {
             padding: 8px 4px;
             background: rgba(255, 255, 255, 0.95);
@@ -535,40 +545,30 @@
                 <h2 style="margin: 0;">All Coins (Mobile)</h2>
                 <button id="mobileAllCoinsBackBtn" style="padding: 10px 16px; background: #666; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px;">← Back</button>
             </div>
-            <div class="table-wrapper">
-                <table id="coinsTableMobile">
-                    <thead>
-                        <tr>
-                            <th class="sortable" data-sort="coinName">Name</th>
-                            <th class="sortable" data-sort="coinCountry">Country</th>
-                            <th class="sortable" data-sort="coinYear">Year</th>
-                            <th class="sortable" data-sort="type">Type</th>
-                            <th class="sortable" data-sort="coinMaterial">Metal</th>
-                            <th class="sortable" data-sort="purchasePrice">Pur Price</th>
-                            <th class="sortable" data-sort="currentValue">Current PLN</th>
-                            <th class="sortable" data-sort="currentValueUSD">Current USD</th>
-                        </tr>
-                        <tr class="filter-row">
-                            <th><input type="text" id="filterNameMobile" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;"></th>
-                            <th><input type="text" id="filterCountryMobile" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;"></th>
-                            <th><input type="number" id="filterYearMobile" placeholder="Year..." style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;"></th>
-                            <th><input type="text" id="filterTypeMobile" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;"></th>
-                            <th>
-                                <select id="filterMaterialMobile" style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;">
-                                    <option value="">All</option>
-                                    <option value="Other">Other</option>
-                                    <option value="AG">AG</option>
-                                    <option value="AU">AU</option>
-                                </select>
-                            </th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="coinsBodyMobile"></tbody>
-                </table>
+            <div style="display: grid; gap: 10px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="text" id="filterNameMobile" placeholder="Name" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                    <input type="text" id="filterCountryMobile" placeholder="Country" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                    <input type="number" id="filterYearMobile" placeholder="Year" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                    <input type="text" id="filterTypeMobile" placeholder="Type" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                    <select id="filterMaterialMobile" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                        <option value="">Material</option>
+                        <option value="Other">Other</option>
+                        <option value="AG">AG</option>
+                        <option value="AU">AU</option>
+                    </select>
+                    <input type="date" id="filterPurchaseDateMobile" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <select id="filterSettledMobile" style="flex: 1; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                        <option value="">Settled?</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                    <button id="clearFiltersMobile" type="button" style="padding: 8px 12px; background: rgba(231, 76, 60, 0.9); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Clear</button>
+                </div>
             </div>
+            <div id="coinsCardsMobile" style="display: grid; gap: 12px; margin-top: 12px;"></div>
         </div>
             <div class="section" id="manage-types-section" style="display: none;">
                 <div style="background: rgba(255,255,255,0.95); border-radius: 16px; padding: 24px; margin-bottom: 20px;">
@@ -2028,8 +2028,8 @@ async function addType(t){
 }
 window.deleteType=async function(tn){const cu=coins.filter(c=>c.type===tn).length;if(cu>0){if(!confirm(`${cu} coin(s) use this type. Delete anyway?`))return;coins.forEach(c=>{if(c.type===tn)c.type=''});await saveCoins()}const l=(await loadTypes()).filter(t=>t!==tn);await saveTypes(l);populateTypeDropdown();renderTypesTable();renderCoinsTable()};
 async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.innerHTML='';const ts=await loadTypes();if(!ts.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:#999">No types defined</td></tr>';return}ts.forEach((t,i)=>{const cu=coins.filter(c=>c.type===t).length;const tr=document.createElement('tr');tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td style="font-weight:600">${t}</td><td>${cu} coin${cu!==1?'s':''}</td><td><button class="delete-btn" onclick="deleteType('${t.replace(/'/g,"\\'")}')">Delete</button></td>`;tb.appendChild(tr)})}
-function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="14" style="text-align:center;padding:40px">No coins</td></tr>';const mobileBody=$('#coinsBodyMobile');if(mobileBody)mobileBody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const usdValue=computeCurrentValueUSD(c);tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td><input type="checkbox" ${c.isChecked?'checked':''} onclick="event.stopPropagation();toggleChecked('${c.coinId}')"></td><td><input type="checkbox" ${c.isSettled?'checked':''} onclick="event.stopPropagation();toggleSettled('${c.coinId}')"></td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="font-weight:bold">${usdValue==null?'-':fmt(usdValue)+' USD'}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)});renderCoinsTableMobile(f)}
-function renderCoinsTableMobile(filtered){const tb=$('#coinsBodyMobile');if(!tb)return;tb.innerHTML='';const list=Array.isArray(filtered)?filtered:getFilteredAndSortedCoins();list.forEach(c=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const usdValue=computeCurrentValueUSD(c);tr.innerHTML=`<td style="font-weight:600">${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td>${c.purchasePrice||'-'}</td><td>${fmt(computeCurrentValuePLN(c))}</td><td>${usdValue==null?'-':fmt(usdValue)}</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)})}
+function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="14" style="text-align:center;padding:40px">No coins</td></tr>';const cards=$('#coinsCardsMobile');if(cards)cards.innerHTML='<div style="text-align:center;padding:24px;color:#666">No coins</div>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const usdValue=computeCurrentValueUSD(c);tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td><input type="checkbox" ${c.isChecked?'checked':''} onclick="event.stopPropagation();toggleChecked('${c.coinId}')"></td><td><input type="checkbox" ${c.isSettled?'checked':''} onclick="event.stopPropagation();toggleSettled('${c.coinId}')"></td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="font-weight:bold">${usdValue==null?'-':fmt(usdValue)+' USD'}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)});renderCoinsTableMobile(f)}
+function renderCoinsTableMobile(filtered){const cards=$('#coinsCardsMobile');if(!cards)return;cards.innerHTML='';const list=Array.isArray(filtered)?filtered:getFilteredAndSortedCoins();list.forEach(c=>{const card=document.createElement('div');card.className='mobile-coin-card';card.dataset.coinId=c.coinId;const usdValue=computeCurrentValueUSD(c);card.innerHTML=`<div class="mobile-coin-title">${c.coinName||'-'}</div><div class="mobile-coin-meta">${c.coinCountry||'-'} • ${c.coinYear||'-'} • ${c.type||'-'}</div><div class="mobile-coin-grid"><div><div class="mobile-coin-label">Metal</div><div class="mobile-coin-value">${c.coinMaterial||'-'}</div></div><div><div class="mobile-coin-label">Pur Price</div><div class="mobile-coin-value">${c.purchasePrice||'-'}</div></div><div><div class="mobile-coin-label">Current PLN</div><div class="mobile-coin-value">${fmt(computeCurrentValuePLN(c))}</div></div><div><div class="mobile-coin-label">Current USD</div><div class="mobile-coin-value">${usdValue==null?'-':fmt(usdValue)}</div></div></div>`;card.addEventListener('click',function(){viewCoin(c.coinId)});cards.appendChild(card)})}
 function getFilteredAndSortedCoins(){
     const val=(id,mobileId)=>{const v=$(`#${id}`)?.value||'';if(v)return v;return $(`#${mobileId}`)?.value||''};
     const nf=(val('filterName','filterNameMobile')||'').toLowerCase();

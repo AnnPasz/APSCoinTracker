@@ -44,6 +44,27 @@
             content: '↓';
             opacity: 1;
         }
+        .mobile-only { display: none; }
+        .desktop-only { display: block; }
+        @media (max-width: 768px) {
+            .desktop-only { display: none; }
+            .mobile-only { display: block; }
+            #coinsTableMobile { width: 100%; border-collapse: collapse; }
+            #coinsTableMobile th {
+                background: #6c7ae0;
+                color: white;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 10px 8px;
+                text-align: left;
+            }
+            #coinsTableMobile td {
+                padding: 10px 8px;
+                font-size: 12px;
+                border-bottom: 1px solid #eaeaea;
+                vertical-align: top;
+            }
+        }
         .filter-row th {
             padding: 8px 4px;
             background: rgba(255, 255, 255, 0.95);
@@ -459,7 +480,7 @@
                         <button id="addCoinFromListBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">➕ ADD COIN</button>
                     </div>
                 </div>
-                <div class="table-wrapper">
+                <div class="table-wrapper desktop-only">
                     <table id="coinsTable">
                         <thead>
                             <tr>
@@ -510,6 +531,23 @@
                             </tr>
                         </thead>
                         <tbody id="coinsBody"></tbody>
+                    </table>
+                </div>
+                <div class="table-wrapper mobile-only">
+                    <table id="coinsTableMobile">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="coinName">Name</th>
+                                <th class="sortable" data-sort="coinCountry">Country</th>
+                                <th class="sortable" data-sort="coinYear">Year</th>
+                                <th class="sortable" data-sort="type">Type</th>
+                                <th class="sortable" data-sort="coinMaterial">Metal</th>
+                                <th class="sortable" data-sort="purchasePrice">Pur Price</th>
+                                <th class="sortable" data-sort="currentValue">Current PLN</th>
+                                <th class="sortable" data-sort="currentValueUSD">Current USD</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coinsBodyMobile"></tbody>
                     </table>
                 </div>
             </div>
@@ -1969,7 +2007,8 @@ async function addType(t){
 }
 window.deleteType=async function(tn){const cu=coins.filter(c=>c.type===tn).length;if(cu>0){if(!confirm(`${cu} coin(s) use this type. Delete anyway?`))return;coins.forEach(c=>{if(c.type===tn)c.type=''});await saveCoins()}const l=(await loadTypes()).filter(t=>t!==tn);await saveTypes(l);populateTypeDropdown();renderTypesTable();renderCoinsTable()};
 async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.innerHTML='';const ts=await loadTypes();if(!ts.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:#999">No types defined</td></tr>';return}ts.forEach((t,i)=>{const cu=coins.filter(c=>c.type===t).length;const tr=document.createElement('tr');tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td style="font-weight:600">${t}</td><td>${cu} coin${cu!==1?'s':''}</td><td><button class="delete-btn" onclick="deleteType('${t.replace(/'/g,"\\'")}')">Delete</button></td>`;tb.appendChild(tr)})}
-function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="14" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const usdValue=computeCurrentValueUSD(c);tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td><input type="checkbox" ${c.isChecked?'checked':''} onclick="event.stopPropagation();toggleChecked('${c.coinId}')"></td><td><input type="checkbox" ${c.isSettled?'checked':''} onclick="event.stopPropagation();toggleSettled('${c.coinId}')"></td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="font-weight:bold">${usdValue==null?'-':fmt(usdValue)+' USD'}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)})}
+function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="14" style="text-align:center;padding:40px">No coins</td></tr>';const mobileBody=$('#coinsBodyMobile');if(mobileBody)mobileBody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const usdValue=computeCurrentValueUSD(c);tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td><input type="checkbox" ${c.isChecked?'checked':''} onclick="event.stopPropagation();toggleChecked('${c.coinId}')"></td><td><input type="checkbox" ${c.isSettled?'checked':''} onclick="event.stopPropagation();toggleSettled('${c.coinId}')"></td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="font-weight:bold">${usdValue==null?'-':fmt(usdValue)+' USD'}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)});renderCoinsTableMobile(f)}
+function renderCoinsTableMobile(filtered){const tb=$('#coinsBodyMobile');if(!tb)return;tb.innerHTML='';const list=Array.isArray(filtered)?filtered:getFilteredAndSortedCoins();list.forEach(c=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const usdValue=computeCurrentValueUSD(c);tr.innerHTML=`<td style="font-weight:600">${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td>${c.purchasePrice||'-'}</td><td>${fmt(computeCurrentValuePLN(c))}</td><td>${usdValue==null?'-':fmt(usdValue)}</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)})}
 function getFilteredAndSortedCoins(){const nf=($('#filterName')?.value||'').toLowerCase();const cf=($('#filterCountry')?.value||'').toLowerCase();const yf=$('#filterYear')?.value||'';const tf=($('#filterType')?.value||'').toLowerCase();const mf=$('#filterMaterial')?.value||'';const pf=$('#filterPurity')?.value||'';const sf=$('#filterSettled')?.value||'';const df=$('#filterPurchaseDate')?.value||'';let fil=coins.filter(c=>{if(nf&&!(c.coinName||'').toLowerCase().includes(nf))return false;if(cf&&!(c.coinCountry||'').toLowerCase().includes(cf))return false;if(yf&&c.coinYear!=yf)return false;if(tf&&!(c.type||'').toLowerCase().includes(tf))return false;if(mf&&c.coinMaterial!==mf)return false;if(pf&&c.coinMetalContent!=pf)return false;if(sf){const isSettled=!!c.isSettled;if(sf==='true'&&!isSettled)return false;if(sf==='false'&&isSettled)return false}if(df&&c.purchaseDate!==df)return false;return true});fil.sort((a,b)=>{let vA,vB;if(currentSortBy==='currentValue'){vA=computeCurrentValuePLN(a);vB=computeCurrentValuePLN(b)}else if(currentSortBy==='currentValueUSD'){vA=computeCurrentValueUSD(a)||0;vB=computeCurrentValueUSD(b)||0}else if(currentSortBy==='gain'){vA=computeCurrentValuePLN(a)-costBasisPLN(a);vB=computeCurrentValuePLN(b)-costBasisPLN(b)}else if(currentSortBy==='coinYear'||currentSortBy==='purchasePrice'){vA=parseFloat(a[currentSortBy])||0;vB=parseFloat(b[currentSortBy])||0}else if(currentSortBy==='purchaseDate'){vA=a.purchaseDate||'';vB=b.purchaseDate||''}else{vA=(a[currentSortBy]||'').toString().toLowerCase();vB=(b[currentSortBy]||'').toString().toLowerCase()}if(vA<vB)return currentSortOrder==='asc'?-1:1;if(vA>vB)return currentSortOrder==='asc'?1:-1;return 0});return fil}
 
 function renderSoldCoinsTable(){

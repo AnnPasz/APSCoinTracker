@@ -175,7 +175,7 @@
                         🔄 Refresh FX Rates
                     </button>
                     <div id="fxStatus" style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 8px;">FX: idle</div>
-                    <div id="buildStamp" style="text-align: center; font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 6px;">Build: 2026-02-17</div>
+                    <div id="buildStamp" style="text-align: center; font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 6px;">Build: 2026-02-17a</div>
                 </div>
             </nav>
         </aside>
@@ -475,6 +475,7 @@
                                 <th class="sortable" data-sort="purchaseDate">Purchase Date</th>
                                 <th class="sortable" data-sort="purchasePrice" style="font-weight: bold;">Purchase Price</th>
                                 <th class="sortable" data-sort="currentValue" style="font-weight: bold;">Current Value</th>
+                                <th class="sortable" data-sort="currentValueUSD" style="font-weight: bold;">Current Value USD</th>
                                 <th class="sortable" data-sort="gain">Gain/Loss</th>
                             </tr>
                             <tr class="filter-row">
@@ -501,6 +502,7 @@
                                     </select>
                                 </th>
                                 <th><input type="date" id="filterPurchaseDate" style="width: 100%; padding: 4px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -1779,6 +1781,7 @@ async function fetchRates(){
 }
 function convertToPLN(a,c){if(!a)return 0;if(!c||c==='PLN')return Number(a);if(exchangeRatesPLN&&exchangeRatesPLN[c])return a/exchangeRatesPLN[c];return Number(a)}
 function convertUSDToPLN(a){if(!exchangeRatesPLN||!exchangeRatesPLN.USD)return a;return a/exchangeRatesPLN.USD}
+function convertPLNToUSD(a){if(!exchangeRatesPLN||!exchangeRatesPLN.USD)return null;return a*exchangeRatesPLN.USD}
 function costBasisPLN(c){return convertToPLN(parseFloat(c.purchasePrice)||0,c.purchaseCurrency||'PLN')}
 function computeCurrentValuePLN(c){
     const m=(c.coinMaterial||'Other').toUpperCase();
@@ -1806,6 +1809,11 @@ function computeCurrentValuePLN(c){
     // For non-precious metals or missing data, use cost basis
     console.log(`📌 ${c.coinName}: Using cost basis ${costBasisPLN(c).toFixed(2)} PLN`);
     return costBasisPLN(c);
+}
+function computeCurrentValueUSD(c){
+    const pln=computeCurrentValuePLN(c);
+    const usd=convertPLNToUSD(pln);
+    return usd==null?null:usd;
 }
 function calculateSoldCoinsProfitLoss(){
     if(!window.soldCoins||window.soldCoins.length===0)return 0;
@@ -1961,8 +1969,8 @@ async function addType(t){
 }
 window.deleteType=async function(tn){const cu=coins.filter(c=>c.type===tn).length;if(cu>0){if(!confirm(`${cu} coin(s) use this type. Delete anyway?`))return;coins.forEach(c=>{if(c.type===tn)c.type=''});await saveCoins()}const l=(await loadTypes()).filter(t=>t!==tn);await saveTypes(l);populateTypeDropdown();renderTypesTable();renderCoinsTable()};
 async function renderTypesTable(){const tb=$('#typesBody');if(!tb)return;tb.innerHTML='';const ts=await loadTypes();if(!ts.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:#999">No types defined</td></tr>';return}ts.forEach((t,i)=>{const cu=coins.filter(c=>c.type===t).length;const tr=document.createElement('tr');tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td style="font-weight:600">${t}</td><td>${cu} coin${cu!==1?'s':''}</td><td><button class="delete-btn" onclick="deleteType('${t.replace(/'/g,"\\'")}')">Delete</button></td>`;tb.appendChild(tr)})}
-function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td><input type="checkbox" ${c.isChecked?'checked':''} onclick="event.stopPropagation();toggleChecked('${c.coinId}')"></td><td><input type="checkbox" ${c.isSettled?'checked':''} onclick="event.stopPropagation();toggleSettled('${c.coinId}')"></td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)})}
-function getFilteredAndSortedCoins(){const nf=($('#filterName')?.value||'').toLowerCase();const cf=($('#filterCountry')?.value||'').toLowerCase();const yf=$('#filterYear')?.value||'';const tf=($('#filterType')?.value||'').toLowerCase();const mf=$('#filterMaterial')?.value||'';const pf=$('#filterPurity')?.value||'';const sf=$('#filterSettled')?.value||'';const df=$('#filterPurchaseDate')?.value||'';let fil=coins.filter(c=>{if(nf&&!(c.coinName||'').toLowerCase().includes(nf))return false;if(cf&&!(c.coinCountry||'').toLowerCase().includes(cf))return false;if(yf&&c.coinYear!=yf)return false;if(tf&&!(c.type||'').toLowerCase().includes(tf))return false;if(mf&&c.coinMaterial!==mf)return false;if(pf&&c.coinMetalContent!=pf)return false;if(sf){const isSettled=!!c.isSettled;if(sf==='true'&&!isSettled)return false;if(sf==='false'&&isSettled)return false}if(df&&c.purchaseDate!==df)return false;return true});fil.sort((a,b)=>{let vA,vB;if(currentSortBy==='currentValue'){vA=computeCurrentValuePLN(a);vB=computeCurrentValuePLN(b)}else if(currentSortBy==='gain'){vA=computeCurrentValuePLN(a)-costBasisPLN(a);vB=computeCurrentValuePLN(b)-costBasisPLN(b)}else if(currentSortBy==='coinYear'||currentSortBy==='purchasePrice'){vA=parseFloat(a[currentSortBy])||0;vB=parseFloat(b[currentSortBy])||0}else if(currentSortBy==='purchaseDate'){vA=a.purchaseDate||'';vB=b.purchaseDate||''}else{vA=(a[currentSortBy]||'').toString().toLowerCase();vB=(b[currentSortBy]||'').toString().toLowerCase()}if(vA<vB)return currentSortOrder==='asc'?-1:1;if(vA>vB)return currentSortOrder==='asc'?1:-1;return 0});return fil}
+function renderCoinsTable(){const tb=$('#coinsBody');if(!tb)return;tb.innerHTML='';let f=getFilteredAndSortedCoins();if(!f.length){tb.innerHTML='<tr><td colspan="14" style="text-align:center;padding:40px">No coins</td></tr>';return}f.forEach((c,i)=>{const tr=document.createElement('tr');tr.dataset.coinId=c.coinId;tr.style.cursor='pointer';if(c.isNumismatic){tr.style.background='rgba(155,89,182,0.08)'}const purityStyle=(!c.coinMetalContent&&(c.coinMaterial==='AG'||c.coinMaterial==='AU'))?'background:#fff3cd;font-weight:bold':'';const usdValue=computeCurrentValueUSD(c);tr.innerHTML=`<td style="font-weight:bold;color:#666">${i+1}</td><td>${c.coinName||'-'}</td><td>${c.coinCountry||'-'}</td><td>${c.coinYear||'-'}</td><td>${c.type||'-'}</td><td>${c.coinMaterial||'-'}</td><td style="${purityStyle}">${c.coinMetalContent||'<span style="color:red;font-weight:bold">⚠️ MISSING</span>'}</td><td><input type="checkbox" ${c.isChecked?'checked':''} onclick="event.stopPropagation();toggleChecked('${c.coinId}')"></td><td><input type="checkbox" ${c.isSettled?'checked':''} onclick="event.stopPropagation();toggleSettled('${c.coinId}')"></td><td>${c.purchaseDate||'-'}</td><td style="font-weight:bold">${c.purchasePrice||'-'}</td><td style="font-weight:bold">${fmt(computeCurrentValuePLN(c))}</td><td style="font-weight:bold">${usdValue==null?'-':fmt(usdValue)+' USD'}</td><td style="color:${(computeCurrentValuePLN(c)-costBasisPLN(c))<0?'red':'green'}">${fmt(computeCurrentValuePLN(c)-costBasisPLN(c))} PLN</td>`;tr.addEventListener('click',function(){viewCoin(c.coinId)});tb.appendChild(tr)})}
+function getFilteredAndSortedCoins(){const nf=($('#filterName')?.value||'').toLowerCase();const cf=($('#filterCountry')?.value||'').toLowerCase();const yf=$('#filterYear')?.value||'';const tf=($('#filterType')?.value||'').toLowerCase();const mf=$('#filterMaterial')?.value||'';const pf=$('#filterPurity')?.value||'';const sf=$('#filterSettled')?.value||'';const df=$('#filterPurchaseDate')?.value||'';let fil=coins.filter(c=>{if(nf&&!(c.coinName||'').toLowerCase().includes(nf))return false;if(cf&&!(c.coinCountry||'').toLowerCase().includes(cf))return false;if(yf&&c.coinYear!=yf)return false;if(tf&&!(c.type||'').toLowerCase().includes(tf))return false;if(mf&&c.coinMaterial!==mf)return false;if(pf&&c.coinMetalContent!=pf)return false;if(sf){const isSettled=!!c.isSettled;if(sf==='true'&&!isSettled)return false;if(sf==='false'&&isSettled)return false}if(df&&c.purchaseDate!==df)return false;return true});fil.sort((a,b)=>{let vA,vB;if(currentSortBy==='currentValue'){vA=computeCurrentValuePLN(a);vB=computeCurrentValuePLN(b)}else if(currentSortBy==='currentValueUSD'){vA=computeCurrentValueUSD(a)||0;vB=computeCurrentValueUSD(b)||0}else if(currentSortBy==='gain'){vA=computeCurrentValuePLN(a)-costBasisPLN(a);vB=computeCurrentValuePLN(b)-costBasisPLN(b)}else if(currentSortBy==='coinYear'||currentSortBy==='purchasePrice'){vA=parseFloat(a[currentSortBy])||0;vB=parseFloat(b[currentSortBy])||0}else if(currentSortBy==='purchaseDate'){vA=a.purchaseDate||'';vB=b.purchaseDate||''}else{vA=(a[currentSortBy]||'').toString().toLowerCase();vB=(b[currentSortBy]||'').toString().toLowerCase()}if(vA<vB)return currentSortOrder==='asc'?-1:1;if(vA>vB)return currentSortOrder==='asc'?1:-1;return 0});return fil}
 
 function renderSoldCoinsTable(){
     const tbody=document.getElementById('soldCoinsBody');

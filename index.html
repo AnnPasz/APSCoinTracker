@@ -535,29 +535,6 @@
                 <h2 style="margin: 0;">All Coins (Mobile)</h2>
                 <button id="mobileAllCoinsBackBtn" style="padding: 10px 16px; background: #666; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px;">← Back</button>
             </div>
-            <div style="background: rgba(255,255,255,0.95); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <input type="text" id="filterNameMobile" placeholder="Name" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
-                    <input type="text" id="filterCountryMobile" placeholder="Country" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
-                    <input type="number" id="filterYearMobile" placeholder="Year" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
-                    <input type="text" id="filterTypeMobile" placeholder="Type" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
-                    <select id="filterMaterialMobile" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
-                        <option value="">Material</option>
-                        <option value="Other">Other</option>
-                        <option value="AG">AG</option>
-                        <option value="AU">AU</option>
-                    </select>
-                    <input type="date" id="filterPurchaseDateMobile" style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
-                </div>
-                <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <select id="filterSettledMobile" style="flex: 1; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px;">
-                        <option value="">Settled?</option>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                    <button id="clearFiltersMobile" type="button" style="padding: 8px 12px; background: rgba(231, 76, 60, 0.9); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">Clear</button>
-                </div>
-            </div>
             <div class="table-wrapper">
                 <table id="coinsTableMobile">
                     <thead>
@@ -570,6 +547,23 @@
                             <th class="sortable" data-sort="purchasePrice">Pur Price</th>
                             <th class="sortable" data-sort="currentValue">Current PLN</th>
                             <th class="sortable" data-sort="currentValueUSD">Current USD</th>
+                        </tr>
+                        <tr class="filter-row">
+                            <th><input type="text" id="filterNameMobile" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                            <th><input type="text" id="filterCountryMobile" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                            <th><input type="number" id="filterYearMobile" placeholder="Year..." style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                            <th><input type="text" id="filterTypeMobile" placeholder="Filter..." style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;"></th>
+                            <th>
+                                <select id="filterMaterialMobile" style="width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <option value="">All</option>
+                                    <option value="Other">Other</option>
+                                    <option value="AG">AG</option>
+                                    <option value="AU">AU</option>
+                                </select>
+                            </th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="coinsBodyMobile"></tbody>

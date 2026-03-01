@@ -467,6 +467,14 @@
             let fxSource = '';
             const attempts = [
                 async () => {
+                    const key = localStorage.getItem('metalprice_api_key');
+                    if (!key) return null;
+                    const r = await fetch(`https://api.metalpriceapi.com/v1/latest?api_key=${encodeURIComponent(key)}&base=USD&currencies=XAU,XAG`);
+                    if (!r.ok) return null;
+                    metalSource = 'metalpriceapi.com';
+                    return await r.json();
+                },
+                async () => {
                     const r = await fetch('https://api.metals.live/v1/spot');
                     if (r.ok) {
                         metalSource = 'metals.live';
@@ -509,6 +517,13 @@
                         } else {
                             if (data.gold) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(data.gold);
                             if (data.silver) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(data.silver);
+                            if (data.rates) {
+                                Object.entries(data.rates).forEach(([k, v]) => {
+                                    const keyUpper = String(k).toUpperCase();
+                                    if (keyUpper.includes('XAU')) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(v);
+                                    if (keyUpper.includes('XAG')) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(v);
+                                });
+                            }
                         }
                     }
                     if (metalRatesUSD.AU && metalRatesUSD.AG) metalOk = true;

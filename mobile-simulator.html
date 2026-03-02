@@ -517,13 +517,15 @@
                         } else {
                             if (data.gold) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(data.gold);
                             if (data.silver) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(data.silver);
-                            if (data.rates) {
-                                Object.entries(data.rates).forEach(([k, v]) => {
-                                    const keyUpper = String(k).toUpperCase();
-                                    if (keyUpper.includes('XAU')) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(v);
-                                    if (keyUpper.includes('XAG')) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(v);
-                                });
-                            }
+                                if (data.rates) {
+                                    Object.entries(data.rates).forEach(([k, v]) => {
+                                        const keyUpper = String(k).toUpperCase();
+                                        const rate = parseFloat(v);
+                                        if (!rate || !isFinite(rate)) continue;
+                                        if (keyUpper.includes('XAU')) metalRatesUSD.AU = rate < 1 ? 1 / rate : rate;
+                                        if (keyUpper.includes('XAG')) metalRatesUSD.AG = rate < 1 ? 1 / rate : rate;
+                                    });
+                                }
                         }
                     }
                     if (metalRatesUSD.AU && metalRatesUSD.AG) metalOk = true;

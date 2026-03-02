@@ -1752,8 +1752,10 @@ async function fetchRates(){
                 const entries=Object.entries(data.rates);
                 for(const [k,v] of entries){
                     const keyUpper=String(k).toUpperCase();
-                    if(keyUpper.includes('XAU')) metalRatesUSD.AU=parseFloat(v);
-                    if(keyUpper.includes('XAG')) metalRatesUSD.AG=parseFloat(v);
+                    const rate=parseFloat(v);
+                    if(!rate||!isFinite(rate))continue;
+                    if(keyUpper.includes('XAU')) metalRatesUSD.AU=rate<1?1/rate:rate;
+                    if(keyUpper.includes('XAG')) metalRatesUSD.AG=rate<1?1/rate:rate;
                 }
                 if(metalRatesUSD.AU&&metalRatesUSD.AG){metalSource='metalpriceapi.com';metalOk=true}
                 return metalRatesUSD.AU&&metalRatesUSD.AG;

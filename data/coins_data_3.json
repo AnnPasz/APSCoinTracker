@@ -290,5 +290,25 @@
     "withJJU": false,
     "isSettled": true,
     "isChecked": true
+  },
+  {
+    "coinId": "CMMGAEWC5VBIP",
+    "coinName": "Walking Liberty",
+    "coinCountry": "USA",
+    "coinYear": "2001",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "380",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-03-07",
+    "comments": "Bytom",
+    "isNumismatic": false,
+    "withJJU": false,
+    "isSettled": true,
+    "isChecked": true
   }
 ]

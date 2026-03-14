@@ -518,13 +518,15 @@
                             if (data.gold) metalRatesUSD.AU = metalRatesUSD.AU || parseFloat(data.gold);
                             if (data.silver) metalRatesUSD.AG = metalRatesUSD.AG || parseFloat(data.silver);
                                 if (data.rates) {
-                                    Object.entries(data.rates).forEach(([k, v]) => {
+                                    for (const [k, v] of Object.entries(data.rates)) {
                                         const keyUpper = String(k).toUpperCase();
                                         const rate = parseFloat(v);
-                                        if (!rate || !isFinite(rate)) continue;
+                                        if (!rate || !isFinite(rate)) {
+                                            continue;
+                                        }
                                         if (keyUpper.includes('XAU')) metalRatesUSD.AU = rate < 1 ? 1 / rate : rate;
                                         if (keyUpper.includes('XAG')) metalRatesUSD.AG = rate < 1 ? 1 / rate : rate;
-                                    });
+                                    }
                                 }
                         }
                     }
@@ -535,52 +537,68 @@
                 }
             }
             
-            // Fetch exchange rates
+            // Fetch exchange rates (same order as main app)
             let fxOk = false;
             try {
-                const r = await fetch('https://api.exchangerate.host/latest?base=PLN');
+                const r = await fetch('https://open.er-api.com/v6/latest/PLN');
                 if (r.ok) {
                     const j = await r.json();
                     if (j && j.rates) {
                         exchangeRatesPLN = j.rates;
                         fxOk = true;
-                        fxSource = 'exchangerate.host';
+                        fxSource = 'open.er-api';
                     }
                 }
             } catch (e) {
-                console.warn('FX fetch (base=PLN) failed', e);
+                console.warn('FX fetch (open.er-api) failed', e);
             }
-            
+
             if (!fxOk) {
                 try {
-                    const r = await fetch('https://api.exchangerate.host/latest');
+                    const r = await fetch('https://api.frankfurter.app/latest?from=PLN');
+                    if (r.ok) {
+                        const j = await r.json();
+                        if (j && j.rates) {
+                            exchangeRatesPLN = j.rates;
+                            fxOk = true;
+                            fxSource = 'frankfurter';
+                        }
+                    }
+                } catch (e) {
+                    console.warn('FX fetch (frankfurter) failed', e);
+                }
+            }
+
+            if (!fxOk) {
+                try {
+                    const r = await fetch('https://api.exchangerate.host/latest?base=PLN');
+                    if (r.ok) {
+                        const j = await r.json();
+                        if (j && j.rates) {
+                            exchangeRatesPLN = j.rates;
+                            fxOk = true;
+                            fxSource = 'exchangerate.host';
+                        }
+                    }
+                } catch (e) {
+                    console.warn('FX fetch (exchangerate.host) failed', e);
+                }
+            }
+
+            if (!fxOk) {
+                try {
+                    const r = await fetch('https://api.frankfurter.app/latest?from=USD');
                     if (r.ok) {
                         const j = await r.json();
                         if (j && j.rates && j.rates.PLN) {
                             exchangeRatesPLN = {};
                             Object.keys(j.rates).forEach(c => exchangeRatesPLN[c] = j.rates[c] / j.rates.PLN);
                             fxOk = true;
-                            fxSource = 'exchangerate.host (convert)';
+                            fxSource = 'frankfurter-usd';
                         }
                     }
                 } catch (e) {
-                    console.warn('FX fetch (convert) failed', e);
-                }
-            }
-            
-            if (!fxOk) {
-                try {
-                    const r = await fetch('https://open.er-api.com/v6/latest/PLN');
-                    if (r.ok) {
-                        const j = await r.json();
-                        if (j && j.rates) {
-                            exchangeRatesPLN = j.rates;
-                            fxOk = true;
-                            fxSource = 'open.er-api';
-                        }
-                    }
-                } catch (e) {
-                    console.warn('FX fetch (open.er-api) failed', e);
+                    console.warn('FX fetch (USD convert) failed', e);
                 }
             }
             const metalStatus = metalOk ? `metals ok${metalSource ? ` (${metalSource})` : ''}` : 'metals failed';

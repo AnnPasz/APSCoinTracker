@@ -336,6 +336,8 @@
             
             <button class="btn btn-refresh" id="refreshRatesBtn">🔄 Odśwież kursy</button>
             <div id="fxStatus" style="text-align: center; font-size: 12px; color: #666; margin-top: 6px;">FX: idle</div>
+            <button id="fxDebugToggleBtn" style="margin: 8px auto 0; display: block; background: none; border: none; color: #4ecdc4; font-size: 12px; cursor: pointer;">Pokaż debug FX</button>
+            <div id="fxDebugPanel" style="display: none; margin-top: 8px; padding: 10px; border-radius: 8px; background: #f7f7f9; border: 1px solid #e0e0e0; font-size: 11px; color: #444; white-space: pre-wrap; word-break: break-word;"></div>
             <div id="buildStamp" style="text-align: center; font-size: 11px; color: #888; margin-top: 4px;">Build: 2026-02-17a</div>
         </div>
 
@@ -451,12 +453,23 @@
             return amountPLN * exchangeRatesPLN.USD;
         }
 
+        const fxDebugLines = [];
+
+        function appendFxDebug(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            fxDebugLines.push(`[${timestamp}] ${message}`);
+            if (fxDebugLines.length > 30) fxDebugLines.shift();
+            const panel = document.getElementById('fxDebugPanel');
+            if (panel) panel.textContent = fxDebugLines.join('\n');
+        }
+
         function setFxStatus(message, isError = false) {
             const el = document.getElementById('fxStatus');
             if (el) {
                 el.textContent = message;
                 el.style.color = isError ? '#c0392b' : '#27ae60';
             }
+            appendFxDebug(message);
         }
 
         // Fetch rates from APIs
@@ -547,10 +560,12 @@
                         exchangeRatesPLN = j.rates;
                         fxOk = true;
                         fxSource = 'open.er-api';
+                        appendFxDebug('open.er-api ok');
                     }
                 }
             } catch (e) {
                 console.warn('FX fetch (open.er-api) failed', e);
+                appendFxDebug(`open.er-api failed: ${e?.message || e}`);
             }
 
             if (!fxOk) {
@@ -562,10 +577,12 @@
                             exchangeRatesPLN = j.rates;
                             fxOk = true;
                             fxSource = 'frankfurter';
+                            appendFxDebug('frankfurter ok');
                         }
                     }
                 } catch (e) {
                     console.warn('FX fetch (frankfurter) failed', e);
+                    appendFxDebug(`frankfurter failed: ${e?.message || e}`);
                 }
             }
 
@@ -578,10 +595,12 @@
                             exchangeRatesPLN = j.rates;
                             fxOk = true;
                             fxSource = 'exchangerate.host';
+                            appendFxDebug('exchangerate.host ok');
                         }
                     }
                 } catch (e) {
                     console.warn('FX fetch (exchangerate.host) failed', e);
+                    appendFxDebug(`exchangerate.host failed: ${e?.message || e}`);
                 }
             }
 
@@ -595,10 +614,12 @@
                             Object.keys(j.rates).forEach(c => exchangeRatesPLN[c] = j.rates[c] / j.rates.PLN);
                             fxOk = true;
                             fxSource = 'frankfurter-usd';
+                            appendFxDebug('frankfurter-usd ok');
                         }
                     }
                 } catch (e) {
                     console.warn('FX fetch (USD convert) failed', e);
+                    appendFxDebug(`frankfurter-usd failed: ${e?.message || e}`);
                 }
             }
             const metalStatus = metalOk ? `metals ok${metalSource ? ` (${metalSource})` : ''}` : 'metals failed';
@@ -942,6 +963,13 @@
                 btn.disabled = false;
                 btn.textContent = '🔄 Odśwież kursy';
             }
+        });
+
+        $('#fxDebugToggleBtn').addEventListener('click', function() {
+            const panel = $('#fxDebugPanel');
+            const isVisible = panel.style.display === 'block';
+            panel.style.display = isVisible ? 'none' : 'block';
+            this.textContent = isVisible ? 'Pokaż debug FX' : 'Ukryj debug FX';
         });
 
         // Initialize

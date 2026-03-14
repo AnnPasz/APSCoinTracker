@@ -336,13 +336,16 @@
             
             <button class="btn btn-refresh" id="refreshRatesBtn">🔄 Odśwież kursy</button>
             <div id="fxStatus" style="text-align: center; font-size: 12px; color: #666; margin-top: 6px;">FX: idle</div>
-            <button id="fxDebugToggleBtn" style="margin: 8px auto 0; display: block; background: none; border: none; color: #4ecdc4; font-size: 12px; cursor: pointer;">Pokaż debug FX</button>
-            <div id="fxDebugPanel" style="display: none; margin-top: 8px; padding: 10px; border-radius: 8px; background: #f7f7f9; border: 1px solid #e0e0e0; font-size: 11px; color: #444; white-space: pre-wrap; word-break: break-word;"></div>
-            <div style="margin-top: 12px; padding: 12px; border-radius: 10px; background: #f9f9fb; border: 1px solid #e6e6ef;">
-                <label for="metalpriceApiKeyInput" style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">MetalpriceAPI Key (opcjonalnie)</label>
-                <input type="password" id="metalpriceApiKeyInput" placeholder="mpa_xxxxxxxxxxxxxxxxxxxxxxxxx" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px;">
-                <button id="saveMetalpriceApiKeyBtn" style="margin-top: 8px; width: 100%; padding: 10px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">💾 Zapisz klucz MetalpriceAPI</button>
-                <div id="metalpriceKeyStatus" style="margin-top: 6px; font-size: 11px; color: #666; text-align: center;"></div>
+            <button id="toolsToggleBtn" style="margin: 8px auto 0; display: block; background: none; border: none; color: #4ecdc4; font-size: 12px; cursor: pointer;">Tools</button>
+            <div id="toolsPanel" style="display: none; margin-top: 8px;">
+                <button id="fxDebugToggleBtn" style="margin: 0 auto 6px; display: block; background: none; border: none; color: #4ecdc4; font-size: 12px; cursor: pointer;">Pokaż debug FX</button>
+                <div id="fxDebugPanel" style="display: none; margin-top: 4px; padding: 10px; border-radius: 8px; background: #f7f7f9; border: 1px solid #e0e0e0; font-size: 11px; color: #444; white-space: pre-wrap; word-break: break-word;"></div>
+                <div style="margin-top: 10px; padding: 12px; border-radius: 10px; background: #f9f9fb; border: 1px solid #e6e6ef;">
+                    <label for="metalpriceApiKeyInput" style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">MetalpriceAPI Key (opcjonalnie)</label>
+                    <input type="password" id="metalpriceApiKeyInput" placeholder="mpa_xxxxxxxxxxxxxxxxxxxxxxxxx" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px;">
+                    <button id="saveMetalpriceApiKeyBtn" style="margin-top: 8px; width: 100%; padding: 10px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">💾 Zapisz klucz MetalpriceAPI</button>
+                    <div id="metalpriceKeyStatus" style="margin-top: 6px; font-size: 11px; color: #666; text-align: center;"></div>
+                </div>
             </div>
             <div id="buildStamp" style="text-align: center; font-size: 11px; color: #888; margin-top: 4px;">Build: 2026-02-17a</div>
         </div>
@@ -976,6 +979,13 @@
             const isVisible = panel.style.display === 'block';
             panel.style.display = isVisible ? 'none' : 'block';
             this.textContent = isVisible ? 'Pokaż debug FX' : 'Ukryj debug FX';
+        });
+
+        $('#toolsToggleBtn').addEventListener('click', function() {
+            const panel = $('#toolsPanel');
+            const isVisible = panel.style.display === 'block';
+            panel.style.display = isVisible ? 'none' : 'block';
+            this.textContent = isVisible ? 'Tools' : 'Tools (ukryj)';
         });
 
         const keyStatusEl = $('#metalpriceKeyStatus');

@@ -310,5 +310,25 @@
     "withJJU": false,
     "isSettled": true,
     "isChecked": true
+  },
+  {
+    "coinId": "CMOEPPAU3W4B9",
+    "coinName": "Walking Liberty",
+    "coinCountry": "USA",
+    "coinYear": "1996",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "350",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-04-25",
+    "comments": "Targ staroci Jelenja",
+    "isNumismatic": false,
+    "withJJU": false,
+    "isSettled": true,
+    "isChecked": true
   }
 ]

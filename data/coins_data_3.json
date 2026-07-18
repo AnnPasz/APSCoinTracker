@@ -330,5 +330,43 @@
     "withJJU": false,
     "isSettled": true,
     "isChecked": true
+  },
+  {
+    "coinId": "CMRQ8TPHU4KX2",
+    "coinName": "Walking Liberty ",
+    "coinCountry": "USA",
+    "coinYear": "1997",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "270",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-07-18",
+    "comments": "Feni lx",
+    "isNumismatic": false,
+    "withJJU": false,
+    "isSettled": false
+  },
+  {
+    "coinId": "CMRQ9DF181973",
+    "coinName": "Walking Liberty",
+    "coinCountry": "Usa",
+    "coinYear": "2016",
+    "coinWeight": "31.1",
+    "coinSize": "1",
+    "category": "Bulion",
+    "type": "Bulion USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "1000",
+    "purchasePrice": "270",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-07-18",
+    "comments": "Feniks",
+    "isNumismatic": false,
+    "withJJU": false,
+    "isSettled": false
   }
 ]

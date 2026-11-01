@@ -427,8 +427,8 @@
     "purchaseDate": "2026-10-20",
     "comments": "250 lecie",
     "isNumismatic": true,
-    "withJJU": false,
-    "isSettled": false,
+    "withJJU": true,
+    "isSettled": true,
     "isChecked": true
   },
   {
@@ -440,7 +440,7 @@
     "coinSize": "1",
     "category": "Bulion",
     "type": "Rounds",
-    "coinMaterial": "AU",
+    "coinMaterial": "AG",
     "coinMetalContent": "1000",
     "purchasePrice": "65",
     "purchaseCurrency": "USD",
@@ -470,5 +470,24 @@
     "withJJU": false,
     "isSettled": false,
     "isChecked": true
+  },
+  {
+    "coinId": "CMVY9ZDTYXLMM",
+    "coinName": "Morgan Dollar",
+    "coinCountry": "USA",
+    "coinYear": "1885",
+    "coinWeight": "28",
+    "coinSize": "1",
+    "category": "Coin",
+    "type": "Obiegowe USA",
+    "coinMaterial": "AG",
+    "coinMetalContent": "900",
+    "purchasePrice": "0",
+    "purchaseCurrency": "PLN",
+    "purchaseDate": "2026-10-20",
+    "comments": "",
+    "isNumismatic": false,
+    "withJJU": false,
+    "isSettled": false
   }
 ]

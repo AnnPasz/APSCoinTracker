@@ -7,7 +7,7 @@
     "coinWeight": "31.33",
     "coinSize": "38.1",
     "coinMaterial": "AG",
-    "coinMetalContent": "1000",
+    "coinMetalContent": "925",
     "purchasePrice": "210",
     "purchaseCurrency": "PLN",
     "purchaseDate": "2025-11-01",
@@ -21,7 +21,9 @@
     "checked": true,
     "coinLink": "",
     "isChecked": true,
-    "isSettled": true
+    "isSettled": true,
+    "isNumismatic": false,
+    "withJJU": false
   },
   {
     "coinId": "CMIM3LP14LP87",
